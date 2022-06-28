@@ -60,33 +60,68 @@ namespace RoundReports
                     Scientists = Player.Get(RoleType.Scientist).Count(),
                     StartTime = DateTime.Now.ToString("MMMM dd, yyyy hh:mm:ss tt"),
                     PlayersAtStart = Player.List.Where(r => !r.IsDead).Count(),
+                    Players = new()
                 };
+                foreach (var player in Player.List)
+                {
+                    if (player.DoNotTrack)
+                    {
+                        stat.Players.Add($"{Reporter.DoNotTrackText} [{player.Role}]");
+                    }
+                    else
+                    {
+                        stat.Players.Add($"{player.Nickname} [{player.Role}]");
+                    }
+                }
                 Hold(stat);
             });
         }
 
         public void OnUsedItem(UsedItemEventArgs ev)
         {
-            if (!TryGetStat<MedicalStats>(out MedicalStats stats))
+            if (ev.Item.IsScp)
             {
-                stats = new();
+                if (!TryGetStat<SCPItemStats>(out SCPItemStats stats))
+                {
+                    stats = new();
+                }
+                switch (ev.Item.Type)
+                {
+                    case ItemType.SCP207:
+                        stats.Scp207Drank++;
+                        break;
+                    case ItemType.SCP268:
+                        stats.Scp268Uses++;
+                        break;
+                    case ItemType.SCP1853:
+                        stats.Scp1853Uses++;
+                        break;
+                }
+                Hold(stats);
             }
-            switch (ev.Item.Type)
+            else
             {
-                case ItemType.Painkillers:
-                    stats.PainkillersConsumed++;
-                    break;
-                case ItemType.Medkit:
-                    stats.MedkitsConsumed++;
-                    break;
-                case ItemType.Adrenaline:
-                    stats.AdrenalinesConsumed++;
-                    break;
-                case ItemType.SCP500:
-                    stats.SCP500sConsumed++;
-                    break;
+                if (!TryGetStat<MedicalStats>(out MedicalStats stats))
+                {
+                    stats = new();
+                }
+                switch (ev.Item.Type)
+                {
+                    case ItemType.Painkillers:
+                        stats.PainkillersConsumed++;
+                        break;
+                    case ItemType.Medkit:
+                        stats.MedkitsConsumed++;
+                        break;
+                    case ItemType.Adrenaline:
+                        stats.AdrenalinesConsumed++;
+                        break;
+                    case ItemType.SCP500:
+                        stats.SCP500sConsumed++;
+                        break;
+                }
+                Hold(stats);
             }
-            Hold(stats);
         }
     }
 }

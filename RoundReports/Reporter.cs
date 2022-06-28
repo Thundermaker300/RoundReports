@@ -10,6 +10,7 @@ using UnityEngine.Networking;
 using System.Text;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace RoundReports
 {
@@ -18,6 +19,7 @@ namespace RoundReports
         private List<IReportStat> Stats { get; set; }
         private string _webhook;
         public bool HasSent { get; private set; } = false;
+        public const string DoNotTrackText = "";
 
         public Reporter(string webhookUrl)
         {
@@ -74,11 +76,12 @@ namespace RoundReports
                         var attr = pinfo.GetCustomAttribute<DescriptionAttribute>();
                         if (attr is null)
                         {
-                            bldr.AppendLine($"{SplitString(pinfo.Name)}: {pinfo.GetValue(stat)}");
+                            bldr.AppendLine($"{SplitString(pinfo.Name)}: {GetDisplay(pinfo.GetValue(stat))}");
                         }
                         else
                         {
-                            bldr.AppendLine($"{attr.Description}: {pinfo.GetValue(stat)}");
+                            object val = pinfo.GetValue(stat);
+                            bldr.AppendLine($"{attr.Description}: {GetDisplay(val)}");
                         }
                     }
                     section.contents = bldr.ToString();
@@ -121,6 +124,40 @@ namespace RoundReports
             else
             {
                 Log.Warn($"Report failed to post! {pasteWWW.error}");
+            }
+        }
+
+        private static string GetDisplay(object val)
+        {
+            if (val is null)
+                return "null";
+            if (val is Player plr)
+            {
+                if (plr.DoNotTrack)
+                {
+                    return DoNotTrackText;
+                }
+                else
+                {
+                    return plr.Nickname;
+                }
+            }
+            else if (val is IEnumerable list && val.GetType().IsGenericType)
+            {
+                StringBuilder bldr2 = StringBuilderPool.Shared.Rent();
+                bldr2.AppendLine();
+                foreach (var item in list)
+                {
+                    if (item is null) continue;
+                    bldr2.AppendLine("- " + GetDisplay(item));
+                }
+                var display = bldr2.ToString().TrimEnd(' ', '\r', '\n');
+                StringBuilderPool.Shared.Return(bldr2);
+                return display;
+            }
+            else
+            {
+                return val.ToString();
             }
         }
 

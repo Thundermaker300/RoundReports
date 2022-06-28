@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Exiled.API.Features;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -19,5 +20,6 @@ namespace RoundReports
         public int SCPs { get; set; }
         public int Scientists { get; set; }
         public int FacilityGuards { get; set; }
+        public List<string> Players { get; set; }
     }
 }

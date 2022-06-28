@@ -99,7 +99,7 @@
     <Compile Include="PasteEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reporter.cs" />
-    <Compile Include="DataStructures\SCPItemsStats.cs" />
+    <Compile Include="DataStructures\SCPItemStats.cs" />
     <Compile Include="DataStructures\MedicalStats.cs" />
   </ItemGroup>
   <ItemGroup>
