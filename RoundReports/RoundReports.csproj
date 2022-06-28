@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataStructures\IReportStat.cs" />
+    <Compile Include="DataStructures\DoorStats.cs" />
     <Compile Include="DataStructures\StartingStats.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="MainPlugin.cs" />
