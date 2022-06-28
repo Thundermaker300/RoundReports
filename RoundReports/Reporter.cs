@@ -25,11 +25,6 @@ namespace RoundReports
             Stats = ListPool<IReportStat>.Shared.Rent();
         }
 
-        ~Reporter()
-        {
-            ListPool<IReportStat>.Shared.Return(Stats);
-        }
-
         public T GetStat<T>()
             where T: class, IReportStat
         {
@@ -97,7 +92,7 @@ namespace RoundReports
                 }
             }
 
-            Stats.Clear();
+            ListPool<IReportStat>.Shared.Return(Stats);
 
             // Conclude
             return entry;
@@ -111,10 +106,8 @@ namespace RoundReports
 
         private IEnumerator<float> _SendReport()
         {
-            Log.Info("Sending...");
             var key = MainPlugin.Singleton.Config.PasteKey;
             PasteEntry data = BuildReport();
-            Log.Info("Built...");
             Log.Info(JsonConvert.SerializeObject(data));
             var pasteWWW = UnityWebRequest.Put("https://api.paste.ee/v1/pastes", JsonConvert.SerializeObject(data));
             pasteWWW.method = "POST";

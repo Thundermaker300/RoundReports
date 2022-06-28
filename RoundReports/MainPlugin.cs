@@ -3,6 +3,7 @@ using Exiled.API.Features;
 using System.ComponentModel;
 
 using ServerEvents = Exiled.Events.Handlers.Server;
+using PlayerEvents = Exiled.Events.Handlers.Player;
 
 namespace RoundReports
 {
@@ -28,6 +29,9 @@ namespace RoundReports
 
             // Server Events
             ServerEvents.RoundStarted += Handlers.OnRoundStarted;
+
+            // Player Events
+            PlayerEvents.UsedItem += Handlers.OnUsedItem;
 
             base.OnEnabled();
         }

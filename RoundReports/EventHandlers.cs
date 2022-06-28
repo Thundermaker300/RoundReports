@@ -1,4 +1,6 @@
 ﻿using Exiled.API.Features;
+using Exiled.API.Features.Items;
+using Exiled.Events.EventArgs;
 using MEC;
 using System;
 using System.Collections.Generic;
@@ -13,10 +15,18 @@ namespace RoundReports
     {
         public List<IReportStat> Holding { get; set; }
 
-        public T TryGetStat<T>()
+        public void Hold<T>(T stat)
             where T: class, IReportStat
         {
-            return Holding.FirstOrDefault(r => r.GetType() == typeof(T)) as T;
+            Holding.RemoveAll(r => r.GetType() == typeof(T));
+            Holding.Add(stat);
+        }
+
+        public bool TryGetStat<T>(out T value)
+            where T: class, IReportStat
+        {
+            value = Holding.FirstOrDefault(r => r.GetType() == typeof(T)) as T;
+            return value != null;
         }
 
         public void OnWaitingForPlayers()
@@ -51,8 +61,32 @@ namespace RoundReports
                     StartTime = DateTime.Now.ToString("MMMM dd, yyyy hh:mm:ss tt"),
                     PlayersAtStart = Player.List.Where(r => !r.IsDead).Count(),
                 };
-                MainPlugin.Reporter.SetStat(stat);
+                Hold(stat);
             });
+        }
+
+        public void OnUsedItem(UsedItemEventArgs ev)
+        {
+            if (!TryGetStat<MedicalStats>(out MedicalStats stats))
+            {
+                stats = new();
+            }
+            switch (ev.Item.Type)
+            {
+                case ItemType.Painkillers:
+                    stats.PainkillersConsumed++;
+                    break;
+                case ItemType.Medkit:
+                    stats.MedkitsConsumed++;
+                    break;
+                case ItemType.Adrenaline:
+                    stats.AdrenalinesConsumed++;
+                    break;
+                case ItemType.SCP500:
+                    stats.SCP500sConsumed++;
+                    break;
+            }
+            Hold(stats);
         }
     }
 }

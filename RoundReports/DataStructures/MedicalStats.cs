@@ -11,7 +11,7 @@ namespace RoundReports
     {
         public string Title => "Medical Statistics";
         public int Order => 5;
-        public int PillsConsumed { get; set; }
+        public int PainkillersConsumed { get; set; }
         public int MedkitsConsumed { get; set; }
         public int AdrenalinesConsumed { get; set; }
         [Description("SCP-500s Consumed")]
