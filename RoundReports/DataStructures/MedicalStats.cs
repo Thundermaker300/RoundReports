@@ -7,20 +7,14 @@ using System.Threading.Tasks;
 
 namespace RoundReports
 {
-    public struct MedicalStats : IReportStat
+    public class MedicalStats : IReportStat
     {
         public string Title => "Medical Statistics";
-
-        [Description("Pills Consumed")]
-        public int PillsUsed { get; set; }
-
-        [Description("Medkits Consumed")]
-        public int MedkitsUsed { get; set; }
-
-        [Description("Adrenalines Consumed")]
-        public int AdrenalinesUsed { get; set; }
-
+        public int Order => 5;
+        public int PillsConsumed { get; set; }
+        public int MedkitsConsumed { get; set; }
+        public int AdrenalinesConsumed { get; set; }
         [Description("SCP-500s Consumed")]
-        public int SCP500sUsed { get; set; }
+        public int SCP500sConsumed { get; set; }
     }
 }

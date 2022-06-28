@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace RoundReports
 {
-    public struct SCPItemStats : IReportStat
+    public class SCPItemStats : IReportStat
     {
         public string Title => "SCP Item Statistics";
+        public int Order => 6;
     }
 }

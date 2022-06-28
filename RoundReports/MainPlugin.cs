@@ -14,16 +14,20 @@ namespace RoundReports
 
         public override void OnEnabled()
         {
-            if (string.IsNullOrEmpty(Config.PastebinKey))
+            if (string.IsNullOrEmpty(Config.PasteKey))
             {
-                Log.Warn("Missing pastebin key!");
+                Log.Warn("Missing paste.ee key!");
                 return;
             }
             Singleton = this;
             Handlers = new EventHandlers();
 
+            // Handle reporter
             ServerEvents.WaitingForPlayers += Handlers.OnWaitingForPlayers;
             ServerEvents.RestartingRound += Handlers.OnRestarting;
+
+            // Server Events
+            ServerEvents.RoundStarted += Handlers.OnRoundStarted;
 
             base.OnEnabled();
         }
@@ -45,8 +49,8 @@ namespace RoundReports
         [Description("Whether or not the plugin is active.")]
         public bool IsEnabled { get; set; } = true;
 
-        [Description("Your Pastebin key. Get this from https://pastebin.com/doc_api after creating a pastebin account. Does not give access to your pastebin account.")]
-        public string PastebinKey { get; set; } = "";
+        [Description("Your Paste.ee key. Get this from https://paste.ee/account/api after creating a paste.ee account.")]
+        public string PasteKey { get; set; } = "";
 
         [Description("Provide a Discord webhook to send reports to.")]
         public string DiscordWebhook { get; set; } = string.Empty;
