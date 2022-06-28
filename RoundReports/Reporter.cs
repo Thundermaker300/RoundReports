@@ -5,6 +5,8 @@ using System.Reflection;
 using Exiled.API.Features;
 using NorthwoodLib.Pools;
 using System.ComponentModel;
+using MEC;
+using UnityEngine.Networking;
 
 namespace RoundReports
 {
@@ -12,6 +14,7 @@ namespace RoundReports
     {
         public SortedSet<IReportStat> Stats { get; set; }
         private string _webhook;
+        public bool HasSent { get; private set; } = false;
 
         public Reporter(string webhookUrl)
         {
@@ -49,6 +52,27 @@ namespace RoundReports
             string result = builder.ToString();
             StringBuilderPool.Shared.Return(builder);
             return result;
+        }
+
+        public void SendReport()
+        {
+            HasSent = true;
+            Timing.RunCoroutine(_SendReport());
+        }
+
+        private IEnumerator<float> _SendReport()
+        {
+            var pasteWWW = UnityWebRequest.Put("http://hastebin.com/documents", BuildReport());
+            pasteWWW.method = "POST";
+            yield return Timing.WaitUntilDone(pasteWWW.SendWebRequest());
+            if (!pasteWWW.isHttpError && !pasteWWW.isNetworkError)
+            {
+                Log.Info("Report posted! " + pasteWWW.downloadHandler.text);
+            }
+            else
+            {
+                Log.Warn($"Report failed to post! {pasteWWW.error}");
+            }
         }
     }
 }
