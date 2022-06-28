@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using Exiled.API.Features;
 using NorthwoodLib.Pools;
+using System.ComponentModel;
 
 namespace RoundReports
 {
@@ -33,6 +35,11 @@ namespace RoundReports
                 foreach (PropertyInfo pinfo in type.GetProperties())
                 {
                     if (pinfo.Name == "Title") continue;
+                    var attr = pinfo.GetCustomAttribute<DescriptionAttribute>();
+                    if (attr is not null)
+                    {
+                        builder.AppendLine($"{attr.Description}: {pinfo.GetValue(stat)}");
+                    }
                 }
             }
 
