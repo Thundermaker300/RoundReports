@@ -17,14 +17,16 @@ namespace RoundReports
     public class Reporter
     {
         private List<IReportStat> Stats { get; set; }
+        public static Dictionary<Player, string> NameStore { get; set; }
         private string _webhook;
         public bool HasSent { get; private set; } = false;
-        public const string DoNotTrackText = "";
+        public const string DoNotTrackText = "[DO NOT TRACK USER]";
 
         public Reporter(string webhookUrl)
         {
             _webhook = webhookUrl;
             Stats = ListPool<IReportStat>.Shared.Rent();
+            NameStore = new(0);
         }
 
         public T GetStat<T>()
@@ -96,6 +98,7 @@ namespace RoundReports
             }
 
             ListPool<IReportStat>.Shared.Return(Stats);
+            NameStore.Clear();
 
             // Conclude
             return entry;
@@ -111,7 +114,6 @@ namespace RoundReports
         {
             var key = MainPlugin.Singleton.Config.PasteKey;
             PasteEntry data = BuildReport();
-            Log.Info(JsonConvert.SerializeObject(data));
             var pasteWWW = UnityWebRequest.Put("https://api.paste.ee/v1/pastes", JsonConvert.SerializeObject(data));
             pasteWWW.method = "POST";
             pasteWWW.SetRequestHeader("Content-Type", "application/json");
@@ -176,6 +178,17 @@ namespace RoundReports
                 return "No Data";
             if (val is Player plr)
             {
+                if (!plr.IsConnected)
+                {
+                    if (NameStore.ContainsKey(plr))
+                    {
+                        return $"[DC] {NameStore[plr]}";
+                    }
+                    else
+                    {
+                        return "[DC] Unknown";
+                    }
+                }
                 if (plr.DoNotTrack)
                 {
                     return DoNotTrackText;

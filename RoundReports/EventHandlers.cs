@@ -105,6 +105,14 @@ namespace RoundReports
             Hold(stats);
         }
 
+        public void OnLeft(LeftEventArgs ev)
+        {
+            if (!Reporter.NameStore.ContainsKey(ev.Player) && !ev.Player.DoNotTrack)
+            {
+                Reporter.NameStore.Add(ev.Player, ev.Player.Nickname);
+            }
+        }
+
         public void OnDied(DiedEventArgs ev)
         {
             var stats = GetStat<FinalStats>();
@@ -112,6 +120,8 @@ namespace RoundReports
             stats.TotalDeaths++;
             if (ev.Killer is not null)
             {
+                // Kill logs
+                killStats.PlayerKills.Insert(0, $"[{DateTime.Now.ToString("hh:mm:ss tt")}] {(ev.Killer.DoNotTrack ? Reporter.DoNotTrackText : ev.Killer.Nickname)} killed {(ev.Target.DoNotTrack ? Reporter.DoNotTrackText : ev.Target.Nickname)}");
                 // Kill by player
                 if (!killStats.KillsByPlayer.ContainsKey(ev.Killer))
                 {

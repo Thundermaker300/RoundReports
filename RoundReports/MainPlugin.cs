@@ -36,6 +36,7 @@ namespace RoundReports
             ServerEvents.RoundEnded += Handlers.OnRoundEnded;
 
             // Player Events
+            PlayerEvents.Left += Handlers.OnLeft;
             PlayerEvents.Died += Handlers.OnDied;
             PlayerEvents.UsedItem += Handlers.OnUsedItem;
             PlayerEvents.InteractingDoor += Handlers.OnInteractingDoor;
