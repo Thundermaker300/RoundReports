@@ -11,8 +11,8 @@ namespace RoundReports
     public class StartingStats : IReportStat
     {
         public string Title => "Starting Statistics";
-        public int Order => 1;
-        public string StartTime { get; set; }
+        public int Order => 2;
+        public DateTime StartTime { get; set; }
         public int PlayersAtStart { get; set; }
         [Description("Class-D Personnel")]
         public int ClassDPersonnel { get; set; }

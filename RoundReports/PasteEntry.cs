@@ -18,4 +18,17 @@ namespace RoundReports
         public string syntax { get; set; }
         public string contents { get; set; }
     }
+
+    public class PasteResponse
+    {
+        public string id { get; set; }
+        public string link { get; set; }
+        public bool success { get; set; }
+    }
+
+    public class DiscordHook
+    {
+        public string username { get; set; }
+        public string content { get; set; }
+    }
 }

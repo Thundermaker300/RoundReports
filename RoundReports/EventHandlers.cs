@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NorthwoodLib.Pools;
+using Exiled.API.Enums;
 
 namespace RoundReports
 {
@@ -27,6 +28,17 @@ namespace RoundReports
         {
             value = Holding.FirstOrDefault(r => r.GetType() == typeof(T)) as T;
             return value != null;
+        }
+
+        public T GetStat<T>()
+            where T: class, IReportStat, new()
+        {
+            var value = Holding.FirstOrDefault(r => r.GetType() == typeof(T)) as T;
+            if (value is null)
+            {
+                value = new T();
+            }
+            return value;
         }
 
         public void OnWaitingForPlayers()
@@ -52,13 +64,13 @@ namespace RoundReports
         {
             Timing.CallDelayed(.5f, () =>
             {
-                StartingStats stat = new()
+                StartingStats stats = new()
                 {
                     ClassDPersonnel = Player.Get(RoleType.ClassD).Count(),
                     SCPs = Player.Get(Team.SCP).Count(),
                     FacilityGuards = Player.Get(RoleType.FacilityGuard).Count(),
                     Scientists = Player.Get(RoleType.Scientist).Count(),
-                    StartTime = DateTime.Now.ToString("MMMM dd, yyyy hh:mm:ss tt"),
+                    StartTime = DateTime.Now,
                     PlayersAtStart = Player.List.Where(r => !r.IsDead).Count(),
                     Players = new()
                 };
@@ -66,15 +78,80 @@ namespace RoundReports
                 {
                     if (player.DoNotTrack)
                     {
-                        stat.Players.Add($"{Reporter.DoNotTrackText} [{player.Role}]");
+                        stats.Players.Add($"{Reporter.DoNotTrackText} [{player.Role}]");
                     }
                     else
                     {
-                        stat.Players.Add($"{player.Nickname} [{player.Role}]");
+                        stats.Players.Add($"{player.Nickname} [{player.Role}]");
                     }
                 }
-                Hold(stat);
+                Hold(stats);
             });
+        }
+
+        public void OnRoundEnded(RoundEndedEventArgs ev)
+        {
+            var stats = GetStat<FinalStats>();
+            stats.EndTime = DateTime.Now;
+            stats.WinningTeam = ev.LeadingTeam switch
+            {
+                LeadingTeam.Anomalies => "SCPs",
+                LeadingTeam.ChaosInsurgency => "Insurgency",
+                LeadingTeam.FacilityForces => "Mobile Task Force",
+                LeadingTeam.Draw => "Stalemate",
+                _ => "Unknown"
+            };
+            stats.RoundTime = Round.ElapsedTime;
+            Hold(stats);
+        }
+
+        public void OnDied(DiedEventArgs ev)
+        {
+            var stats = GetStat<FinalStats>();
+            var killStats = GetStat<OrganizedKillsStats>();
+            stats.TotalDeaths++;
+            if (ev.Killer is not null)
+            {
+                // Kill by player
+                if (!killStats.KillsByPlayer.ContainsKey(ev.Killer))
+                {
+                    killStats.KillsByPlayer.Add(ev.Killer, 1);
+                }
+                else
+                {
+                    killStats.KillsByPlayer[ev.Killer]++;
+                }
+                stats.TotalKills++;
+                switch (ev.Killer.Role.Team)
+                {
+                    case Team.SCP:
+                        stats.MTFKills++;
+                        break;
+                    case Team.CDP:
+                        stats.DClassKills++;
+                        break;
+                    case Team.RSC:
+                        stats.ScientistKills++;
+                        break;
+                    case Team.MTF:
+                        stats.MTFKills++;
+                        break;
+                    case Team.CHI:
+                        stats.ChaosKills++;
+                        break;
+                }
+            }
+            // Kill by type
+            if (!killStats.KillsByType.ContainsKey(ev.Handler.Type))
+            {
+                killStats.KillsByType.Add(ev.Handler.Type, 1);
+            }
+            else
+            {
+                killStats.KillsByType[ev.Handler.Type]++;
+            }
+            Hold(killStats);
+            Hold(stats);
         }
 
         public void OnUsedItem(UsedItemEventArgs ev)
@@ -122,6 +199,20 @@ namespace RoundReports
                 }
                 Hold(stats);
             }
+        }
+
+        public void OnInteractingDoor(InteractingDoorEventArgs ev)
+        {
+            var stats = GetStat<DoorStats>();
+            if (ev.Door.IsOpen)
+            {
+                stats.DoorsClosed++;
+            }
+            else
+            {
+                stats.DoorsOpened++;
+            }
+            Hold(stats);
         }
     }
 }

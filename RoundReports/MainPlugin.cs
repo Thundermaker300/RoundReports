@@ -20,6 +20,10 @@ namespace RoundReports
                 Log.Warn("Missing paste.ee key!");
                 return;
             }
+            if (string.IsNullOrEmpty(Config.DiscordWebhook))
+            {
+                Log.Warn($"Missing Discord webhook! The plugin will still function, but only users with access to the server console get the report link.");
+            }
             Singleton = this;
             Handlers = new EventHandlers();
 
@@ -29,9 +33,12 @@ namespace RoundReports
 
             // Server Events
             ServerEvents.RoundStarted += Handlers.OnRoundStarted;
+            ServerEvents.RoundEnded += Handlers.OnRoundEnded;
 
             // Player Events
+            PlayerEvents.Died += Handlers.OnDied;
             PlayerEvents.UsedItem += Handlers.OnUsedItem;
+            PlayerEvents.InteractingDoor += Handlers.OnInteractingDoor;
 
             base.OnEnabled();
         }

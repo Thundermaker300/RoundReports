@@ -119,12 +119,55 @@ namespace RoundReports
             yield return Timing.WaitUntilDone(pasteWWW.SendWebRequest());
             if (!pasteWWW.isHttpError && !pasteWWW.isNetworkError)
             {
-                Log.Info("Report posted! " + pasteWWW.downloadHandler.text);
+                PasteResponse response;
+                try
+                {
+                    response = JsonConvert.DeserializeObject<PasteResponse>(pasteWWW.downloadHandler.text);
+                }
+                catch (Exception e)
+                {
+                    Log.Warn($"Report failed to post! {e}");
+                    yield break;
+                }
+                if (!response.success)
+                {
+                    Log.Warn("Unknown error when uploading the report.");
+                }
+                else
+                {
+                    Log.Info($"Report uploaded successfully! Access it here: {response.link}");
+                    if (!string.IsNullOrEmpty(MainPlugin.Singleton.Config.DiscordWebhook))
+                    {
+                        DiscordHook hookData = new()
+                        {
+                            username = "Round Report",
+                            content = "Link: " + response.link
+                        };
+
+                        var discordWWW = UnityWebRequest.Put(MainPlugin.Singleton.Config.DiscordWebhook, JsonConvert.SerializeObject(hookData));
+                        discordWWW.method = "POST";
+                        discordWWW.SetRequestHeader("Content-Type", "application/json");
+                        yield return Timing.WaitUntilDone(discordWWW.SendWebRequest());
+                        if (discordWWW.isHttpError || discordWWW.isNetworkError)
+                        {
+                            Log.Warn($"Error when attempting to send report to discord log: {discordWWW.error}");
+                        }
+                    }
+                }
             }
             else
             {
                 Log.Warn($"Report failed to post! {pasteWWW.error}");
             }
+        }
+
+        private static string SplitString(string s)
+        {
+            var r = new Regex(@"
+                (?<=[A-Z])(?=[A-Z][a-z]) |
+                 (?<=[^A-Z])(?=[A-Z]) |
+                 (?<=[A-Za-z])(?=[^A-Za-z])", RegexOptions.IgnorePatternWhitespace);
+            return r.Replace(s, " ");
         }
 
         private static string GetDisplay(object val)
@@ -142,8 +185,41 @@ namespace RoundReports
                     return plr.Nickname;
                 }
             }
+            else if (val is DateTime dt)
+            {
+                return dt.ToString("MMMM dd, yyyy hh:mm:ss tt");
+            }
+            else if (val is TimeSpan ts)
+            {
+                return $"{ts.Minutes}m{ts.Seconds}s";
+            }
+            else if (val is IDictionary dict)
+            {
+                if (dict.Count == 0)
+                {
+                    return "[None]";
+                }
+                StringBuilder bldr2 = StringBuilderPool.Shared.Rent();
+                bldr2.AppendLine();
+                foreach (DictionaryEntry item in dict)
+                {
+                    if (item.Key is null || item.Value is null) continue;
+                    bldr2.AppendLine("- " + GetDisplay(item.Key) + ": " + GetDisplay(item.Value));
+                }
+                var display = bldr2.ToString().TrimEnd(' ', '\r', '\n');
+                StringBuilderPool.Shared.Return(bldr2);
+                return display;
+            }
             else if (val is IEnumerable list && val.GetType().IsGenericType)
             {
+                // Check for zero results
+                int i = 0;
+                foreach (var item in list) i++;
+                if (i == 0)
+                {
+                    return "[None]";
+                }
+
                 StringBuilder bldr2 = StringBuilderPool.Shared.Rent();
                 bldr2.AppendLine();
                 foreach (var item in list)
@@ -159,15 +235,6 @@ namespace RoundReports
             {
                 return val.ToString();
             }
-        }
-
-        private static string SplitString(string s)
-        {
-            var r = new Regex(@"
-                (?<=[A-Z])(?=[A-Z][a-z]) |
-                 (?<=[^A-Z])(?=[A-Z]) |
-                 (?<=[A-Za-z])(?=[^A-Za-z])", RegexOptions.IgnorePatternWhitespace);
-            return r.Replace(s, " ");
         }
     }
 }
