@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Exiled.API.Features;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -14,5 +15,7 @@ namespace RoundReports
         public int DoorsOpened { get; set; }
         public int DoorsClosed { get; set; }
         public int DoorsDestroyed { get; set; }
+        public Dictionary<Player, int> PlayerDoorsOpened { get; set; } = new(0);
+        public Dictionary<Player, int> PlayerDoorsClosed { get; set; } = new(0);
     }
 }

@@ -173,7 +173,7 @@ namespace RoundReports
         private static string GetDisplay(object val)
         {
             if (val is null)
-                return "null";
+                return "No Data";
             if (val is Player plr)
             {
                 if (plr.DoNotTrack)
@@ -187,10 +187,14 @@ namespace RoundReports
             }
             else if (val is DateTime dt)
             {
+                if (dt == DateTime.MinValue)
+                    return "No Data";
                 return dt.ToString("MMMM dd, yyyy hh:mm:ss tt");
             }
             else if (val is TimeSpan ts)
             {
+                if (ts == TimeSpan.Zero)
+                    return "No Data";
                 return $"{ts.Minutes}m{ts.Seconds}s";
             }
             else if (val is IDictionary dict)

@@ -203,14 +203,31 @@ namespace RoundReports
 
         public void OnInteractingDoor(InteractingDoorEventArgs ev)
         {
+            if (ev.Player is null) return;
             var stats = GetStat<DoorStats>();
             if (ev.Door.IsOpen)
             {
                 stats.DoorsClosed++;
+                if (stats.PlayerDoorsClosed.ContainsKey(ev.Player))
+                {
+                    stats.PlayerDoorsClosed[ev.Player]++;
+                }
+                else
+                {
+                    stats.PlayerDoorsClosed.Add(ev.Player, 1);
+                }
             }
             else
             {
                 stats.DoorsOpened++;
+                if (stats.PlayerDoorsOpened.ContainsKey(ev.Player))
+                {
+                    stats.PlayerDoorsOpened[ev.Player]++;
+                }
+                else
+                {
+                    stats.PlayerDoorsOpened.Add(ev.Player, 1);
+                }
             }
             Hold(stats);
         }
