@@ -165,13 +165,13 @@ namespace RoundReports
                                         new()
                                         {
                                             Name = "Post Date",
-                                            Value = $"<t:{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}>",
+                                            Value = $"<t:{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}:D>",
                                             Inline = true
                                         },
                                         new()
                                         {
                                             Name = "Expire Date",
-                                            Value = $"<t:{DateTimeOffset.UtcNow.AddDays(28).ToUnixTimeSeconds()}>",
+                                            Value = $"<t:{DateTimeOffset.UtcNow.AddDays(28).ToUnixTimeSeconds()}:D>",
                                             Inline = true,
                                         }
                                     },
