@@ -22,12 +22,14 @@ namespace RoundReports
         private string _webhook;
         public bool HasSent { get; private set; } = false;
         public LeadingTeam LeadingTeam { get; set; }
+        public List<string> Remarks { get; set; }
         public const string DoNotTrackText = "[DO NOT TRACK USER]";
 
         public Reporter(string webhookUrl)
         {
             _webhook = webhookUrl;
             Stats = ListPool<IReportStat>.Shared.Rent();
+            Remarks = ListPool<string>.Shared.Rent();
             NameStore = new(0);
         }
 
@@ -46,6 +48,7 @@ namespace RoundReports
         public void ReturnLists()
         {
             ListPool<IReportStat>.Shared.Return(Stats);
+            ListPool<string>.Shared.Return(Remarks);
             NameStore.Clear();
         }
 
@@ -65,6 +68,23 @@ namespace RoundReports
                         Log.Warn(ex);
                     }
                 }
+            }
+            // Remarks
+            if (Remarks.Count > 0)
+            {
+                var section = new PasteSection()
+                {
+                    name = "Round Remarks",
+                    syntax = "text",
+                    contents = string.Empty,
+
+                };
+                StringBuilder bldr = StringBuilderPool.Shared.Rent();
+                foreach (var remark in Remarks)
+                    bldr.AppendLine(remark);
+                section.contents = bldr.ToString();
+                entry.sections.Add(section);
+                StringBuilderPool.Shared.Return(bldr);
             }
             // Stats
             var stats = Stats.OrderBy(stat => stat.Order);
@@ -209,7 +229,7 @@ namespace RoundReports
             return r.Replace(s, " ");
         }
 
-        private static string GetDisplay(object val)
+        public static string GetDisplay(object val)
         {
             if (val is null)
                 return "No Data";

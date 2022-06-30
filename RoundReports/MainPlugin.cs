@@ -41,6 +41,7 @@ namespace RoundReports
             PlayerEvents.Died += Handlers.OnDied;
             PlayerEvents.UsedItem += Handlers.OnUsedItem;
             PlayerEvents.InteractingDoor += Handlers.OnInteractingDoor;
+            PlayerEvents.Escaping += Handlers.OnEscaping;
 
             base.OnEnabled();
         }

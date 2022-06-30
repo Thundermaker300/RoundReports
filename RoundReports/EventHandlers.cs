@@ -15,6 +15,7 @@ namespace RoundReports
     public class EventHandlers
     {
         public List<IReportStat> Holding { get; set; }
+        public bool FirstEscape { get; set; } = false;
 
         public void Hold<T>(T stat)
             where T: class, IReportStat
@@ -43,6 +44,7 @@ namespace RoundReports
 
         public void OnWaitingForPlayers()
         {
+            FirstEscape = false;
             Holding = ListPool<IReportStat>.Shared.Rent();
             MainPlugin.Reporter = new Reporter(MainPlugin.Singleton.Config.DiscordWebhook);
         }
@@ -296,6 +298,16 @@ namespace RoundReports
                 }
             }
             Hold(stats);
+        }
+
+        public void OnEscaping(EscapingEventArgs ev)
+        {
+            if (!ev.IsAllowed) return;
+            if (!FirstEscape && MainPlugin.Reporter is not null)
+            {
+                FirstEscape = true;
+                MainPlugin.Reporter.Remarks.Add($"{Reporter.GetDisplay(ev.Player)} [{ev.Player.Role}] was the first to escape!");
+            }
         }
     }
 }
