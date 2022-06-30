@@ -41,7 +41,11 @@ namespace RoundReports
             PlayerEvents.Died += Handlers.OnDied;
             PlayerEvents.UsedItem += Handlers.OnUsedItem;
             PlayerEvents.InteractingDoor += Handlers.OnInteractingDoor;
+            PlayerEvents.InteractingScp330 += Handlers.OnInteractingScp330;
             PlayerEvents.Escaping += Handlers.OnEscaping;
+
+            Exiled.Events.Handlers.Scp914.Activating += Handlers.OnActivatingScp914;
+            // add other 914 events
 
             base.OnEnabled();
         }

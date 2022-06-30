@@ -104,6 +104,11 @@ namespace RoundReports
 
         public void OnRoundEnded(RoundEndedEventArgs ev)
         {
+            // Fill out door destroyed stat
+            var doorStats = GetStat<DoorStats>();
+            doorStats.DoorsDestroyed = Door.List.Count(d => d.IsBroken);
+            Hold(doorStats);
+            // Fill out final stats
             var stats = GetStat<FinalStats>();
             stats.EndTime = DateTime.Now;
             stats.WinningTeam = ev.LeadingTeam switch
@@ -300,14 +305,49 @@ namespace RoundReports
             Hold(stats);
         }
 
+        public void OnInteractingScp330(InteractingScp330EventArgs ev)
+        {
+            if (!ev.IsAllowed || !Round.IsStarted) return;
+            var stats = GetStat<Scp330Stats>();
+            if (stats.FirstUse == DateTime.MinValue)
+            {
+                stats.FirstUse = DateTime.Now;
+            }
+            stats.TotalCandiesTaken++;
+            if (!stats.CandiesByPlayer.ContainsKey(ev.Player))
+            {
+                stats.CandiesByPlayer.Add(ev.Player, 1);
+            }
+            else
+            {
+                stats.CandiesByPlayer[ev.Player]++;
+            }
+            if (ev.ShouldSever)
+            {
+                stats.SeveredHands++;
+            }
+            Hold(stats);
+        }
+
         public void OnEscaping(EscapingEventArgs ev)
         {
-            if (!ev.IsAllowed) return;
+            if (!ev.IsAllowed || !Round.IsStarted) return;
             if (!FirstEscape && MainPlugin.Reporter is not null)
             {
                 FirstEscape = true;
                 MainPlugin.Reporter.Remarks.Add($"{Reporter.GetDisplay(ev.Player)} [{ev.Player.Role}] was the first to escape!");
             }
+        }
+
+        public void OnActivatingScp914(ActivatingEventArgs ev)
+        {
+            var stats = GetStat<Scp914Stats>();
+            if (stats.FirstActivation == DateTime.MinValue)
+            {
+                stats.FirstActivation = DateTime.Now;
+            }
+            stats.TotalActivations++;
+            Hold(stats);
         }
     }
 }
