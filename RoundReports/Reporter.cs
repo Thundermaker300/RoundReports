@@ -11,6 +11,7 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System.Collections;
+using Exiled.API.Enums;
 
 namespace RoundReports
 {
@@ -20,6 +21,7 @@ namespace RoundReports
         public static Dictionary<Player, string> NameStore { get; set; }
         private string _webhook;
         public bool HasSent { get; private set; } = false;
+        public LeadingTeam LeadingTeam { get; set; }
         public const string DoNotTrackText = "[DO NOT TRACK USER]";
 
         public Reporter(string webhookUrl)
@@ -142,8 +144,39 @@ namespace RoundReports
                     {
                         DiscordHook hookData = new()
                         {
-                            username = "Round Report",
-                            content = "Link: " + response.link
+                            Username = "Round Report",
+                            Embeds = new()
+                            {
+                                new()
+                                {
+                                    Title = "Round Report",
+                                    TimeStamp = DateTime.Now,
+                                    Color = LeadingTeam switch
+                                    {
+                                        LeadingTeam.Anomalies => 16711680,
+                                        LeadingTeam.FacilityForces => 38143,
+                                        LeadingTeam.ChaosInsurgency => 26916,
+                                        LeadingTeam.Draw => 10197915,
+                                        _ => 10197915,
+                                    },
+                                    Description = response.link,
+                                    Fields = new()
+                                    {
+                                        new()
+                                        {
+                                            Name = "Post Date",
+                                            Value = $"<t:{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}>",
+                                            Inline = true
+                                        },
+                                        new()
+                                        {
+                                            Name = "Expire Date",
+                                            Value = $"<t:{DateTimeOffset.UtcNow.AddDays(28).ToUnixTimeSeconds()}>",
+                                            Inline = true,
+                                        }
+                                    },
+                                }
+                            },
                         };
 
                         var discordWWW = UnityWebRequest.Put(MainPlugin.Singleton.Config.DiscordWebhook, JsonConvert.SerializeObject(hookData));

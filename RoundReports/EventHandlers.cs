@@ -101,6 +101,10 @@ namespace RoundReports
                 LeadingTeam.Draw => "Stalemate",
                 _ => "Unknown"
             };
+            if (MainPlugin.Reporter is not null)
+            {
+                MainPlugin.Reporter.LeadingTeam = ev.LeadingTeam;
+            }
             stats.RoundTime = Round.ElapsedTime;
             Hold(stats);
         }

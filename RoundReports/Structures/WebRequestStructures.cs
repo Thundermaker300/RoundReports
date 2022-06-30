@@ -25,10 +25,4 @@ namespace RoundReports
         public string link { get; set; }
         public bool success { get; set; }
     }
-
-    public class DiscordHook
-    {
-        public string username { get; set; }
-        public string content { get; set; }
-    }
 }
