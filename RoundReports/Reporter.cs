@@ -43,6 +43,12 @@ namespace RoundReports
             Stats.Add(stat);
         }
 
+        public void ReturnLists()
+        {
+            ListPool<IReportStat>.Shared.Return(Stats);
+            NameStore.Clear();
+        }
+
         public PasteEntry BuildReport()
         {
             var entry = new PasteEntry() { description = $"{MainPlugin.Singleton.Config.ServerName} | {DateTime.Now.ToString("MMMM dd, yyyy hh:mm:ss tt")}", sections = new(1) };
@@ -99,10 +105,8 @@ namespace RoundReports
                 }
             }
 
-            ListPool<IReportStat>.Shared.Return(Stats);
-            NameStore.Clear();
-
             // Conclude
+            ReturnLists();
             return entry;
         }
 

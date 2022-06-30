@@ -37,6 +37,7 @@ namespace RoundReports
 
             // Player Events
             PlayerEvents.Left += Handlers.OnLeft;
+            PlayerEvents.Hurting += Handlers.OnHurting;
             PlayerEvents.Died += Handlers.OnDied;
             PlayerEvents.UsedItem += Handlers.OnUsedItem;
             PlayerEvents.InteractingDoor += Handlers.OnInteractingDoor;
@@ -48,6 +49,9 @@ namespace RoundReports
         {
             ServerEvents.WaitingForPlayers -= Handlers.OnWaitingForPlayers;
             ServerEvents.RestartingRound -= Handlers.OnRestarting;
+
+            if (Reporter is not null)
+                Reporter.ReturnLists();
 
             Reporter = null;
             Singleton = null;

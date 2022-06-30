@@ -47,13 +47,16 @@ namespace RoundReports
             MainPlugin.Reporter = new Reporter(MainPlugin.Singleton.Config.DiscordWebhook);
         }
 
-        public void OnRestarting()
+        public void SendData()
         {
+            if (MainPlugin.Reporter is null)
+                return;
+
             foreach (var stat in Holding)
             {
                 MainPlugin.Reporter.SetStat(stat);
             }
-            if (MainPlugin.Reporter is not null && !MainPlugin.Reporter.HasSent)
+            if (!MainPlugin.Reporter.HasSent)
             {
                 MainPlugin.Reporter.SendReport();
             }
@@ -89,6 +92,14 @@ namespace RoundReports
             });
         }
 
+        public void OnRestarting()
+        {
+            if (MainPlugin.Reporter is not null && !MainPlugin.Reporter.HasSent)
+            {
+                SendData();
+            }
+        }
+
         public void OnRoundEnded(RoundEndedEventArgs ev)
         {
             var stats = GetStat<FinalStats>();
@@ -107,6 +118,7 @@ namespace RoundReports
             }
             stats.RoundTime = Round.ElapsedTime;
             Hold(stats);
+            SendData();
         }
 
         public void OnLeft(LeftEventArgs ev)
@@ -117,8 +129,46 @@ namespace RoundReports
             }
         }
 
+        public void OnHurting(HurtingEventArgs ev)
+        {
+            if (!Round.IsStarted) return;
+            int amount = (int)Math.Round(ev.Amount);
+            if (!ev.IsAllowed) return;
+            if (ev.Amount == -1 || ev.Amount > 150) amount = 150;
+
+            // Stats
+            var stats = GetStat<OrganizedDamageStats>();
+            stats.TotalDamage += amount;
+
+            // Check damage type
+            if (!stats.DamageByType.ContainsKey(ev.Handler.Type))
+            {
+                stats.DamageByType.Add(ev.Handler.Type, amount);
+            }
+            else
+            {
+                stats.DamageByType[ev.Handler.Type] += amount;
+            }
+
+            // Check Attacker
+            if (ev.Attacker is not null)
+            {
+                stats.PlayerDamage += amount;
+                if (!stats.DamageByPlayer.ContainsKey(ev.Attacker))
+                {
+                    stats.DamageByPlayer.Add(ev.Attacker, amount);
+                }
+                else
+                {
+                    stats.DamageByPlayer[ev.Attacker] += amount;
+                }
+            }
+            Hold(stats);
+        }
+
         public void OnDied(DiedEventArgs ev)
         {
+            if (!Round.IsStarted) return;
             var stats = GetStat<FinalStats>();
             var killStats = GetStat<OrganizedKillsStats>();
             stats.TotalDeaths++;
@@ -170,6 +220,7 @@ namespace RoundReports
 
         public void OnUsedItem(UsedItemEventArgs ev)
         {
+            if (!Round.IsStarted) return;
             if (ev.Item.IsScp)
             {
                 if (!TryGetStat<SCPItemStats>(out SCPItemStats stats))
@@ -217,6 +268,7 @@ namespace RoundReports
 
         public void OnInteractingDoor(InteractingDoorEventArgs ev)
         {
+            if (!Round.IsStarted) return;
             if (ev.Player is null) return;
             var stats = GetStat<DoorStats>();
             if (ev.Door.IsOpen)
