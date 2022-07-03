@@ -4,6 +4,8 @@ using System.ComponentModel;
 
 using ServerEvents = Exiled.Events.Handlers.Server;
 using PlayerEvents = Exiled.Events.Handlers.Player;
+using Scp914Events = Exiled.Events.Handlers.Scp914;
+using WarheadEvents = Exiled.Events.Handlers.Warhead;
 
 namespace RoundReports
 {
@@ -44,8 +46,9 @@ namespace RoundReports
             PlayerEvents.InteractingScp330 += Handlers.OnInteractingScp330;
             PlayerEvents.Escaping += Handlers.OnEscaping;
 
-            Exiled.Events.Handlers.Scp914.Activating += Handlers.OnActivatingScp914;
-            // add other 914 events
+            Scp914Events.Activating += Handlers.OnActivatingScp914;
+            Scp914Events.UpgradingItem += Handlers.On914UpgradingItem;
+            Scp914Events.UpgradingInventoryItem += Handlers.On914UpgradingInventoryItem;
 
             base.OnEnabled();
         }

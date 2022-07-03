@@ -22,7 +22,7 @@ namespace RoundReports
         private string _webhook;
         public bool HasSent { get; private set; } = false;
         public LeadingTeam LeadingTeam { get; set; }
-        public List<string> Remarks { get; set; }
+        private List<string> Remarks { get; set; }
         public const string DoNotTrackText = "[DO NOT TRACK USER]";
 
         public Reporter(string webhookUrl)
@@ -50,6 +50,11 @@ namespace RoundReports
             ListPool<IReportStat>.Shared.Return(Stats);
             ListPool<string>.Shared.Return(Remarks);
             NameStore.Clear();
+        }
+
+        public void AddRemark(string remark)
+        {
+            Remarks.Add($"[{DateTime.UtcNow.ToString("HH:mm:ss")}] {remark}");
         }
 
         public PasteEntry BuildReport()

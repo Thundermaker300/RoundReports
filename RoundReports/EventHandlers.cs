@@ -9,6 +9,10 @@ using System.Text;
 using System.Threading.Tasks;
 using NorthwoodLib.Pools;
 using Exiled.API.Enums;
+using Exiled.API.Extensions;
+using Scp914;
+
+using Scp914Object = Exiled.API.Features.Scp914;
 
 namespace RoundReports
 {
@@ -16,6 +20,7 @@ namespace RoundReports
     {
         public List<IReportStat> Holding { get; set; }
         public bool FirstEscape { get; set; } = false;
+        public bool FirstUpgrade { get; set; } = false;
 
         public void Hold<T>(T stat)
             where T: class, IReportStat
@@ -45,6 +50,7 @@ namespace RoundReports
         public void OnWaitingForPlayers()
         {
             FirstEscape = false;
+            FirstUpgrade = false;
             Holding = ListPool<IReportStat>.Shared.Rent();
             MainPlugin.Reporter = new Reporter(MainPlugin.Singleton.Config.DiscordWebhook);
         }
@@ -335,19 +341,66 @@ namespace RoundReports
             if (!FirstEscape && MainPlugin.Reporter is not null)
             {
                 FirstEscape = true;
-                MainPlugin.Reporter.Remarks.Add($"{Reporter.GetDisplay(ev.Player)} [{ev.Player.Role}] was the first to escape!");
+                MainPlugin.Reporter.AddRemark($"{Reporter.GetDisplay(ev.Player)} [{ev.Player.Role}] was the first to escape ({Round.ElapsedTime.Minutes}m{Round.ElapsedTime.Seconds}s)!");
             }
         }
 
         public void OnActivatingScp914(ActivatingEventArgs ev)
         {
+            if (!ev.IsAllowed || !Round.IsStarted) return;
             var stats = GetStat<Scp914Stats>();
-            if (stats.FirstActivation == DateTime.MinValue)
+            if (stats.FirstActivation == DateTime.MinValue && ev.Player is not null)
             {
                 stats.FirstActivation = DateTime.Now;
+                stats.FirstActivator = ev.Player;
             }
             stats.TotalActivations++;
+            if (!stats.Activations.ContainsKey(Scp914Object.KnobStatus))
+            {
+                stats.Activations.Add(Scp914Object.KnobStatus, 1);
+            }
+            else
+            {
+                stats.Activations[Scp914Object.KnobStatus]++;
+            }
             Hold(stats);
+        }
+
+        private void UpgradeItemLog(ItemType type, Scp914KnobSetting mode)
+        {
+            var stats = GetStat<Scp914Stats>();
+            stats.TotalItemUpgrades++;
+            if (!FirstUpgrade)
+            {
+                FirstUpgrade = true;
+                MainPlugin.Reporter.AddRemark($"The first item to be upgraded in SCP-914 was a {type} on {mode}.");
+            }
+            if (type.IsKeycard())
+                stats.KeycardUpgrades++;
+            else if (type.IsWeapon(false))
+                stats.FirearmUpgrades++;
+
+            if (!stats.Upgrades.ContainsKey(type))
+            {
+                stats.Upgrades.Add(type, 1);
+            }
+            else
+            {
+                stats.Upgrades[type]++;
+            }
+            Hold(stats);
+        }
+
+        public void On914UpgradingItem(UpgradingItemEventArgs ev)
+        {
+            if (!ev.IsAllowed || !Round.IsStarted) return;
+            UpgradeItemLog(ev.Item.Type, ev.KnobSetting);
+        }
+
+        public void On914UpgradingInventoryItem(UpgradingInventoryItemEventArgs ev)
+        {
+            if (!ev.IsAllowed || !Round.IsStarted) return;
+            UpgradeItemLog(ev.Item.Type, ev.KnobSetting);
         }
     }
 }
