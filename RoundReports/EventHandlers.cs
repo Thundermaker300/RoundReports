@@ -89,11 +89,11 @@ namespace RoundReports
                 {
                     if (player.DoNotTrack)
                     {
-                        stats.Players.Add($"{Reporter.DoNotTrackText} [{player.Role}]");
+                        stats.Players.Add($"{Reporter.DoNotTrackText} [{player.Role.Type}]");
                     }
                     else
                     {
-                        stats.Players.Add($"{player.Nickname} [{player.Role}]");
+                        stats.Players.Add($"{player.Nickname} [{player.Role.Type}]");
                     }
                 }
                 Hold(stats);
