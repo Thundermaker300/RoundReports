@@ -341,7 +341,7 @@ namespace RoundReports
             if (!FirstEscape && MainPlugin.Reporter is not null)
             {
                 FirstEscape = true;
-                MainPlugin.Reporter.AddRemark($"{Reporter.GetDisplay(ev.Player)} [{ev.Player.Role}] was the first to escape ({Round.ElapsedTime.Minutes}m{Round.ElapsedTime.Seconds}s)!");
+                MainPlugin.Reporter.AddRemark($"{Reporter.GetDisplay(ev.Player)} [{ev.Player.Role.Type}] was the first to escape ({Round.ElapsedTime.Minutes}m{Round.ElapsedTime.Seconds}s)!");
             }
         }
 
