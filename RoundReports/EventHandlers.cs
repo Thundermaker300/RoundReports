@@ -318,6 +318,7 @@ namespace RoundReports
             if (stats.FirstUse == DateTime.MinValue)
             {
                 stats.FirstUse = DateTime.Now;
+                stats.FirstUser = ev.Player;
             }
             stats.TotalCandiesTaken++;
             if (!stats.CandiesByPlayer.ContainsKey(ev.Player))

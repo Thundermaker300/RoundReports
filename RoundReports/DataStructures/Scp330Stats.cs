@@ -15,6 +15,7 @@ namespace RoundReports
         public string Title => "SCP-330 Stats";
         public int Order => 75;
         public DateTime FirstUse { get; set; } = DateTime.MinValue;
+        public Player FirstUser { get; set; }
         public int TotalCandiesTaken { get; set; }
         public int SeveredHands { get; set; }
         public Dictionary<CandyKindID, int> CandiesTaken { get; set; } = new(0);
