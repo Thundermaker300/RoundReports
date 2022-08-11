@@ -151,6 +151,7 @@ namespace RoundReports
         {
             var key = MainPlugin.Singleton.Config.PasteKey;
             PasteEntry data = BuildReport();
+            // UnityWebRequest.Post bug moment
             var pasteWWW = UnityWebRequest.Put("https://api.paste.ee/v1/pastes", JsonConvert.SerializeObject(data));
             pasteWWW.method = "POST";
             pasteWWW.SetRequestHeader("Content-Type", "application/json");
