@@ -52,6 +52,12 @@ namespace RoundReports
             NameStore.Clear();
         }
 
+        public void Kill()
+        {
+            ReturnLists();
+            MainPlugin.Reporter = null;
+        }
+
         public void AddRemark(string remark)
         {
             Remarks.Add($"[{DateTime.UtcNow.ToString("HH:mm:ss")}] {remark}");
@@ -131,7 +137,7 @@ namespace RoundReports
             }
 
             // Conclude
-            ReturnLists();
+            Kill();
             return entry;
         }
 
@@ -168,7 +174,8 @@ namespace RoundReports
                 }
                 else
                 {
-                    Log.Info($"Report uploaded successfully! Access it here: {response.link}");
+                    if (MainPlugin.Singleton.Config.SendInConsole)
+                        Log.Info($"Report uploaded successfully! Access it here: {response.link}");
                     if (!string.IsNullOrEmpty(MainPlugin.Singleton.Config.DiscordWebhook))
                     {
                         DiscordHook hookData = new()
