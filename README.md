@@ -4,7 +4,7 @@
 # RoundReports
  An SCP:SL Exiled plugin which generates reports at the end of each round, and shares them in your Discord server.  
   
- This plugin uses [paste.ee](https://paste.ee/) for hosting reports. This service is provided entirely for free.
+ This plugin uses [paste.ee](https://paste.ee/) for hosting reports. This service is provided entirely for free. Reports automatically expire after 30 days; however, they can be saved with a simple tool like the [Wayback Machine](https://web.archive.org/).
 
  ## Commands
  ### pausereport
