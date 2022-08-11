@@ -12,5 +12,5 @@
  Disables reporting for the duration of the round. Automatically unpauses at the start of the next round.
 
  ### addremark / remark
- Permission: rr.remark
+ Permission: rr.remark  
  Adds a remark to the report. Can be used to specify event rounds & etc.
