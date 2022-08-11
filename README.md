@@ -9,7 +9,7 @@
  ## Commands
  ### pausereport
  Permission: rr.pause  
- Disables reporting for the duration of the round.
+ Disables reporting for the duration of the round. Automatically unpauses at the start of the next round.
 
  ### addremark / remark
  Permission: rr.remark
