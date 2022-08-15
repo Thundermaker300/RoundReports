@@ -4,6 +4,7 @@ using System.ComponentModel;
 
 using ServerEvents = Exiled.Events.Handlers.Server;
 using PlayerEvents = Exiled.Events.Handlers.Player;
+using Scp330Events = Exiled.Events.Handlers.Scp330;
 using Scp914Events = Exiled.Events.Handlers.Scp914;
 using WarheadEvents = Exiled.Events.Handlers.Warhead;
 using System;
@@ -55,8 +56,8 @@ namespace RoundReports
             PlayerEvents.Died += Handlers.OnDied;
             PlayerEvents.UsedItem += Handlers.OnUsedItem;
             PlayerEvents.InteractingDoor += Handlers.OnInteractingDoor;
-            PlayerEvents.InteractingScp330 += Handlers.OnInteractingScp330;
             PlayerEvents.Escaping += Handlers.OnEscaping;
+            Scp330Events.InteractingScp330 += Handlers.OnInteractingScp330;
 
             Scp914Events.Activating += Handlers.OnActivatingScp914;
             Scp914Events.UpgradingItem += Handlers.On914UpgradingItem;
@@ -67,8 +68,26 @@ namespace RoundReports
 
         public override void OnDisabled()
         {
+            // Handle reporter
             ServerEvents.WaitingForPlayers -= Handlers.OnWaitingForPlayers;
             ServerEvents.RestartingRound -= Handlers.OnRestarting;
+
+            // Server Events
+            ServerEvents.RoundStarted -= Handlers.OnRoundStarted;
+            ServerEvents.RoundEnded -= Handlers.OnRoundEnded;
+
+            // Player Events
+            PlayerEvents.Left -= Handlers.OnLeft;
+            PlayerEvents.Hurting -= Handlers.OnHurting;
+            PlayerEvents.Died -= Handlers.OnDied;
+            PlayerEvents.UsedItem -= Handlers.OnUsedItem;
+            PlayerEvents.InteractingDoor -= Handlers.OnInteractingDoor;
+            PlayerEvents.Escaping -= Handlers.OnEscaping;
+            Scp330Events.InteractingScp330 -= Handlers.OnInteractingScp330;
+
+            Scp914Events.Activating -= Handlers.OnActivatingScp914;
+            Scp914Events.UpgradingItem -= Handlers.On914UpgradingItem;
+            Scp914Events.UpgradingInventoryItem -= Handlers.On914UpgradingInventoryItem;
 
             if (Reporter is not null)
                 Reporter.Kill();
