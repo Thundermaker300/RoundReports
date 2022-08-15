@@ -1,4 +1,5 @@
 ﻿using CommandSystem;
+using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
 using RemoteAdmin;
 using System;
@@ -19,6 +20,11 @@ namespace RoundReports.Commands
             if (!sender.CheckPermission("rr.pause"))
             {
                 response = "Missing permission: rr.pause";
+                return false;
+            }
+            if (Round.IsEnded)
+            {
+                response = "This command is unavailable after the end of the round.";
                 return false;
             }
             if (MainPlugin.Reporter is null)
