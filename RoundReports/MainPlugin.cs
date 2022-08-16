@@ -63,6 +63,11 @@ namespace RoundReports
             Scp914Events.UpgradingItem += Handlers.On914UpgradingItem;
             Scp914Events.UpgradingInventoryItem += Handlers.On914UpgradingInventoryItem;
 
+            // Warhead
+            PlayerEvents.ActivatingWarheadPanel += Handlers.OnActivatingWarheadPanel;
+            WarheadEvents.Starting += Handlers.OnWarheadStarting;
+            WarheadEvents.Detonated += Handlers.OnWarheadDetonated;
+
             base.OnEnabled();
         }
 
@@ -88,6 +93,11 @@ namespace RoundReports
             Scp914Events.Activating -= Handlers.OnActivatingScp914;
             Scp914Events.UpgradingItem -= Handlers.On914UpgradingItem;
             Scp914Events.UpgradingInventoryItem -= Handlers.On914UpgradingInventoryItem;
+
+            // Warhead
+            PlayerEvents.ActivatingWarheadPanel -= Handlers.OnActivatingWarheadPanel;
+            WarheadEvents.Starting -= Handlers.OnWarheadStarting;
+            WarheadEvents.Detonated -= Handlers.OnWarheadDetonated;
 
             if (Reporter is not null)
                 Reporter.Kill();
