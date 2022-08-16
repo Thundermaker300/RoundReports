@@ -24,6 +24,7 @@ namespace RoundReports
         [Description("MTF Kills")]
         public int MTFKills { get; set; }
         public int ChaosKills { get; set; }
+        [HideIfDefault]
         public int SerpentsHandKills { get; set; }
         public int TutorialKills { get; set; }
         public List<string> SurvivingPlayers { get; set; }
