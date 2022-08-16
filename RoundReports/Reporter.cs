@@ -114,6 +114,11 @@ namespace RoundReports
                     foreach (PropertyInfo pinfo in type.GetProperties())
                     {
                         if (pinfo.Name is "Title" or "Order") continue;
+                        var hideAttr = pinfo.GetCustomAttribute<HideIfDefaultAttribute>();
+                        if (hideAttr is not null && pinfo.GetValue(stat) == default)
+                        {
+                            continue;
+                        }
                         var attr = pinfo.GetCustomAttribute<DescriptionAttribute>();
                         if (attr is null)
                         {

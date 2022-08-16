@@ -233,6 +233,9 @@ namespace RoundReports
                     case Team.CHI:
                         stats.ChaosKills++;
                         break;
+                    case Team.TUT when ev.Killer.SessionVariables.ContainsKey("IsSH"):
+                        stats.SerpentsHandKills++;
+                        break;
                     case Team.TUT:
                         stats.TutorialKills++;
                         break;
