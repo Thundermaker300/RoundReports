@@ -60,7 +60,7 @@ namespace RoundReports
 
         public void AddRemark(string remark)
         {
-            Remarks.Add($"[{DateTime.UtcNow.ToString("HH:mm:ss")}] {remark}");
+            Remarks.Add($"[{DateTime.Now.ToString("HH:mm:ss")}] {remark}");
         }
 
         public PasteEntry BuildReport()
