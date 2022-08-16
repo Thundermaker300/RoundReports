@@ -21,6 +21,7 @@ namespace RoundReports
         public List<IReportStat> Holding { get; set; }
         public bool FirstEscape { get; set; } = false;
         public bool FirstUpgrade { get; set; } = false;
+        public bool FirstKill { get; set; } = false;
 
         public void Hold<T>(T stat)
             where T: class, IReportStat
@@ -51,6 +52,7 @@ namespace RoundReports
         {
             FirstEscape = false;
             FirstUpgrade = false;
+            FirstKill = false;
             Holding = ListPool<IReportStat>.Shared.Rent();
             MainPlugin.Reporter = new Reporter(MainPlugin.Singleton.Config.DiscordWebhook);
         }
@@ -219,6 +221,12 @@ namespace RoundReports
                     case Team.TUT:
                         stats.TutorialKills++;
                         break;
+                }
+                // First kill check
+                if (!FirstKill)
+                {
+                    MainPlugin.Reporter.AddRemark($"{(ev.Killer.DoNotTrack ? Reporter.DoNotTrackText : ev.Killer.Nickname)} [{ev.Killer.Role}] killed first! They killed {(ev.Target.DoNotTrack ? Reporter.DoNotTrackText : ev.Target.Nickname)} [{ev.TargetOldRole}]");
+                    FirstKill = true;
                 }
             }
             // Kill by type
