@@ -30,13 +30,6 @@ namespace RoundReports
             Holding.Add(stat);
         }
 
-        public bool TryGetStat<T>(out T value)
-            where T: class, IReportStat
-        {
-            value = Holding.FirstOrDefault(r => r.GetType() == typeof(T)) as T;
-            return value != null;
-        }
-
         public T GetStat<T>()
             where T: class, IReportStat, new()
         {
@@ -247,10 +240,7 @@ namespace RoundReports
             if (!Round.IsStarted) return;
             if (ev.Item.IsScp)
             {
-                if (!TryGetStat<SCPItemStats>(out SCPItemStats stats))
-                {
-                    stats = new();
-                }
+                var stats = GetStat<SCPItemStats>();
                 switch (ev.Item.Type)
                 {
                     case ItemType.SCP207:
@@ -267,10 +257,7 @@ namespace RoundReports
             }
             else
             {
-                if (!TryGetStat<MedicalStats>(out MedicalStats stats))
-                {
-                    stats = new();
-                }
+                var stats = GetStat<MedicalStats>();
                 switch (ev.Item.Type)
                 {
                     case ItemType.Painkillers:
