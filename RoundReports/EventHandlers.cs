@@ -188,7 +188,7 @@ namespace RoundReports
             if (ev.Killer is not null)
             {
                 // Kill logs
-                killStats.PlayerKills.Insert(0, $"[{DateTime.Now.ToString("hh:mm:ss tt")}] {(ev.Killer.DoNotTrack ? Reporter.DoNotTrackText : ev.Killer.Nickname)} killed {(ev.Target.DoNotTrack ? Reporter.DoNotTrackText : ev.Target.Nickname)}");
+                killStats.PlayerKills.Insert(0, $"[{DateTime.Now.ToString("hh:mm:ss tt")}] {(ev.Killer.DoNotTrack ? Reporter.DoNotTrackText : ev.Killer.Nickname)} [{ev.Killer.Role}] killed {(ev.Target.DoNotTrack ? Reporter.DoNotTrackText : ev.Target.Nickname)} [{ev.TargetOldRole}]");
                 // Kill by player
                 if (!killStats.KillsByPlayer.ContainsKey(ev.Killer))
                 {
