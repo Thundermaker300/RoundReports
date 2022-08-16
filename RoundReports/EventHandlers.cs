@@ -331,6 +331,7 @@ namespace RoundReports
                 stats.FirstUse = DateTime.Now;
                 stats.FirstUser = ev.Player;
             }
+
             stats.TotalCandiesTaken++;
             if (!stats.CandiesByPlayer.ContainsKey(ev.Player))
             {
@@ -340,9 +341,21 @@ namespace RoundReports
             {
                 stats.CandiesByPlayer[ev.Player]++;
             }
+
+            // Hands
             if (ev.ShouldSever)
             {
                 stats.SeveredHands++;
+            }
+
+            // Candies Taken
+            if (!stats.CandiesTaken.ContainsKey(ev.Candy))
+            {
+                stats.CandiesTaken.Add(ev.Candy, 1);
+            }
+            else
+            {
+                stats.CandiesTaken[ev.Candy]++;
             }
             Hold(stats);
         }
