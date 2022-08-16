@@ -438,8 +438,11 @@ namespace RoundReports
         {
             if (!Round.IsStarted) return;
             var stats = GetStat<WarheadStats>();
-            stats.Detonated = true;
-            stats.DetonationTime = DateTime.Now;
+            if (!stats.Detonated)
+            {
+                stats.Detonated = true;
+                stats.DetonationTime = DateTime.Now;
+            }
             Hold(stats);
         }
     }
