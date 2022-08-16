@@ -414,5 +414,33 @@ namespace RoundReports
             if (!ev.IsAllowed || !Round.IsStarted) return;
             UpgradeItemLog(ev.Item.Type, ev.KnobSetting);
         }
+
+        public void OnActivatingWarheadPanel(ActivatingWarheadPanelEventArgs ev)
+        {
+            if (!ev.IsAllowed || !Round.IsStarted) return;
+            var stats = GetStat<WarheadStats>();
+            stats.ButtonUnlocked = true;
+            if (stats.ButtonUnlocker == null)
+                stats.ButtonUnlocker = ev.Player;
+            Hold(stats);
+        }
+
+        public void OnWarheadStarting(StartingEventArgs ev)
+        {
+            if (!ev.IsAllowed || !Round.IsStarted) return;
+            var stats = GetStat<WarheadStats>();
+            if (stats.FirstActivator == null)
+                stats.FirstActivator = ev.Player;
+            Hold(stats);
+        }
+
+        public void OnWarheadDetonated()
+        {
+            if (!Round.IsStarted) return;
+            var stats = GetStat<WarheadStats>();
+            stats.Detonated = true;
+            stats.DetonationTime = DateTime.Now;
+            Hold(stats);
+        }
     }
 }

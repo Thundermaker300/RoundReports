@@ -253,6 +253,8 @@ namespace RoundReports
         {
             if (val is null)
                 return "No Data";
+            if (val is bool b)
+                return b == true ? "Yes" : "No";
             if (val is Player plr)
             {
                 if (!plr.IsConnected)
