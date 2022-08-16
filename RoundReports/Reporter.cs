@@ -196,7 +196,14 @@ namespace RoundReports
                                         LeadingTeam.Draw => 10197915,
                                         _ => 10197915,
                                     },
-                                    Description = response.link,
+                                    Description = LeadingTeam switch
+                                    {
+                                        LeadingTeam.Anomalies => "SCPs Win",
+                                        LeadingTeam.ChaosInsurgency => "Insurgency Win",
+                                        LeadingTeam.FacilityForces => "Mobile Task Force Win",
+                                        LeadingTeam.Draw => "Stalemate",
+                                        _ => "Unknown"
+                                    } + "\n" + response.link,
                                     Fields = new()
                                     {
                                         new()
