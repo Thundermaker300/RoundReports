@@ -216,6 +216,9 @@ namespace RoundReports
                     case Team.CHI:
                         stats.ChaosKills++;
                         break;
+                    case Team.TUT:
+                        stats.TutorialKills++;
+                        break;
                 }
             }
             // Kill by type
