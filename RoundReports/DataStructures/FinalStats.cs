@@ -25,5 +25,6 @@ namespace RoundReports
         public int MTFKills { get; set; }
         public int ChaosKills { get; set; }
         public int TutorialKills { get; set; }
+        public List<string> SurvivingPlayers { get; set; }
     }
 }

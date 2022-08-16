@@ -53,7 +53,7 @@ namespace RoundReports
             // Player Events
             PlayerEvents.Left += Handlers.OnLeft;
             PlayerEvents.Hurting += Handlers.OnHurting;
-            PlayerEvents.Died += Handlers.OnDied;
+            PlayerEvents.Dying += Handlers.OnDying;
             PlayerEvents.UsedItem += Handlers.OnUsedItem;
             PlayerEvents.InteractingDoor += Handlers.OnInteractingDoor;
             PlayerEvents.Escaping += Handlers.OnEscaping;
@@ -84,7 +84,7 @@ namespace RoundReports
             // Player Events
             PlayerEvents.Left -= Handlers.OnLeft;
             PlayerEvents.Hurting -= Handlers.OnHurting;
-            PlayerEvents.Died -= Handlers.OnDied;
+            PlayerEvents.Dying -= Handlers.OnDying;
             PlayerEvents.UsedItem -= Handlers.OnUsedItem;
             PlayerEvents.InteractingDoor -= Handlers.OnInteractingDoor;
             PlayerEvents.Escaping -= Handlers.OnEscaping;

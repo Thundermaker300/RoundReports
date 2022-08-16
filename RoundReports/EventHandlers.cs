@@ -120,12 +120,23 @@ namespace RoundReports
                 LeadingTeam.Draw => "Stalemate",
                 _ => "Unknown"
             };
+            stats.RoundTime = Round.ElapsedTime;
+            foreach (var player in Player.Get(plr => plr.IsAlive))
+            {
+                string role = player.Role.Type.ToString();
+                if (player.SessionVariables.ContainsKey("IsSH"))
+                {
+                    role = "SerpentsHand";
+                }
+                stats.SurvivingPlayers.Add($"{(player.DoNotTrack ? Reporter.DoNotTrackText : player.Nickname)} ({role})");
+            }
+            Hold(stats);
+
+            // Send stats
             if (MainPlugin.Reporter is not null)
             {
                 MainPlugin.Reporter.LeadingTeam = ev.LeadingTeam;
             }
-            stats.RoundTime = Round.ElapsedTime;
-            Hold(stats);
             SendData();
         }
 
@@ -174,16 +185,27 @@ namespace RoundReports
             Hold(stats);
         }
 
-        public void OnDied(DiedEventArgs ev)
+        public void OnDying(DyingEventArgs ev)
         {
-            if (!Round.IsStarted) return;
+            if (!Round.IsStarted || !ev.IsAllowed) return;
             var stats = GetStat<FinalStats>();
             var killStats = GetStat<OrganizedKillsStats>();
             stats.TotalDeaths++;
             if (ev.Killer is not null)
             {
                 // Kill logs
-                killStats.PlayerKills.Insert(0, $"[{DateTime.Now.ToString("hh:mm:ss tt")}] {(ev.Killer.DoNotTrack ? Reporter.DoNotTrackText : ev.Killer.Nickname)} [{ev.Killer.Role}] killed {(ev.Target.DoNotTrack ? Reporter.DoNotTrackText : ev.Target.Nickname)} [{ev.TargetOldRole}]");
+                string killerRole = ev.Killer.Role.Type.ToString();
+                if (ev.Killer.SessionVariables.ContainsKey("IsSH"))
+                {
+                    killerRole = "SerpentsHand";
+                }
+
+                string dyingRole = ev.Target.Role.Type.ToString();
+                if (ev.Target.SessionVariables.ContainsKey("IsSH"))
+                {
+                    dyingRole = "SerpentsHand";
+                }
+                killStats.PlayerKills.Insert(0, $"[{DateTime.Now.ToString("hh:mm:ss tt")}] {(ev.Killer.DoNotTrack ? Reporter.DoNotTrackText : ev.Killer.Nickname)} [{killerRole}] killed {(ev.Target.DoNotTrack ? Reporter.DoNotTrackText : ev.Target.Nickname)} [{dyingRole}]");
                 // Kill by player
                 if (!killStats.KillsByPlayer.ContainsKey(ev.Killer))
                 {
@@ -218,7 +240,7 @@ namespace RoundReports
                 // First kill check
                 if (!FirstKill)
                 {
-                    MainPlugin.Reporter.AddRemark($"{(ev.Killer.DoNotTrack ? Reporter.DoNotTrackText : ev.Killer.Nickname)} [{ev.Killer.Role}] killed first! They killed {(ev.Target.DoNotTrack ? Reporter.DoNotTrackText : ev.Target.Nickname)} [{ev.TargetOldRole}]");
+                    MainPlugin.Reporter.AddRemark($"{(ev.Killer.DoNotTrack ? Reporter.DoNotTrackText : ev.Killer.Nickname)} [{killerRole}] killed first! They killed {(ev.Target.DoNotTrack ? Reporter.DoNotTrackText : ev.Target.Nickname)} [{dyingRole}]");
                     FirstKill = true;
                 }
             }
