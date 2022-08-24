@@ -219,29 +219,36 @@ namespace RoundReports
                     killStats.KillsByPlayer[ev.Killer]++;
                 }
                 stats.TotalKills++;
-                switch (ev.Killer.Role.Team)
+                if (GetRole(ev.Killer) == "UIU")
                 {
-                    case Team.SCP:
-                        stats.MTFKills++;
-                        break;
-                    case Team.CDP:
-                        stats.DClassKills++;
-                        break;
-                    case Team.RSC:
-                        stats.ScientistKills++;
-                        break;
-                    case Team.MTF:
-                        stats.MTFKills++;
-                        break;
-                    case Team.CHI:
-                        stats.ChaosKills++;
-                        break;
-                    case Team.TUT when GetRole(ev.Killer) == "SerpentsHand":
-                        stats.SerpentsHandKills++;
-                        break;
-                    case Team.TUT:
-                        stats.TutorialKills++;
-                        break;
+                    stats.UIUKills++;
+                }
+                else
+                {
+                    switch (ev.Killer.Role.Team)
+                    {
+                        case Team.SCP:
+                            stats.MTFKills++;
+                            break;
+                        case Team.CDP:
+                            stats.DClassKills++;
+                            break;
+                        case Team.RSC:
+                            stats.ScientistKills++;
+                            break;
+                        case Team.MTF:
+                            stats.MTFKills++;
+                            break;
+                        case Team.CHI:
+                            stats.ChaosKills++;
+                            break;
+                        case Team.TUT when GetRole(ev.Killer) == "SerpentsHand":
+                            stats.SerpentsHandKills++;
+                            break;
+                        case Team.TUT:
+                            stats.TutorialKills++;
+                            break;
+                    }
                 }
                 // First kill check
                 if (!FirstKill)

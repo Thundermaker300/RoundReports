@@ -26,6 +26,8 @@ namespace RoundReports
         public int ChaosKills { get; set; }
         [HideIfDefault]
         public int SerpentsHandKills { get; set; }
+        [HideIfDefault, Description("UIU Kills")]
+        public int UIUKills { get; set; }
         [HideIfDefault]
         public int TutorialKills { get; set; }
         public List<string> SurvivingPlayers { get; set; }
