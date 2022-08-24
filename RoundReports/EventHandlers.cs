@@ -47,6 +47,10 @@ namespace RoundReports
             {
                 return "SerpentsHand";
             }
+            else if (player.SessionVariables.ContainsKey("IsUIU"))
+            {
+                return "UIU";
+            }
             return player.Role.Type.ToString();
         }
 
