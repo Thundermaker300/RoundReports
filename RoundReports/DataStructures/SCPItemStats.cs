@@ -11,6 +11,8 @@ namespace RoundReports
     {
         public string Title => "SCP Item Statistics";
         public int Order => 6;
+        [Description("SCP-018's Thrown")]
+        public int Scp018Thrown { get; set; }
         [Description("SCP-207's Drank")]
         public int Scp207Drank { get; set; }
         [Description("SCP-268 Uses")]

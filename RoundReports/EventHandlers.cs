@@ -271,6 +271,9 @@ namespace RoundReports
                 var stats = GetStat<SCPItemStats>();
                 switch (ev.Item.Type)
                 {
+                    case ItemType.SCP018:
+                        stats.Scp018Thrown++;
+                        break;
                     case ItemType.SCP207:
                         stats.Scp207Drank++;
                         break;
