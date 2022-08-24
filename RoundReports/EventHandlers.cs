@@ -142,9 +142,12 @@ namespace RoundReports
 
         public void OnLeft(LeftEventArgs ev)
         {
-            if (!Reporter.NameStore.ContainsKey(ev.Player) && !ev.Player.DoNotTrack)
+            if (!Reporter.NameStore.ContainsKey(ev.Player))
             {
-                Reporter.NameStore.Add(ev.Player, ev.Player.Nickname);
+                if (!ev.Player.DoNotTrack)
+                    Reporter.NameStore.Add(ev.Player, ev.Player.Nickname);
+                else
+                    Reporter.NameStore.Add(ev.Player, Reporter.DoNotTrackText);
             }
         }
 
