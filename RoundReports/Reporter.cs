@@ -33,6 +33,11 @@ namespace RoundReports
             NameStore = new(0);
         }
 
+        public static object GetDefault(Type t)
+        {
+            return t.IsValueType ? Activator.CreateInstance(t) : null;
+        }
+
         public T GetStat<T>()
             where T: class, IReportStat
         {
@@ -115,7 +120,8 @@ namespace RoundReports
                     {
                         if (pinfo.Name is "Title" or "Order") continue;
                         var hideAttr = pinfo.GetCustomAttribute<HideIfDefaultAttribute>();
-                        if (hideAttr is not null && pinfo.GetValue(stat) == default)
+                        var propertyValue = pinfo.GetValue(stat);
+                        if (hideAttr is not null && object.Equals(propertyValue, GetDefault(pinfo.PropertyType)))
                         {
                             continue;
                         }

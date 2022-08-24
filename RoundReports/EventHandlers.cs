@@ -41,6 +41,15 @@ namespace RoundReports
             return value;
         }
 
+        public string GetRole(Player player)
+        {
+            if (player.SessionVariables.ContainsKey("IsSH"))
+            {
+                return "SerpentsHand";
+            }
+            return player.Role.Type.ToString();
+        }
+
         public void OnWaitingForPlayers()
         {
             FirstEscape = false;
@@ -123,11 +132,7 @@ namespace RoundReports
             stats.RoundTime = Round.ElapsedTime;
             foreach (var player in Player.Get(plr => plr.IsAlive))
             {
-                string role = player.Role.Type.ToString();
-                if (player.SessionVariables.ContainsKey("IsSH"))
-                {
-                    role = "SerpentsHand";
-                }
+                string role = GetRole(player);
                 stats.SurvivingPlayers.Add($"{(player.DoNotTrack ? Reporter.DoNotTrackText : player.Nickname)} ({role})");
             }
             Hold(stats);
@@ -197,17 +202,8 @@ namespace RoundReports
             if (ev.Killer is not null)
             {
                 // Kill logs
-                string killerRole = ev.Killer.Role.Type.ToString();
-                if (ev.Killer.SessionVariables.ContainsKey("IsSH"))
-                {
-                    killerRole = "SerpentsHand";
-                }
-
-                string dyingRole = ev.Target.Role.Type.ToString();
-                if (ev.Target.SessionVariables.ContainsKey("IsSH"))
-                {
-                    dyingRole = "SerpentsHand";
-                }
+                string killerRole = GetRole(ev.Killer);
+                string dyingRole = GetRole(ev.Target);
                 killStats.PlayerKills.Insert(0, $"[{DateTime.Now.ToString("hh:mm:ss tt")}] {(ev.Killer.DoNotTrack ? Reporter.DoNotTrackText : ev.Killer.Nickname)} [{killerRole}] killed {(ev.Target.DoNotTrack ? Reporter.DoNotTrackText : ev.Target.Nickname)} [{dyingRole}]");
                 // Kill by player
                 if (!killStats.KillsByPlayer.ContainsKey(ev.Killer))
@@ -236,7 +232,7 @@ namespace RoundReports
                     case Team.CHI:
                         stats.ChaosKills++;
                         break;
-                    case Team.TUT when ev.Killer.SessionVariables.ContainsKey("IsSH"):
+                    case Team.TUT when GetRole(ev.Killer) == "SerpentsHand":
                         stats.SerpentsHandKills++;
                         break;
                     case Team.TUT:
