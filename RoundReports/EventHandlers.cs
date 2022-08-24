@@ -153,7 +153,7 @@ namespace RoundReports
 
         public void OnHurting(HurtingEventArgs ev)
         {
-            if (!Round.IsStarted) return;
+            if (!Round.IsStarted || !ev.IsAllowed) return;
             int amount = (int)Math.Round(ev.Amount);
             if (!ev.IsAllowed) return;
             if (ev.Amount == -1 || ev.Amount > 150) amount = 150;
