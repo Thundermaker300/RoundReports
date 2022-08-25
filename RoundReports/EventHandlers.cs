@@ -253,7 +253,7 @@ namespace RoundReports
                     }
                 }
                 // First kill check
-                if (!FirstKill)
+                if (!FirstKill && MainPlugin.Reporter is not null)
                 {
                     MainPlugin.Reporter.AddRemark($"{(ev.Killer.DoNotTrack ? Reporter.DoNotTrackText : ev.Killer.Nickname)} [{killerRole}] killed first! They killed {(ev.Target.DoNotTrack ? Reporter.DoNotTrackText : ev.Target.Nickname)} [{dyingRole}]");
                     FirstKill = true;
@@ -346,10 +346,10 @@ namespace RoundReports
                     stats.PlayerDoorsOpened.Add(ev.Player, 1);
                 }
 
-                if (!FirstDoor && ev.Player is not null)
+                if (!FirstDoor && ev.Player is not null && MainPlugin.Reporter is not null)
                 {
                     FirstDoor = true;
-                    MainPlugin.Reporter?.AddRemark($"{(ev.Player.DoNotTrack ? Reporter.DoNotTrackText : ev.Player.Nickname)} [{GetRole(ev.Player)}] was the first to open a door! ({Round.ElapsedTime.Milliseconds}ms)");
+                    MainPlugin.Reporter.AddRemark($"{(ev.Player.DoNotTrack ? Reporter.DoNotTrackText : ev.Player.Nickname)} [{GetRole(ev.Player)}] was the first to open a door! ({Round.ElapsedTime.Milliseconds}ms)");
                 }
             }
             Hold(stats);
@@ -428,7 +428,7 @@ namespace RoundReports
         {
             var stats = GetStat<Scp914Stats>();
             stats.TotalItemUpgrades++;
-            if (!FirstUpgrade)
+            if (!FirstUpgrade && MainPlugin.Reporter is not null)
             {
                 FirstUpgrade = true;
                 MainPlugin.Reporter.AddRemark($"The first item to be upgraded in SCP-914 was a {type} on {mode}.");
