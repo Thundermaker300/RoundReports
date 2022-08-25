@@ -22,6 +22,7 @@ namespace RoundReports
         public bool FirstEscape { get; set; } = false;
         public bool FirstUpgrade { get; set; } = false;
         public bool FirstKill { get; set; } = false;
+        public bool FirstDoor { get; set; } = false;
 
         public void Hold<T>(T stat)
             where T: class, IReportStat
@@ -59,6 +60,7 @@ namespace RoundReports
             FirstEscape = false;
             FirstUpgrade = false;
             FirstKill = false;
+            FirstDoor = false;
             Holding = ListPool<IReportStat>.Shared.Rent();
             MainPlugin.Reporter = new Reporter(MainPlugin.Singleton.Config.DiscordWebhook);
         }
@@ -317,7 +319,7 @@ namespace RoundReports
 
         public void OnInteractingDoor(InteractingDoorEventArgs ev)
         {
-            if (!Round.IsStarted) return;
+            if (!Round.IsStarted || !ev.IsAllowed) return;
             if (ev.Player is null) return;
             var stats = GetStat<DoorStats>();
             if (ev.Door.IsOpen)
@@ -342,6 +344,12 @@ namespace RoundReports
                 else
                 {
                     stats.PlayerDoorsOpened.Add(ev.Player, 1);
+                }
+
+                if (!FirstDoor && ev.Player is not null)
+                {
+                    FirstDoor = true;
+                    MainPlugin.Reporter?.AddRemark($"{(ev.Player.DoNotTrack ? Reporter.DoNotTrackText : ev.Player.Nickname)} [{GetRole(ev.Player)}] was the first to open a door! ({Round.ElapsedTime.Milliseconds}ms)");
                 }
             }
             Hold(stats);
