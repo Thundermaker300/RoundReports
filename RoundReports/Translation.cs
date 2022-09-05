@@ -39,10 +39,8 @@ namespace RoundReports
         public string ChaosKills { get; set; } = "Chaos Kills";
         public string SerpentsHandKills { get; set; } = "Serpent's Hand Kills";
         public string UiuKills { get; set; } = "UIU Kills";
-
         public string TutorialKills { get; set; } = "Tutorial Kills";
-
-        public string SurvivingPlayers { get; set; } = "T";
+        public string SurvivingPlayers { get; set; } = "Surviving Players";
 
         // Medical Stats
         public string MedicalStatsTitle { get; set; } = "Medical Statistics";
@@ -110,7 +108,7 @@ namespace RoundReports
 
         // Remarks
         public string DoorRemark { get; set; } = "{PLAYER} [{ROLE}] was the first to open a door ({MILLISECOND}ms)!";
-        public string EscapeRemark { get; set; } = "{PLAYER} [{ROLE}] was the first to escape! ({MINUTE}m{SECOND}s)!";
+        public string EscapeRemark { get; set; } = "{PLAYER} [{ROLE}] was the first to escape ({MINUTE}m{SECOND}s)!";
         public string KillRemark { get; set; } = "{PLAYER} [{ROLE}] killed first! They killed {TARGET} [{TARGETROLE}].";
         public string UpgradeRemark { get; set; } = "The first item to be upgraded in SCP-914 was an {ITEM} on {MODE}.";
     }
