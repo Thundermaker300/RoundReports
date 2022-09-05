@@ -99,8 +99,8 @@ namespace RoundReports
 
         // SCP Item Stats
         public string ScpItemTitle { get; set; } = "SCP Item Statistics";
-        public string Scp018Thrown { get; set; } = "SCP-018's Thrown";
-        public string Scp207Drank { get; set; } = "SCP-207's Drank";
+        public string Scp018Thrown { get; set; } = "SCP-018s Thrown";
+        public string Scp207Drank { get; set; } = "SCP-207s Drank";
         public string Scp268Uses { get; set; } = "SCP-268 Uses";
         public string Scp1853Uses { get; set; } = "SCP-1853 Uses";
 
