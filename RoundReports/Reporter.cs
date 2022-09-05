@@ -199,24 +199,14 @@ namespace RoundReports
                     if (!string.IsNullOrEmpty(MainPlugin.Singleton.Config.DiscordWebhook))
                     {
                         string winText = MainPlugin.Translations.WinText;
-                        switch (LeadingTeam)
+                        winText = LeadingTeam switch
                         {
-                            case LeadingTeam.Anomalies:
-                                winText = winText.Replace("{TEAM}", MainPlugin.Translations.ScpTeam);
-                                break;
-                            case LeadingTeam.ChaosInsurgency:
-                                winText = winText.Replace("{TEAM}", MainPlugin.Translations.InsurgencyTeam);
-                                break;
-                            case LeadingTeam.FacilityForces:
-                                winText = winText.Replace("{TEAM}", MainPlugin.Translations.MtfTeam);
-                                break;
-                            case LeadingTeam.Draw:
-                                winText = MainPlugin.Translations.Stalemate;
-                                break;
-                            default:
-                                winText = winText.Replace("{TEAM}", MainPlugin.Translations.Unknown);
-                                break;
-                        }
+                            LeadingTeam.Anomalies => winText.Replace("{TEAM}", MainPlugin.Translations.ScpTeam),
+                            LeadingTeam.ChaosInsurgency => winText.Replace("{TEAM}", MainPlugin.Translations.InsurgencyTeam),
+                            LeadingTeam.FacilityForces => winText.Replace("{TEAM}", MainPlugin.Translations.MtfTeam),
+                            LeadingTeam.Draw => MainPlugin.Translations.Stalemate,
+                            _ => winText.Replace("{TEAM}", MainPlugin.Translations.Unknown),
+                        };
                         DiscordHook hookData = new()
                         {
                             Username = MainPlugin.Singleton.Translation.RoundReport,
@@ -267,7 +257,7 @@ namespace RoundReports
             }
             else
             {
-                Log.Warn($"Report failed to post! {pasteWWW.error}");
+                Log.Warn($"Report failed to post to pastee! {pasteWWW.error}");
             }
         }
 
