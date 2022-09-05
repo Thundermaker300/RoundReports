@@ -23,7 +23,7 @@ namespace RoundReports
         public bool HasSent { get; private set; } = false;
         public LeadingTeam LeadingTeam { get; set; }
         private List<string> Remarks { get; set; }
-        public const string DoNotTrackText = "[DO NOT TRACK USER]";
+        public static string DoNotTrackText => MainPlugin.Translations.DoNotTrack;
 
         public Reporter()
         {
@@ -214,7 +214,7 @@ namespace RoundReports
                                 winText = MainPlugin.Translations.Stalemate;
                                 break;
                             default:
-                                winText = "Unknown Win";
+                                winText = winText.Replace("{TEAM}", MainPlugin.Translations.Unknown);
                                 break;
                         }
                         DiscordHook hookData = new()
@@ -283,9 +283,9 @@ namespace RoundReports
         public static string GetDisplay(object val)
         {
             if (val is null)
-                return "No Data";
+                return MainPlugin.Translations.NoData;
             if (val is bool b)
-                return b == true ? "Yes" : "No";
+                return b == true ? MainPlugin.Translations.Yes : MainPlugin.Translations.No;
             if (val is Player plr)
             {
                 if (!plr.IsConnected)
@@ -296,7 +296,7 @@ namespace RoundReports
                     }
                     else
                     {
-                        return "[DC] Unknown";
+                        return $"[DC] {MainPlugin.Translations.Unknown}";
                     }
                 }
                 if (plr.DoNotTrack)
@@ -311,20 +311,20 @@ namespace RoundReports
             else if (val is DateTime dt)
             {
                 if (dt == DateTime.MinValue)
-                    return "No Data";
+                    return MainPlugin.Translations.NoData;
                 return dt.ToString("MMMM dd, yyyy hh:mm:ss tt");
             }
             else if (val is TimeSpan ts)
             {
                 if (ts == TimeSpan.Zero)
-                    return "No Data";
+                    return MainPlugin.Translations.NoData;
                 return $"{ts.Minutes}m{ts.Seconds}s";
             }
             else if (val is IDictionary dict)
             {
                 if (dict.Count == 0)
                 {
-                    return "[None]";
+                    return MainPlugin.Translations.NoData;
                 }
                 StringBuilder bldr2 = StringBuilderPool.Shared.Rent();
                 bldr2.AppendLine();
@@ -344,7 +344,7 @@ namespace RoundReports
                 foreach (var item in list) i++;
                 if (i == 0)
                 {
-                    return "[None]";
+                    return MainPlugin.Translations.NoData;
                 }
 
                 StringBuilder bldr2 = StringBuilderPool.Shared.Rent();

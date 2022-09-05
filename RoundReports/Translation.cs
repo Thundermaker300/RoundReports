@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Interfaces;
+using System.ComponentModel;
 
 namespace RoundReports
 {
@@ -8,10 +9,18 @@ namespace RoundReports
         public string RoundReport { get; set; } = "Round Report";
         public string RoundRemarks { get; set; } = "Round Remarks";
         public string NoData { get; set; } = "No Data";
+
+        [Description("User's name is replaced with this if they have Do Not Track enabled.")]
+        public string DoNotTrack { get; set; } = "[DO NOT TRACK USER]";
         public string ScpTeam { get; set; } = "SCPs";
         public string InsurgencyTeam { get; set; } = "Insurgency";
         public string MtfTeam { get; set; } = "Mobile Task Force";
         public string Stalemate { get; set; } = "Stalemate";
+        public string Yes { get; set; } = "Yes";
+        public string No { get; set; } = "No";
+
+        [Description("Generally should never show, but JUST in case.")]
+        public string Unknown { get; set; } = "Unknown";
 
         // Webhook Text
         public string PostDate { get; set; } = "Post Date";
@@ -37,8 +46,14 @@ namespace RoundReports
         public string ScientistKills { get; set; } = "Scientist Kills";
         public string MtfKills { get; set; } = "MTF Kills";
         public string ChaosKills { get; set; } = "Chaos Kills";
+
+        [Description("This text will only be visible if the Serpent's Hand plugin is also installed.")]
         public string SerpentsHandKills { get; set; } = "Serpent's Hand Kills";
+
+        [Description("This text will only be visible if the UIU plugin is also installed.")]
         public string UiuKills { get; set; } = "UIU Kills";
+
+        [Description("This text will only be visible if at least one tutorial (not Serpent's Hand or UIU) kills a player in the round.")]
         public string TutorialKills { get; set; } = "Tutorial Kills";
         public string SurvivingPlayers { get; set; } = "Surviving Players";
 

@@ -126,7 +126,7 @@ namespace RoundReports
                 LeadingTeam.ChaosInsurgency => MainPlugin.Translations.InsurgencyTeam,
                 LeadingTeam.FacilityForces => MainPlugin.Translations.MtfTeam,
                 LeadingTeam.Draw => MainPlugin.Translations.Stalemate,
-                _ => "Unknown"
+                _ => MainPlugin.Translations.Unknown
             };
             stats.RoundTime = Round.ElapsedTime;
             foreach (var player in Player.Get(plr => plr.IsAlive))
