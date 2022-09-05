@@ -97,14 +97,7 @@ namespace RoundReports
                 };
                 foreach (var player in Player.List)
                 {
-                    if (player.DoNotTrack)
-                    {
-                        stats.Players.Add($"{Reporter.DoNotTrackText} [{player.Role.Type}]");
-                    }
-                    else
-                    {
-                        stats.Players.Add($"{player.Nickname} [{player.Role.Type}]");
-                    }
+                    stats.Players.Add($"{Reporter.GetDisplay(player)} [{GetRole(player)}]");
                 }
                 Hold(stats);
             });
@@ -139,7 +132,7 @@ namespace RoundReports
             foreach (var player in Player.Get(plr => plr.IsAlive))
             {
                 string role = GetRole(player);
-                stats.SurvivingPlayers.Add($"{(player.DoNotTrack ? Reporter.DoNotTrackText : player.Nickname)} ({role})");
+                stats.SurvivingPlayers.Add($"{Reporter.GetDisplay(player)} ({role})");
             }
             Hold(stats);
 
@@ -210,7 +203,7 @@ namespace RoundReports
                 // Kill logs
                 string killerRole = GetRole(ev.Killer);
                 string dyingRole = GetRole(ev.Target);
-                killStats.PlayerKills.Insert(0, $"[{DateTime.Now.ToString("hh:mm:ss tt")}] {(ev.Killer.DoNotTrack ? Reporter.DoNotTrackText : ev.Killer.Nickname)} [{killerRole}] killed {(ev.Target.DoNotTrack ? Reporter.DoNotTrackText : ev.Target.Nickname)} [{dyingRole}]");
+                killStats.PlayerKills.Insert(0, $"[{DateTime.Now.ToString("hh:mm:ss tt")}] {Reporter.GetDisplay(ev.Killer)} [{killerRole}] killed {Reporter.GetDisplay(ev.Target)} [{dyingRole}]");
                 // Kill by player
                 if (!killStats.KillsByPlayer.ContainsKey(ev.Killer))
                 {
@@ -224,6 +217,10 @@ namespace RoundReports
                 if (GetRole(ev.Killer) == "UIU")
                 {
                     stats.UIUKills++;
+                }
+                else if (GetRole(ev.Killer) == "SerpentsHand")
+                {
+                    stats.SerpentsHandKills++;
                 }
                 else
                 {
@@ -244,9 +241,6 @@ namespace RoundReports
                         case Team.CHI:
                             stats.ChaosKills++;
                             break;
-                        case Team.TUT when GetRole(ev.Killer) == "SerpentsHand":
-                            stats.SerpentsHandKills++;
-                            break;
                         case Team.TUT:
                             stats.TutorialKills++;
                             break;
@@ -255,7 +249,12 @@ namespace RoundReports
                 // First kill check
                 if (!FirstKill && MainPlugin.Reporter is not null)
                 {
-                    MainPlugin.Reporter.AddRemark($"{(ev.Killer.DoNotTrack ? Reporter.DoNotTrackText : ev.Killer.Nickname)} [{killerRole}] killed first! They killed {(ev.Target.DoNotTrack ? Reporter.DoNotTrackText : ev.Target.Nickname)} [{dyingRole}]");
+                    string killText = MainPlugin.Translations.KillRemark
+                        .Replace("{PLAYER}", Reporter.GetDisplay(ev.Killer))
+                        .Replace("{ROLE}", GetRole(ev.Killer))
+                        .Replace("{TARGET}", Reporter.GetDisplay(ev.Target))
+                        .Replace("{TARGETROLE}", dyingRole);
+                    MainPlugin.Reporter.AddRemark(killText);
                     FirstKill = true;
                 }
             }
@@ -349,7 +348,11 @@ namespace RoundReports
                 if (!FirstDoor && ev.Player is not null && MainPlugin.Reporter is not null)
                 {
                     FirstDoor = true;
-                    MainPlugin.Reporter.AddRemark($"{(ev.Player.DoNotTrack ? Reporter.DoNotTrackText : ev.Player.Nickname)} [{GetRole(ev.Player)}] was the first to open a door! ({Round.ElapsedTime.Milliseconds}ms)");
+                    string remarkText = MainPlugin.Translations.DoorRemark
+                        .Replace("{PLAYER}", Reporter.GetDisplay(ev.Player))
+                        .Replace("{ROLE}", GetRole(ev.Player))
+                        .Replace("{MILLISECOND}", Round.ElapsedTime.Milliseconds.ToString());
+                    MainPlugin.Reporter.AddRemark(remarkText);
                 }
             }
             Hold(stats);
@@ -399,7 +402,12 @@ namespace RoundReports
             if (!FirstEscape && MainPlugin.Reporter is not null)
             {
                 FirstEscape = true;
-                MainPlugin.Reporter.AddRemark($"{Reporter.GetDisplay(ev.Player)} [{ev.Player.Role.Type}] was the first to escape ({Round.ElapsedTime.Minutes}m{Round.ElapsedTime.Seconds}s)!");
+                string escapeText = MainPlugin.Translations.EscapeRemark
+                    .Replace("{PLAYER}", Reporter.GetDisplay(ev.Player))
+                    .Replace("{ROLE}", GetRole(ev.Player))
+                    .Replace("{MINUTE}", Round.ElapsedTime.Minutes.ToString())
+                    .Replace("{SECOND}", Round.ElapsedTime.Seconds.ToString());
+                MainPlugin.Reporter.AddRemark(escapeText);
             }
         }
 
@@ -431,7 +439,10 @@ namespace RoundReports
             if (!FirstUpgrade && MainPlugin.Reporter is not null)
             {
                 FirstUpgrade = true;
-                MainPlugin.Reporter.AddRemark($"The first item to be upgraded in SCP-914 was a {type} on {mode}.");
+                string upgradeText = MainPlugin.Translations.UpgradeRemark
+                    .Replace("{ITEM}", type.ToString())
+                    .Replace("{MODE}", mode.ToString());
+                MainPlugin.Reporter.AddRemark(upgradeText);
             }
             if (type.IsKeycard())
                 stats.KeycardUpgrades++;

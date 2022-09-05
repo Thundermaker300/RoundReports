@@ -58,5 +58,60 @@ namespace RoundReports
         public string DamageByPlayer { get; set; } = "Damage By Player";
         public string DamageByType { get; set; } = "Damage By Type";
 
+        // Organized Kill Stats
+        public string OrganizedKillsTitle { get; set; } = "Kills";
+        public string KillsByPlayer { get; set; } = "Kills By Player";
+        public string KillsbyType { get; set; } = "Kills By Type";
+        public string PlayerKills { get; set; } = "Player Kills";
+
+        // SCP-330 Stats
+        public string Scp330Title { get; set; } = "SCP-330 Stats";
+        public string FirstUse { get; set; } = "First Use";
+        public string FirstUser { get; set; } = "First User";
+        public string TotalCandiesTaken { get; set; } = "Total Candies Taken";
+        public string SeveredHands { get; set; } = "Severed Hands";
+        public string CandiesTaken { get; set; } = "Candies Taken";
+        public string CandiesByPlayer { get; set; } = "Candies By Player";
+
+        // SCP-914 Stats
+        public string Scp914Title { get; set; } = "SCP-914 Stats";
+        public string FirstActivation { get; set; } = "First Activation";
+        public string FirstActivator { get; set; } = "First Activator";
+        public string TotalActivations { get; set; } = "Total Activations";
+        public string TotalItemUpgrades { get; set; } = "Total Item Upgrades";
+        public string KeycardUpgrades { get; set; } = "Keycard Upgrades";
+        public string FirearmUpgrades { get; set; } = "Firearm Upgrades";
+        public string Activations { get; set; } = "Activations";
+        public string Upgrades { get; set; } = "Upgrades";
+
+        // SCP Item Stats
+        public string ScpItemTitle { get; set; } = "SCP Item Statistics";
+        public string Scp018Thrown { get; set; } = "SCP-018's Thrown";
+        public string Scp207Drank { get; set; } = "SCP-207's Drank";
+        public string Scp268Uses { get; set; } = "SCP-268 Uses";
+        public string Scp1853Uses { get; set; } = "SCP-1853 Uses";
+
+        // Starting Stats
+        public string StartingTitle { get; set; } = "Starting Statistics";
+        public string StartTime { get; set; } = "Start Time";
+        public string PlayersAtStart { get; set; } = "Players At Start";
+        public string ClassDPersonnel { get; set; } = "Class-D Personnel";
+        public string Scps { get; set; } = "SCPs";
+        public string Scientists { get; set; } = "Scientists";
+        public string FacilityGuards { get; set; } = "Facility Guards";
+        public string Players { get; set; } = "Players";
+
+        // Warhead Stats
+        public string WarheadStatsTitle { get; set; } = "Warhead Statistics";
+        public string ButtonUnlocked { get; set; } = "Button Unlocked";
+        public string ButtonUnlocker { get; set; } = "Button Unlocker";
+        public string Detonated { get; set; } = "Detonated";
+        public string DetonationTime { get; set; } = "Detonation Time";
+
+        // Remarks
+        public string DoorRemark { get; set; } = "{PLAYER} [{ROLE}] was the first to open a door ({MILLISECOND}ms)!";
+        public string EscapeRemark { get; set; } = "{PLAYER} [{ROLE}] was the first to escape! ({MINUTE}m{SECOND}s)!";
+        public string KillRemark { get; set; } = "{PLAYER} [{ROLE}] killed first! They killed {TARGET} [{TARGETROLE}].";
+        public string UpgradeRemark { get; set; } = "The first item to be upgraded in SCP-914 was an {ITEM} on {MODE}.";
     }
 }

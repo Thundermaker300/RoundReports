@@ -115,6 +115,7 @@
     <Compile Include="Reporter.cs" />
     <Compile Include="DataStructures\SCPItemStats.cs" />
     <Compile Include="DataStructures\MedicalStats.cs" />
+    <Compile Include="Translation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

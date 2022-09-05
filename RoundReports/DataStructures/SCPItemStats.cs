@@ -9,15 +9,20 @@ namespace RoundReports
 {
     public class SCPItemStats : IReportStat
     {
+        [Translation(nameof(Translation.ScpItemTitle))]
         public string Title => "SCP Item Statistics";
         public int Order => 6;
-        [Description("SCP-018's Thrown")]
+
+        [Translation(nameof(Translation.Scp018Thrown))]
         public int Scp018Thrown { get; set; }
-        [Description("SCP-207's Drank")]
+
+        [Translation(nameof(Translation.Scp207Drank))]
         public int Scp207Drank { get; set; }
-        [Description("SCP-268 Uses")]
+
+        [Translation(nameof(Translation.Scp268Uses))]
         public int Scp268Uses { get; set; }
-        [Description("SCP-1853 Uses")]
+
+        [Translation(nameof(Translation.Scp1853Uses))]
         public int Scp1853Uses { get; set; }
     }
 }
