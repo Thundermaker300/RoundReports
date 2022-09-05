@@ -62,7 +62,7 @@ namespace RoundReports
             FirstKill = false;
             FirstDoor = false;
             Holding = ListPool<IReportStat>.Shared.Rent();
-            MainPlugin.Reporter = new Reporter(MainPlugin.Singleton.Config.DiscordWebhook);
+            MainPlugin.Reporter = new Reporter();
         }
 
         public void SendData()

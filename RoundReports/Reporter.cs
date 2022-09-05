@@ -20,15 +20,13 @@ namespace RoundReports
         private List<IReportStat> Stats { get; set; }
         public static readonly Type TranslationType = typeof(Translation);
         public static Dictionary<Player, string> NameStore { get; set; }
-        private string _webhook;
         public bool HasSent { get; private set; } = false;
         public LeadingTeam LeadingTeam { get; set; }
         private List<string> Remarks { get; set; }
         public const string DoNotTrackText = "[DO NOT TRACK USER]";
 
-        public Reporter(string webhookUrl)
+        public Reporter()
         {
-            _webhook = webhookUrl;
             Stats = ListPool<IReportStat>.Shared.Rent();
             Remarks = ListPool<string>.Shared.Rent();
             NameStore = new(0);
