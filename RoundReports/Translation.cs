@@ -8,6 +8,7 @@ namespace RoundReports
         // General Text
         public string RoundReport { get; set; } = "Round Report";
         public string RoundRemarks { get; set; } = "Round Remarks";
+        [Description("Indicates a stat that was not collected - eg. if no candy was taken, no kills, etc")]
         public string NoData { get; set; } = "No Data";
 
         [Description("User's name is replaced with this if they have Do Not Track enabled.")]
