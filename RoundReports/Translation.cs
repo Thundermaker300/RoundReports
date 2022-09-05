@@ -47,13 +47,13 @@ namespace RoundReports
         public string MtfKills { get; set; } = "MTF Kills";
         public string ChaosKills { get; set; } = "Chaos Kills";
 
-        [Description("This text will only be visible if the Serpent's Hand plugin is also installed.")]
-        public string SerpentsHandKills { get; set; } = "Serpent's Hand Kills";
+        [Description("This text will only be visible if the Serpents Hand plugin is also installed.")]
+        public string SerpentsHandKills { get; set; } = "Serpents Hand Kills";
 
         [Description("This text will only be visible if the UIU plugin is also installed.")]
         public string UiuKills { get; set; } = "UIU Kills";
 
-        [Description("This text will only be visible if at least one tutorial (not Serpent's Hand or UIU) kills a player in the round.")]
+        [Description("This text will only be visible if at least one tutorial (not Serpents Hand or UIU) kills a player in the round.")]
         public string TutorialKills { get; set; } = "Tutorial Kills";
         public string SurvivingPlayers { get; set; } = "Surviving Players";
 
