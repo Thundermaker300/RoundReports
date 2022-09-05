@@ -18,6 +18,7 @@ namespace RoundReports
     public class Reporter
     {
         private List<IReportStat> Stats { get; set; }
+        public static readonly Type TranslationType = typeof(Translation);
         public static Dictionary<Player, string> NameStore { get; set; }
         private string _webhook;
         public bool HasSent { get; private set; } = false;
@@ -90,7 +91,7 @@ namespace RoundReports
             {
                 var section = new PasteSection()
                 {
-                    name = "Round Remarks",
+                    name = MainPlugin.Singleton.Translation.RoundRemarks,
                     syntax = "text",
                     contents = string.Empty,
 
@@ -108,13 +109,21 @@ namespace RoundReports
             {
                 try
                 {
+                    Type type = stat.GetType();
+                    string sectionTitle = stat.Title;
+                    var titleAttr = type.GetProperty("Title").GetCustomAttribute<TranslationAttribute>();
+                    if (titleAttr is not null)
+                    {
+                        PropertyInfo propInfo = TranslationType.GetProperty(titleAttr.KeyName);
+                        string val = propInfo.GetValue(MainPlugin.Translations).ToString();
+                        sectionTitle = val;
+                    }
                     var section = new PasteSection()
                     {
-                        name = stat.Title,
+                        name = sectionTitle,
                         syntax = "text",
-                        contents = "No Data"
+                        contents = MainPlugin.Singleton.Translation.NoData,
                     };
-                    Type type = stat.GetType();
                     StringBuilder bldr = StringBuilderPool.Shared.Rent();
                     foreach (PropertyInfo pinfo in type.GetProperties())
                     {
@@ -125,19 +134,20 @@ namespace RoundReports
                         {
                             continue;
                         }
-                        var attr = pinfo.GetCustomAttribute<DescriptionAttribute>();
+                        var attr = pinfo.GetCustomAttribute<TranslationAttribute>();
                         if (attr is null)
                         {
                             bldr.AppendLine($"{SplitString(pinfo.Name)}: {GetDisplay(pinfo.GetValue(stat))}");
                         }
                         else
                         {
+                            PropertyInfo propInfo = TranslationType.GetProperty(attr.KeyName);
                             object val = pinfo.GetValue(stat);
-                            bldr.AppendLine($"{attr.Description}: {GetDisplay(val)}");
+                            bldr.AppendLine($"{propInfo.GetValue(MainPlugin.Singleton.Translation)}: {GetDisplay(val)}");
                         }
                     }
                     section.contents = bldr.ToString();
-                    if (string.IsNullOrEmpty(section.contents)) section.contents = "No Data";
+                    if (string.IsNullOrEmpty(section.contents)) section.contents = MainPlugin.Singleton.Translation.NoData;
                     StringBuilderPool.Shared.Return(bldr);
                     entry.sections.Add(section);
                 }
@@ -190,14 +200,33 @@ namespace RoundReports
                         Log.Info($"Report uploaded successfully! Access it here: {response.link}");
                     if (!string.IsNullOrEmpty(MainPlugin.Singleton.Config.DiscordWebhook))
                     {
+                        string winText = MainPlugin.Translations.WinText;
+                        switch (LeadingTeam)
+                        {
+                            case LeadingTeam.Anomalies:
+                                winText = winText.Replace("{TEAM}", MainPlugin.Translations.ScpTeam);
+                                break;
+                            case LeadingTeam.ChaosInsurgency:
+                                winText = winText.Replace("{TEAM}", MainPlugin.Translations.InsurgencyTeam);
+                                break;
+                            case LeadingTeam.FacilityForces:
+                                winText = winText.Replace("{TEAM}", MainPlugin.Translations.MtfTeam);
+                                break;
+                            case LeadingTeam.Draw:
+                                winText = MainPlugin.Translations.Stalemate;
+                                break;
+                            default:
+                                winText = "Unknown Win";
+                                break;
+                        }
                         DiscordHook hookData = new()
                         {
-                            Username = "Round Report",
+                            Username = MainPlugin.Singleton.Translation.RoundReport,
                             Embeds = new()
                             {
                                 new()
                                 {
-                                    Title = "Round Report",
+                                    Title = MainPlugin.Singleton.Translation.RoundReport,
                                     TimeStamp = DateTime.Now,
                                     Color = LeadingTeam switch
                                     {
@@ -207,25 +236,18 @@ namespace RoundReports
                                         LeadingTeam.Draw => 10197915,
                                         _ => 10197915,
                                     },
-                                    Description = LeadingTeam switch
-                                    {
-                                        LeadingTeam.Anomalies => "SCPs Win",
-                                        LeadingTeam.ChaosInsurgency => "Insurgency Win",
-                                        LeadingTeam.FacilityForces => "Mobile Task Force Win",
-                                        LeadingTeam.Draw => "Stalemate",
-                                        _ => "Unknown"
-                                    } + "\n" + response.link,
+                                    Description = winText + "\n" + response.link,
                                     Fields = new()
                                     {
                                         new()
                                         {
-                                            Name = "Post Date",
+                                            Name = MainPlugin.Singleton.Translation.PostDate,
                                             Value = $"<t:{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}:D>",
                                             Inline = true
                                         },
                                         new()
                                         {
-                                            Name = "Expire Date",
+                                            Name = MainPlugin.Singleton.Translation.ExpireDate,
                                             Value = $"<t:{DateTimeOffset.UtcNow.AddDays(28).ToUnixTimeSeconds()}:D>",
                                             Inline = true,
                                         }

@@ -129,10 +129,10 @@ namespace RoundReports
             stats.EndTime = DateTime.Now;
             stats.WinningTeam = ev.LeadingTeam switch
             {
-                LeadingTeam.Anomalies => "SCPs",
-                LeadingTeam.ChaosInsurgency => "Insurgency",
-                LeadingTeam.FacilityForces => "Mobile Task Force",
-                LeadingTeam.Draw => "Stalemate",
+                LeadingTeam.Anomalies => MainPlugin.Translations.ScpTeam,
+                LeadingTeam.ChaosInsurgency => MainPlugin.Translations.InsurgencyTeam,
+                LeadingTeam.FacilityForces => MainPlugin.Translations.MtfTeam,
+                LeadingTeam.Draw => MainPlugin.Translations.Stalemate,
                 _ => "Unknown"
             };
             stats.RoundTime = Round.ElapsedTime;

@@ -8,10 +8,11 @@ using Scp330Events = Exiled.Events.Handlers.Scp330;
 using Scp914Events = Exiled.Events.Handlers.Scp914;
 using WarheadEvents = Exiled.Events.Handlers.Warhead;
 using System;
+using System.Reflection;
 
 namespace RoundReports
 {
-    public class MainPlugin : Plugin<Config>
+    public class MainPlugin : Plugin<Config, Translation>
     {
         public override string Name => "RoundReports";
         public override string Author => "Thunder";
@@ -22,6 +23,8 @@ namespace RoundReports
         public static Reporter Reporter { get; set; }
         public static MainPlugin Singleton { get; private set; }
         public static EventHandlers Handlers { get; private set; }
+
+        public static Translation Translations => Singleton.Translation;
 
         public override void OnEnabled()
         {
