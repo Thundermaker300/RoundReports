@@ -162,19 +162,30 @@ namespace RoundReports
 
         public void SendReport()
         {
+            if (HasSent)
+                return;
+
             HasSent = true;
-            Timing.RunCoroutine(_SendReport());
+            SendReportInternal();
         }
 
-        private IEnumerator<float> _SendReport()
+        private void SendReportInternal()
         {
-            var key = MainPlugin.Singleton.Config.PasteKey;
             PasteEntry data = BuildReport();
-            // UnityWebRequest.Post bug moment
+            Timing.RunCoroutine(TryUpload(data, 0));
+        }
+
+        private IEnumerator<float> TryUpload(PasteEntry data, int iter)
+        {
+            if (iter == 10)
+            {
+                Log.Warn("Failed to post round report to pastee ten times. Request discarded.");
+                yield break;
+            }
             var pasteWWW = UnityWebRequest.Put("https://api.paste.ee/v1/pastes", JsonConvert.SerializeObject(data));
             pasteWWW.method = "POST";
             pasteWWW.SetRequestHeader("Content-Type", "application/json");
-            pasteWWW.SetRequestHeader("X-Auth-Token", key);
+            pasteWWW.SetRequestHeader("X-Auth-Token", MainPlugin.Singleton.Config.PasteKey);
             yield return Timing.WaitUntilDone(pasteWWW.SendWebRequest());
             if (!pasteWWW.isHttpError && !pasteWWW.isNetworkError)
             {
@@ -185,12 +196,15 @@ namespace RoundReports
                 }
                 catch (Exception e)
                 {
-                    Log.Warn($"Report failed to post! {e}");
+                    Log.Warn($"Report response could not be read. Retrying upload. Error: {e}");
+                    Timing.RunCoroutine(TryUpload(data, iter + 1));
                     yield break;
                 }
-                if (!response.success)
+                if (response is null || !response.success)
                 {
-                    Log.Warn("Unknown error when uploading the report.");
+                    Log.Warn("Unknown error when uploading the report. Retrying upload.");
+                    Timing.RunCoroutine(TryUpload(data, iter + 1));
+                    yield break;
                 }
                 else
                 {
@@ -257,7 +271,8 @@ namespace RoundReports
             }
             else
             {
-                Log.Warn($"Report failed to post to pastee! {pasteWWW.error}");
+                Log.Warn($"Report failed to post to pastee, retrying. Error: {pasteWWW.error}");
+                Timing.RunCoroutine(TryUpload(data, iter + 1));
             }
         }
 
