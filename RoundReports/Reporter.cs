@@ -346,12 +346,10 @@ namespace RoundReports
                 StringBuilderPool.Shared.Return(bldr2);
                 return display;
             }
-            else if (val is IEnumerable list && val.GetType().IsGenericType)
+            else if (val is ICollection list)
             {
                 // Check for zero results
-                int i = 0;
-                foreach (var item in list) i++;
-                if (i == 0)
+                if (list.Count == 0)
                 {
                     return MainPlugin.Translations.NoData;
                 }
