@@ -60,7 +60,13 @@ namespace RoundReports
         public string SurvivingPlayers { get; set; } = "Surviving Players";
 
         // Medical Stats
-        public string MedicalStatsTitle { get; set; } = "Medical Statistics";
+        public string ItemStatsTitle { get; set; } = "Item Statistics";
+        public string ItemTransfersTitle { get; set; } = "Item Transfers";
+        public string ItemUsesTitle { get; set; } = "Item Uses";
+        public string TotalDrops { get; set; } = "Total Drops";
+        public string Drops { get; set; } = "Drops";
+        public string PlayerDrops { get; set; } = "Player Drops";
+        public string KeycardScans { get; set; } = "Keycard Scans";
         public string PainkillersConsumed { get; set; } = "Painkillers Consumed";
         public string MedkitsConsumed { get; set; } = "Medkits Consumed";
         public string AdrenalinesConsumed { get; set; } = "Adrenalines Consumed";

@@ -271,6 +271,25 @@ namespace RoundReports
             Hold(stats);
         }
 
+        public void OnDroppingItem(DroppingItemEventArgs ev)
+        {
+            if (!Round.IsStarted || !ev.IsAllowed)
+                return;
+            var stats = GetStat<ItemStats>();
+            stats.TotalDrops++;
+
+            if (stats.Drops.ContainsKey(ev.Item.Type))
+                stats.Drops[ev.Item.Type]++;
+            else
+                stats.Drops[ev.Item.Type] = 1;
+
+            if (stats.PlayerDrops.ContainsKey(ev.Player))
+                stats.PlayerDrops[ev.Player]++;
+            else
+                stats.PlayerDrops[ev.Player] = 1;
+            Hold(stats);
+        }
+
         public void OnUsedItem(UsedItemEventArgs ev)
         {
             if (!Round.IsStarted) return;
@@ -296,7 +315,7 @@ namespace RoundReports
             }
             else
             {
-                var stats = GetStat<MedicalStats>();
+                var stats = GetStat<ItemStats>();
                 switch (ev.Item.Type)
                 {
                     case ItemType.Painkillers:
@@ -354,6 +373,12 @@ namespace RoundReports
                         .Replace("{MILLISECOND}", Round.ElapsedTime.Milliseconds.ToString());
                     MainPlugin.Reporter.AddRemark(remarkText);
                 }
+            }
+            if (ev.Door.IsKeycardDoor)
+            {
+                var itemStats = GetStat<ItemStats>();
+                itemStats.KeycardScans++;
+                Hold(itemStats);
             }
             Hold(stats);
         }
