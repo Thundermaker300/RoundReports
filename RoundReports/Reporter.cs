@@ -135,7 +135,7 @@ namespace RoundReports
                         var headerAttribute = pinfo.GetCustomAttribute<HeaderAttribute>();
                         if (headerAttribute is not null)
                         {
-                            bldr.AppendLine($"\n======{headerAttribute.Header}======");
+                            bldr.AppendLine($"\n====== {headerAttribute.Header} ======");
                         }
                         var attr = pinfo.GetCustomAttribute<TranslationAttribute>();
                         if (attr is null)
@@ -149,9 +149,8 @@ namespace RoundReports
                             bldr.AppendLine($"{propInfo.GetValue(MainPlugin.Singleton.Translation)}: {GetDisplay(val)}");
                         }
                     }
-                    section.contents = bldr.ToString();
+                    section.contents = StringBuilderPool.Shared.ToStringReturn(bldr).Trim();
                     if (string.IsNullOrEmpty(section.contents)) section.contents = MainPlugin.Singleton.Translation.NoData;
-                    StringBuilderPool.Shared.Return(bldr);
                     entry.sections.Add(section);
                 }
                 catch (Exception e)

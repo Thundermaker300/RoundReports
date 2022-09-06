@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Exiled.API.Features;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace RoundReports
         public string Title => "Final Statistics";
         public int Order => 1;
 
+        [Header(nameof(Translation.EndofRoundSummary))]
         [Translation(nameof(Translation.WinningTeam))]
         public string WinningTeam { get; set; }
 
@@ -57,5 +59,37 @@ namespace RoundReports
 
         [Translation(nameof(Translation.SurvivingPlayers))]
         public List<string> SurvivingPlayers { get; set; }
+
+        [Header(nameof(Translation.WarheadStatsTitle))]
+        [Translation(nameof(Translation.ButtonUnlocked))]
+        public bool ButtonUnlocked { get; set; } = false;
+
+        [Translation(nameof(Translation.ButtonUnlocker))]
+        public Player ButtonUnlocker { get; set; }
+
+        [Translation(nameof(Translation.FirstActivator))]
+        public Player FirstActivator { get; set; }
+
+        [Translation(nameof(Translation.Detonated))]
+        public bool Detonated { get; set; } = false;
+
+        [Translation(nameof(Translation.DetonationTime))]
+        public DateTime DetonationTime { get; set; } = DateTime.MinValue;
+
+        [Header(nameof(Translation.DoorStatsTitle))]
+        [Translation(nameof(Translation.DoorsOpened))]
+        public int DoorsOpened { get; set; }
+
+        [Translation(nameof(Translation.DoorsClosed))]
+        public int DoorsClosed { get; set; }
+
+        [Translation(nameof(Translation.DoorsDestroyed))]
+        public int DoorsDestroyed { get; set; }
+
+        [Translation(nameof(Translation.PlayerDoorsOpened))]
+        public Dictionary<Player, int> PlayerDoorsOpened { get; set; } = new(0);
+
+        [Translation(nameof(Translation.PlayerDoorsClosed))]
+        public Dictionary<Player, int> PlayerDoorsClosed { get; set; } = new(0);
     }
 }

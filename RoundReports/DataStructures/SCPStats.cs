@@ -12,11 +12,11 @@ namespace RoundReports
 {
     public class SCPStats : IReportStat
     {
-        [Translation(nameof(Translation.ScpItemTitle))]
+        [Translation(nameof(Translation.ScpTitle))]
         public string Title => "SCP Statistics";
         public int Order => 6;
 
-        [Header("SCP Item Usages")]
+        [Header(nameof(Translation.ScpItemTitle))]
         [Translation(nameof(Translation.Scp018Thrown))]
         public int Scp018Thrown { get; set; }
 
@@ -29,7 +29,7 @@ namespace RoundReports
         [Translation(nameof(Translation.Scp1853Uses))]
         public int Scp1853Uses { get; set; }
 
-        [Header("SCP-330 Statistics")]
+        [Header(nameof(Translation.Scp330Title))]
         [Translation(nameof(Translation.FirstUse))]
         public DateTime FirstUse { get; set; } = DateTime.MinValue;
 
@@ -48,7 +48,7 @@ namespace RoundReports
         [Translation(nameof(Translation.CandiesByPlayer))]
         public Dictionary<Player, int> CandiesByPlayer { get; set; } = new(0);
 
-        [Header("SCP-914 Statistics")]
+        [Header(nameof(Translation.Scp914Title))]
         [Translation(nameof(Translation.FirstActivation))]
         public DateTime FirstActivation { get; set; } = DateTime.MinValue;
 

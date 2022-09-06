@@ -114,7 +114,7 @@ namespace RoundReports
         public void OnRoundEnded(RoundEndedEventArgs ev)
         {
             // Fill out door destroyed stat
-            var doorStats = GetStat<DoorStats>();
+            var doorStats = GetStat<FinalStats>();
             doorStats.DoorsDestroyed = Door.List.Count(d => d.IsBroken);
             Hold(doorStats);
             // Fill out final stats
@@ -320,7 +320,7 @@ namespace RoundReports
         {
             if (!Round.IsStarted || !ev.IsAllowed) return;
             if (ev.Player is null) return;
-            var stats = GetStat<DoorStats>();
+            var stats = GetStat<FinalStats>();
             if (ev.Door.IsOpen)
             {
                 stats.DoorsClosed++;
@@ -475,7 +475,7 @@ namespace RoundReports
         public void OnActivatingWarheadPanel(ActivatingWarheadPanelEventArgs ev)
         {
             if (!ev.IsAllowed || !Round.IsStarted) return;
-            var stats = GetStat<WarheadStats>();
+            var stats = GetStat<FinalStats>();
             stats.ButtonUnlocked = true;
             if (stats.ButtonUnlocker == null)
                 stats.ButtonUnlocker = ev.Player;
@@ -485,7 +485,7 @@ namespace RoundReports
         public void OnWarheadStarting(StartingEventArgs ev)
         {
             if (!ev.IsAllowed || !Round.IsStarted) return;
-            var stats = GetStat<WarheadStats>();
+            var stats = GetStat<FinalStats>();
             if (stats.FirstActivator == null)
                 stats.FirstActivator = ev.Player;
             Hold(stats);
@@ -494,7 +494,7 @@ namespace RoundReports
         public void OnWarheadDetonated()
         {
             if (!Round.IsStarted) return;
-            var stats = GetStat<WarheadStats>();
+            var stats = GetStat<FinalStats>();
             if (!stats.Detonated)
             {
                 stats.Detonated = true;

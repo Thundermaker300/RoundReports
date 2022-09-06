@@ -37,6 +37,7 @@ namespace RoundReports
 
         // Final Stats
         public string FinalStatsTitle { get; set; } = "Final Statistics";
+        public string EndofRoundSummary { get; set; } = "End-of-Round Summary";
         public string WinningTeam { get; set; } = "Winning Team";
         public string EndTime { get; set; } = "End Time";
         public string RoundTime { get; set; } = "Round Time";
@@ -79,7 +80,7 @@ namespace RoundReports
         public string PlayerKills { get; set; } = "Player Kills";
 
         // SCP-330 Stats
-        public string Scp330Title { get; set; } = "SCP-330 Stats";
+        public string Scp330Title { get; set; } = "SCP-330 Statistics";
         public string FirstUse { get; set; } = "First Use";
         public string FirstUser { get; set; } = "First User";
         public string TotalCandiesTaken { get; set; } = "Total Candies Taken";
@@ -88,7 +89,7 @@ namespace RoundReports
         public string CandiesByPlayer { get; set; } = "Candies By Player";
 
         // SCP-914 Stats
-        public string Scp914Title { get; set; } = "SCP-914 Stats";
+        public string Scp914Title { get; set; } = "SCP-914 Statistics";
         public string FirstActivation { get; set; } = "First Activation";
         public string FirstActivator { get; set; } = "First Activator";
         public string TotalActivations { get; set; } = "Total Activations";
@@ -99,6 +100,7 @@ namespace RoundReports
         public string Upgrades { get; set; } = "Upgrades";
 
         // SCP Item Stats
+        public string ScpTitle { get; set; } = "SCP Statistics";
         public string ScpItemTitle { get; set; } = "SCP Item Statistics";
         public string Scp018Thrown { get; set; } = "SCP-018s Thrown";
         public string Scp207Drank { get; set; } = "SCP-207s Drank";
