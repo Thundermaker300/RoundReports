@@ -94,6 +94,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\HeaderAttribute.cs" />
     <Compile Include="Attributes\TranslationAttribute.cs" />
     <Compile Include="Commands\AddRemark.cs" />
     <Compile Include="Commands\PauseReportCommand.cs" />
@@ -102,8 +103,6 @@
     <Compile Include="DataStructures\FinalStats.cs" />
     <Compile Include="DataStructures\IReportStat.cs" />
     <Compile Include="DataStructures\DoorStats.cs" />
-    <Compile Include="DataStructures\Scp914Stats.cs" />
-    <Compile Include="DataStructures\Scp330Stats.cs" />
     <Compile Include="DataStructures\OrganizedDamageStats.cs" />
     <Compile Include="DataStructures\OrganizedKillsStats.cs" />
     <Compile Include="DataStructures\StartingStats.cs" />
@@ -113,7 +112,7 @@
     <Compile Include="Structures\WebRequestStructures.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reporter.cs" />
-    <Compile Include="DataStructures\SCPItemStats.cs" />
+    <Compile Include="DataStructures\SCPStats.cs" />
     <Compile Include="DataStructures\MedicalStats.cs" />
     <Compile Include="Translation.cs" />
   </ItemGroup>

@@ -1,5 +1,4 @@
-﻿using Exiled.API.Enums;
-using Exiled.API.Features;
+﻿using Exiled.API.Features;
 using InventorySystem.Items.Usables.Scp330;
 using Scp914;
 using System;
@@ -11,12 +10,45 @@ using System.Threading.Tasks;
 
 namespace RoundReports
 {
-    public class Scp914Stats : IReportStat
+    public class SCPStats : IReportStat
     {
-        [Translation(nameof(Translation.Scp914Title))]
-        public string Title => "SCP-914 Stats";
-        public int Order => 76;
+        [Translation(nameof(Translation.ScpItemTitle))]
+        public string Title => "SCP Statistics";
+        public int Order => 6;
 
+        [Header("SCP Item Usages")]
+        [Translation(nameof(Translation.Scp018Thrown))]
+        public int Scp018Thrown { get; set; }
+
+        [Translation(nameof(Translation.Scp207Drank))]
+        public int Scp207Drank { get; set; }
+
+        [Translation(nameof(Translation.Scp268Uses))]
+        public int Scp268Uses { get; set; }
+
+        [Translation(nameof(Translation.Scp1853Uses))]
+        public int Scp1853Uses { get; set; }
+
+        [Header("SCP-330 Statistics")]
+        [Translation(nameof(Translation.FirstUse))]
+        public DateTime FirstUse { get; set; } = DateTime.MinValue;
+
+        [Translation(nameof(Translation.FirstUser))]
+        public Player FirstUser { get; set; }
+
+        [Translation(nameof(Translation.TotalCandiesTaken))]
+        public int TotalCandiesTaken { get; set; }
+
+        [Translation(nameof(Translation.SeveredHands))]
+        public int SeveredHands { get; set; }
+
+        [Translation(nameof(Translation.CandiesTaken))]
+        public Dictionary<CandyKindID, int> CandiesTaken { get; set; } = new(0);
+
+        [Translation(nameof(Translation.CandiesByPlayer))]
+        public Dictionary<Player, int> CandiesByPlayer { get; set; } = new(0);
+
+        [Header("SCP-914 Statistics")]
         [Translation(nameof(Translation.FirstActivation))]
         public DateTime FirstActivation { get; set; } = DateTime.MinValue;
 
@@ -47,6 +79,5 @@ namespace RoundReports
 
         [Translation(nameof(Translation.Upgrades))]
         public Dictionary<ItemType, int> Upgrades { get; set; } = new();
-
     }
 }

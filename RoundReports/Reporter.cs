@@ -132,6 +132,11 @@ namespace RoundReports
                         {
                             continue;
                         }
+                        var headerAttribute = pinfo.GetCustomAttribute<HeaderAttribute>();
+                        if (headerAttribute is not null)
+                        {
+                            bldr.AppendLine($"\n======{headerAttribute.Header}======");
+                        }
                         var attr = pinfo.GetCustomAttribute<TranslationAttribute>();
                         if (attr is null)
                         {

@@ -276,7 +276,7 @@ namespace RoundReports
             if (!Round.IsStarted) return;
             if (ev.Item.IsScp)
             {
-                var stats = GetStat<SCPItemStats>();
+                var stats = GetStat<SCPStats>();
                 switch (ev.Item.Type)
                 {
                     case ItemType.SCP018:
@@ -361,7 +361,7 @@ namespace RoundReports
         public void OnInteractingScp330(InteractingScp330EventArgs ev)
         {
             if (!ev.IsAllowed || !Round.IsStarted) return;
-            var stats = GetStat<Scp330Stats>();
+            var stats = GetStat<SCPStats>();
             if (stats.FirstUse == DateTime.MinValue)
             {
                 stats.FirstUse = DateTime.Now;
@@ -414,7 +414,7 @@ namespace RoundReports
         public void OnActivatingScp914(ActivatingEventArgs ev)
         {
             if (!ev.IsAllowed || !Round.IsStarted) return;
-            var stats = GetStat<Scp914Stats>();
+            var stats = GetStat<SCPStats>();
             if (stats.FirstActivation == DateTime.MinValue && ev.Player is not null)
             {
                 stats.FirstActivation = DateTime.Now;
@@ -434,7 +434,7 @@ namespace RoundReports
 
         private void UpgradeItemLog(ItemType type, Scp914KnobSetting mode)
         {
-            var stats = GetStat<Scp914Stats>();
+            var stats = GetStat<SCPStats>();
             stats.TotalItemUpgrades++;
             if (!FirstUpgrade && MainPlugin.Reporter is not null)
             {
