@@ -16,7 +16,7 @@ namespace RoundReports
     {
         public override string Name => "RoundReports";
         public override string Author => "Thunder";
-        public override Version Version => new Version(0, 2, 0);
+        public override Version Version => new Version(0, 2, 1);
         public override Version RequiredExiledVersion => new Version(5, 2, 2);
 
 
