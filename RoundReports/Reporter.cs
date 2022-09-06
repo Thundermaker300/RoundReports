@@ -321,7 +321,7 @@ namespace RoundReports
             {
                 if (dt == DateTime.MinValue)
                     return MainPlugin.Translations.NoData;
-                return dt.ToString("MMMM dd, yyyy hh:mm:ss tt");
+                return dt.ToString(MainPlugin.Singleton.Config.TimeFormat);
             }
             else if (val is TimeSpan ts)
             {

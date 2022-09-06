@@ -126,5 +126,8 @@ namespace RoundReports
 
         [Description("Name of the server, without any formatting tags, as it will be shown in the report.")]
         public string ServerName { get; set; } = string.Empty;
+
+        [Description("Determines the format of timestamps.")]
+        public string TimeFormat { get; set; } = "MMMM dd, yyyy hh:mm:ss tt";
     }
 }
