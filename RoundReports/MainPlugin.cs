@@ -10,6 +10,7 @@ using Scp173Events = Exiled.Events.Handlers.Scp173;
 using Scp330Events = Exiled.Events.Handlers.Scp330;
 using Scp914Events = Exiled.Events.Handlers.Scp914;
 using WarheadEvents = Exiled.Events.Handlers.Warhead;
+using EBroadcast = Exiled.API.Features.Broadcast;
 using System;
 
 namespace RoundReports
@@ -139,8 +140,10 @@ namespace RoundReports
 
         [Description("Provide a Discord webhook to send reports to.")]
         public string DiscordWebhook { get; set; } = string.Empty;
-        [Description("Send report links in server console when compiled.")]
+        [Description("Send report links in server console when compiled?")]
         public bool SendInConsole { get; set; } = true;
+        [Description("Broadcast to show at the end of the round.")]
+        public EBroadcast EndingBroadcast { get; set; } = new EBroadcast("View the end-of-round report on our Discord server!");
 
         [Description("Name of the server, without any formatting tags, as it will be shown in the report.")]
         public string ServerName { get; set; } = string.Empty;
