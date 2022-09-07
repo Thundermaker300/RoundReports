@@ -4,11 +4,13 @@ using System.ComponentModel;
 
 using ServerEvents = Exiled.Events.Handlers.Server;
 using PlayerEvents = Exiled.Events.Handlers.Player;
+using Scp096Events = Exiled.Events.Handlers.Scp096;
+using Scp106Events = Exiled.Events.Handlers.Scp106;
+using Scp173Events = Exiled.Events.Handlers.Scp173;
 using Scp330Events = Exiled.Events.Handlers.Scp330;
 using Scp914Events = Exiled.Events.Handlers.Scp914;
 using WarheadEvents = Exiled.Events.Handlers.Warhead;
 using System;
-using System.Reflection;
 
 namespace RoundReports
 {
@@ -61,6 +63,13 @@ namespace RoundReports
             PlayerEvents.InteractingDoor += Handlers.OnInteractingDoor;
             PlayerEvents.Escaping += Handlers.OnEscaping;
             PlayerEvents.DroppingItem += Handlers.OnDroppingItem;
+
+            Scp096Events.Charging += Handlers.OnScp096Charge;
+            Scp096Events.Enraging += Handlers.OnScp096Enrage;
+            Scp106Events.Containing += Handlers.OnContaining106;
+            Scp106Events.Teleporting += Handlers.OnScp106Teleport;
+            Scp173Events.Blinking += Handlers.OnScp173Blink;
+
             Scp330Events.InteractingScp330 += Handlers.OnInteractingScp330;
 
             Scp914Events.Activating += Handlers.OnActivatingScp914;
@@ -93,6 +102,13 @@ namespace RoundReports
             PlayerEvents.InteractingDoor -= Handlers.OnInteractingDoor;
             PlayerEvents.Escaping -= Handlers.OnEscaping;
             PlayerEvents.DroppingItem -= Handlers.OnDroppingItem;
+
+            Scp096Events.Charging -= Handlers.OnScp096Charge;
+            Scp096Events.Enraging -= Handlers.OnScp096Enrage;
+            Scp106Events.Containing -= Handlers.OnContaining106;
+            Scp106Events.Teleporting -= Handlers.OnScp106Teleport;
+            Scp173Events.Blinking -= Handlers.OnScp173Blink;
+
             Scp330Events.InteractingScp330 -= Handlers.OnInteractingScp330;
 
             Scp914Events.Activating -= Handlers.OnActivatingScp914;

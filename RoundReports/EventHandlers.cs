@@ -114,11 +114,9 @@ namespace RoundReports
         public void OnRoundEnded(RoundEndedEventArgs ev)
         {
             // Fill out door destroyed stat
-            var doorStats = GetStat<FinalStats>();
-            doorStats.DoorsDestroyed = Door.List.Count(d => d.IsBroken);
-            Hold(doorStats);
-            // Fill out final stats
             var stats = GetStat<FinalStats>();
+            stats.DoorsDestroyed = Door.List.Count(d => d.IsBroken);
+            // Fill out final stats
             stats.EndTime = DateTime.Now;
             stats.WinningTeam = ev.LeadingTeam switch
             {
@@ -288,6 +286,46 @@ namespace RoundReports
                 stats.PlayerDrops[ev.Player]++;
             else
                 stats.PlayerDrops[ev.Player] = 1;
+            Hold(stats);
+        }
+
+        public void OnScp096Charge(ChargingEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed) return;
+            var stats = GetStat<SCPStats>();
+            stats.Scp096Charges++;
+            Hold(stats);
+        }
+
+        public void OnScp096Enrage(EnragingEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed) return;
+            var stats = GetStat<SCPStats>();
+            stats.Scp096Enrages++;
+            Hold(stats);
+        }
+
+        public void OnContaining106(ContainingEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed) return;
+            var stats = GetStat<SCPStats>();
+            stats.FemurBreakerActivated = true;
+            Hold(stats);
+        }
+
+        public void OnScp106Teleport(TeleportingEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed) return;
+            var stats = GetStat<SCPStats>();
+            stats.Scp106Teleports++;
+            Hold(stats);
+        }
+
+        public void OnScp173Blink(BlinkingEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed) return;
+            var stats = GetStat<SCPStats>();
+            stats.Scp173Blinks++;
             Hold(stats);
         }
 

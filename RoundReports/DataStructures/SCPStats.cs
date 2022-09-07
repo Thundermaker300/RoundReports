@@ -16,6 +16,25 @@ namespace RoundReports
         public string Title => "SCP Statistics";
         public int Order => 6;
 
+        [Translation(nameof(Translation.FemurBreakerActivated))]
+        public bool FemurBreakerActivated { get; set; }
+
+        [HideIfDefault]
+        [Translation(nameof(Translation.Scp096Charges))]
+        public int Scp096Charges { get; set; }
+
+        [HideIfDefault]
+        [Translation(nameof(Translation.Scp096Enrages))]
+        public int Scp096Enrages { get; set; }
+
+        [HideIfDefault]
+        [Translation(nameof(Translation.Scp106Teleports))]
+        public int Scp106Teleports { get; set; }
+
+        [HideIfDefault]
+        [Translation(nameof(Translation.Scp173Blinks))]
+        public int Scp173Blinks { get; set; }
+
         [Header(nameof(Translation.ScpItemTitle))]
         [Translation(nameof(Translation.Scp018Thrown))]
         public int Scp018Thrown { get; set; }
