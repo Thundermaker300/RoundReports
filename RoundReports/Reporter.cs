@@ -144,9 +144,8 @@ namespace RoundReports
                         }
                         else
                         {
-                            PropertyInfo propInfo = TranslationType.GetProperty(attr.KeyName);
                             object val = pinfo.GetValue(stat);
-                            bldr.AppendLine($"{propInfo.GetValue(MainPlugin.Singleton.Translation)}: {GetDisplay(val)}");
+                            bldr.AppendLine($"{attr.Text}: {GetDisplay(val)}");
                         }
                     }
                     section.contents = StringBuilderPool.Shared.ToStringReturn(bldr).Trim();
