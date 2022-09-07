@@ -21,7 +21,7 @@ namespace RoundReports
         public static readonly Type TranslationType = typeof(Translation);
         public static Dictionary<Player, string> NameStore { get; set; }
         public bool HasSent { get; private set; } = false;
-        public LeadingTeam LeadingTeam { get; set; }
+        public LeadingTeam WinTeam { get; set; } = LeadingTeam.Draw;
         private List<string> Remarks { get; set; }
         public static string DoNotTrackText => MainPlugin.Translations.DoNotTrack;
 
@@ -175,15 +175,18 @@ namespace RoundReports
 
         private void SendReportInternal()
         {
-            PasteEntry data = BuildReport();
-            Timing.RunCoroutine(TryUpload(data, 0));
+            Timing.CallDelayed(0.1f, () =>
+            {
+                PasteEntry data = BuildReport();
+                Timing.RunCoroutine(TryUpload(data, 0));
+            });
         }
 
         private IEnumerator<float> TryUpload(PasteEntry data, int iter)
         {
             if (iter == 10)
             {
-                Log.Warn("Failed to post round report to pastee ten times. Request discarded.");
+                Log.Warn("Failed to post round report to Pastee ten times. Request discarded.");
                 yield break;
             }
             var pasteWWW = UnityWebRequest.Put("https://api.paste.ee/v1/pastes", JsonConvert.SerializeObject(data));
@@ -217,7 +220,7 @@ namespace RoundReports
                     if (!string.IsNullOrEmpty(MainPlugin.Singleton.Config.DiscordWebhook))
                     {
                         string winText = MainPlugin.Translations.WinText;
-                        winText = LeadingTeam switch
+                        winText = WinTeam switch
                         {
                             LeadingTeam.Anomalies => winText.Replace("{TEAM}", MainPlugin.Translations.ScpTeam),
                             LeadingTeam.ChaosInsurgency => winText.Replace("{TEAM}", MainPlugin.Translations.InsurgencyTeam),
@@ -234,7 +237,7 @@ namespace RoundReports
                                 {
                                     Title = MainPlugin.Singleton.Translation.RoundReport,
                                     TimeStamp = DateTime.Now,
-                                    Color = LeadingTeam switch
+                                    Color = WinTeam switch
                                     {
                                         LeadingTeam.Anomalies => 16711680,
                                         LeadingTeam.FacilityForces => 38143,

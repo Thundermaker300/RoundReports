@@ -128,6 +128,11 @@ namespace RoundReports
                 LeadingTeam.Draw => MainPlugin.Translations.Stalemate,
                 _ => MainPlugin.Translations.Unknown
             };
+            if (MainPlugin.Reporter is not null)
+            {
+                MainPlugin.Reporter.WinTeam = ev.LeadingTeam;
+            }
+
             stats.RoundTime = Round.ElapsedTime;
             foreach (var player in Player.Get(plr => plr.IsAlive))
             {
@@ -137,10 +142,6 @@ namespace RoundReports
             Hold(stats);
 
             // Send stats
-            if (MainPlugin.Reporter is not null)
-            {
-                MainPlugin.Reporter.LeadingTeam = ev.LeadingTeam;
-            }
             SendData();
         }
 
