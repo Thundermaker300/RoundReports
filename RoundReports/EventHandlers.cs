@@ -158,7 +158,7 @@ namespace RoundReports
 
         public void OnHurting(HurtingEventArgs ev)
         {
-            if (!Round.IsStarted || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed) return;
             int amount = (int)Math.Round(ev.Amount);
             if (!ev.IsAllowed) return;
             if (ev.Amount == -1 || ev.Amount > 150) amount = 150;
@@ -195,7 +195,7 @@ namespace RoundReports
 
         public void OnDying(DyingEventArgs ev)
         {
-            if (!Round.IsStarted || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed) return;
             var stats = GetStat<FinalStats>();
             var killStats = GetStat<OrganizedKillsStats>();
             stats.TotalDeaths++;
@@ -274,7 +274,7 @@ namespace RoundReports
 
         public void OnDroppingItem(DroppingItemEventArgs ev)
         {
-            if (!Round.IsStarted || !ev.IsAllowed)
+            if (!Round.InProgress || !ev.IsAllowed)
                 return;
             var stats = GetStat<ItemStats>();
             stats.TotalDrops++;
@@ -293,7 +293,7 @@ namespace RoundReports
 
         public void OnUsedItem(UsedItemEventArgs ev)
         {
-            if (!Round.IsStarted) return;
+            if (!Round.InProgress) return;
             if (ev.Item.IsScp)
             {
                 var stats = GetStat<SCPStats>();
@@ -338,7 +338,7 @@ namespace RoundReports
 
         public void OnInteractingDoor(InteractingDoorEventArgs ev)
         {
-            if (!Round.IsStarted || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed) return;
             if (ev.Player is null) return;
             var stats = GetStat<FinalStats>();
             if (ev.Door.IsOpen)
@@ -386,7 +386,7 @@ namespace RoundReports
 
         public void OnInteractingScp330(InteractingScp330EventArgs ev)
         {
-            if (!ev.IsAllowed || !Round.IsStarted) return;
+            if (!ev.IsAllowed || !Round.InProgress) return;
             var stats = GetStat<SCPStats>();
             if (stats.FirstUse == DateTime.MinValue)
             {
@@ -424,7 +424,7 @@ namespace RoundReports
 
         public void OnEscaping(EscapingEventArgs ev)
         {
-            if (!ev.IsAllowed || !Round.IsStarted) return;
+            if (!ev.IsAllowed || !Round.InProgress) return;
             if (!FirstEscape && MainPlugin.Reporter is not null)
             {
                 FirstEscape = true;
@@ -439,7 +439,7 @@ namespace RoundReports
 
         public void OnActivatingScp914(ActivatingEventArgs ev)
         {
-            if (!ev.IsAllowed || !Round.IsStarted) return;
+            if (!ev.IsAllowed || !Round.InProgress) return;
             var stats = GetStat<SCPStats>();
             if (stats.FirstActivation == DateTime.MinValue && ev.Player is not null)
             {
@@ -488,19 +488,19 @@ namespace RoundReports
 
         public void On914UpgradingItem(UpgradingItemEventArgs ev)
         {
-            if (!ev.IsAllowed || !Round.IsStarted) return;
+            if (!ev.IsAllowed || !Round.InProgress) return;
             UpgradeItemLog(ev.Item.Type, ev.KnobSetting);
         }
 
         public void On914UpgradingInventoryItem(UpgradingInventoryItemEventArgs ev)
         {
-            if (!ev.IsAllowed || !Round.IsStarted) return;
+            if (!ev.IsAllowed || !Round.InProgress) return;
             UpgradeItemLog(ev.Item.Type, ev.KnobSetting);
         }
 
         public void OnActivatingWarheadPanel(ActivatingWarheadPanelEventArgs ev)
         {
-            if (!ev.IsAllowed || !Round.IsStarted) return;
+            if (!ev.IsAllowed || !Round.InProgress) return;
             var stats = GetStat<FinalStats>();
             stats.ButtonUnlocked = true;
             if (stats.ButtonUnlocker == null)
@@ -510,7 +510,7 @@ namespace RoundReports
 
         public void OnWarheadStarting(StartingEventArgs ev)
         {
-            if (!ev.IsAllowed || !Round.IsStarted) return;
+            if (!ev.IsAllowed || !Round.InProgress) return;
             var stats = GetStat<FinalStats>();
             if (stats.FirstActivator == null)
                 stats.FirstActivator = ev.Player;
@@ -519,7 +519,7 @@ namespace RoundReports
 
         public void OnWarheadDetonated()
         {
-            if (!Round.IsStarted) return;
+            if (!Round.InProgress) return;
             var stats = GetStat<FinalStats>();
             if (!stats.Detonated)
             {
