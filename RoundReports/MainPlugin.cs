@@ -60,6 +60,7 @@ namespace RoundReports
             PlayerEvents.UsedItem += Handlers.OnUsedItem;
             PlayerEvents.InteractingDoor += Handlers.OnInteractingDoor;
             PlayerEvents.Escaping += Handlers.OnEscaping;
+            PlayerEvents.DroppingItem += Handlers.OnDroppingItem;
             Scp330Events.InteractingScp330 += Handlers.OnInteractingScp330;
 
             Scp914Events.Activating += Handlers.OnActivatingScp914;
@@ -91,6 +92,7 @@ namespace RoundReports
             PlayerEvents.UsedItem -= Handlers.OnUsedItem;
             PlayerEvents.InteractingDoor -= Handlers.OnInteractingDoor;
             PlayerEvents.Escaping -= Handlers.OnEscaping;
+            PlayerEvents.DroppingItem -= Handlers.OnDroppingItem;
             Scp330Events.InteractingScp330 -= Handlers.OnInteractingScp330;
 
             Scp914Events.Activating -= Handlers.OnActivatingScp914;
