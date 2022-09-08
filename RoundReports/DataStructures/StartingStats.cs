@@ -20,6 +20,7 @@ namespace RoundReports
         [Translation(nameof(Translation.PlayersAtStart))]
         public int PlayersAtStart { get; set; }
 
+        [Rule(Rule.Alphabetical | Rule.CommaSeparatedList)]
         [Translation(nameof(Translation.Scps))]
         public List<RoleType> SCPs { get; set; }
 

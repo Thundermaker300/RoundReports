@@ -137,15 +137,16 @@ namespace RoundReports
                         {
                             bldr.AppendLine($"\n====== {headerAttribute.Header} ======");
                         }
+                        var ruleAttr = pinfo.GetCustomAttribute<RuleAttribute>();
                         var attr = pinfo.GetCustomAttribute<TranslationAttribute>();
                         if (attr is null)
                         {
-                            bldr.AppendLine($"{SplitString(pinfo.Name)}: {GetDisplay(pinfo.GetValue(stat))}");
+                            bldr.AppendLine($"{SplitString(pinfo.Name)}: {GetDisplay(pinfo.GetValue(stat), ruleAttr?.Rule ?? Rule.None)}");
                         }
                         else
                         {
                             object val = pinfo.GetValue(stat);
-                            bldr.AppendLine($"{attr.Text}: {GetDisplay(val)}");
+                            bldr.AppendLine($"{attr.Text}: {GetDisplay(val, ruleAttr?.Rule ?? Rule.None)}");
                         }
                     }
                     section.contents = StringBuilderPool.Shared.ToStringReturn(bldr).Trim();
@@ -291,7 +292,7 @@ namespace RoundReports
             return r.Replace(s, " ");
         }
 
-        public static string GetDisplay(object val)
+        public static string GetDisplay(object val, Rule rules = Rule.None)
         {
             if (val is null)
                 return MainPlugin.Translations.NoData;
@@ -359,13 +360,17 @@ namespace RoundReports
                 }
 
                 StringBuilder bldr2 = StringBuilderPool.Shared.Rent();
-                bldr2.AppendLine();
+                if (!rules.HasFlag(Rule.CommaSeparatedList))
+                    bldr2.AppendLine();
                 foreach (var item in list)
                 {
                     if (item is null) continue;
-                    bldr2.AppendLine("- " + GetDisplay(item));
+                    if (rules.HasFlag(Rule.CommaSeparatedList))
+                        bldr2.Append(GetDisplay(item) + ", ");
+                    else
+                        bldr2.AppendLine("- " + GetDisplay(item));
                 }
-                var display = bldr2.ToString().TrimEnd(' ', '\r', '\n');
+                var display = bldr2.ToString().TrimEnd(' ', '\r', '\n', ',');
                 StringBuilderPool.Shared.Return(bldr2);
                 return display;
             }
