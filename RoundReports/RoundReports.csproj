@@ -119,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\HeaderAttribute.cs" />
+    <Compile Include="Attributes\RuleAttribute.cs" />
     <Compile Include="Attributes\TranslationAttribute.cs" />
     <Compile Include="Commands\AddRemark.cs" />
     <Compile Include="Commands\PauseReportCommand.cs" />
