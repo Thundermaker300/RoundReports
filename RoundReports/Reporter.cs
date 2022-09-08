@@ -338,9 +338,22 @@ namespace RoundReports
                 {
                     return MainPlugin.Translations.NoData;
                 }
+
+                List<DictionaryEntry> internalList = new();
+
                 StringBuilder bldr2 = StringBuilderPool.Shared.Rent();
                 bldr2.AppendLine();
+
                 foreach (DictionaryEntry item in dict)
+                {
+                    internalList.Add(item);
+                }
+
+                // Alphabetical rule
+                if (rules.HasFlag(Rule.Alphabetical))
+                    internalList = internalList.OrderBy(p => p.Key).ToList();
+
+                foreach (DictionaryEntry item in internalList)
                 {
                     if (item.Key is null || item.Value is null) continue;
                     bldr2.AppendLine("- " + GetDisplay(item.Key) + ": " + GetDisplay(item.Value));
@@ -359,10 +372,23 @@ namespace RoundReports
                     return MainPlugin.Translations.NoData;
                 }
 
+                // Hacky solution: Convert IEnumerable to a List<object> to sort it
+                List<object> internalList = new();
                 StringBuilder bldr2 = StringBuilderPool.Shared.Rent();
+
                 if (!rules.HasFlag(Rule.CommaSeparatedList))
                     bldr2.AppendLine();
+
                 foreach (var item in list)
+                {
+                    internalList.Add(item);
+                }
+
+                // Alphabetical rule
+                if (rules.HasFlag(Rule.Alphabetical))
+                    internalList.Sort();
+
+                foreach (var item in internalList)
                 {
                     if (item is null) continue;
                     if (rules.HasFlag(Rule.CommaSeparatedList))
