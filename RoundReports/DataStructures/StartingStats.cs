@@ -20,11 +20,11 @@ namespace RoundReports
         [Translation(nameof(Translation.PlayersAtStart))]
         public int PlayersAtStart { get; set; }
 
+        [Translation(nameof(Translation.Scps))]
+        public List<RoleType> SCPs { get; set; }
+
         [Translation(nameof(Translation.ClassDPersonnel))]
         public int ClassDPersonnel { get; set; }
-
-        [Translation(nameof(Translation.Scps))]
-        public int SCPs { get; set; }
 
         [Translation(nameof(Translation.Scientists))]
         public int Scientists { get; set; }

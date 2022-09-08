@@ -88,7 +88,7 @@ namespace RoundReports
                 StartingStats stats = new()
                 {
                     ClassDPersonnel = Player.Get(RoleType.ClassD).Count(),
-                    SCPs = Player.Get(Team.SCP).Count(),
+                    SCPs = Player.Get(Team.SCP).Select(player => player.Role.Type).ToList(),
                     FacilityGuards = Player.Get(RoleType.FacilityGuard).Count(),
                     Scientists = Player.Get(RoleType.Scientist).Count(),
                     StartTime = DateTime.Now,

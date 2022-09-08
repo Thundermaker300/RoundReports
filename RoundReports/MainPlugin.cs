@@ -135,7 +135,7 @@ namespace RoundReports
         [Description("Whether or not the plugin is active.")]
         public bool IsEnabled { get; set; } = true;
 
-        [Description("Your Paste.ee key. Get this from https://paste.ee/account/api after creating a paste.ee account.")]
+        [Description("Your Paste.ee key. Get this from https://paste.ee/account/api after creating a paste.ee account. The plugin cannot function without a valid Pastee key!")]
         public string PasteKey { get; set; } = "";
 
         [Description("Provide a Discord webhook to send reports to.")]
