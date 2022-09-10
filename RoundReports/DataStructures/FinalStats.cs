@@ -58,7 +58,7 @@ namespace RoundReports
         public int TutorialKills { get; set; }
 
         [Translation(nameof(Translation.SurvivingPlayers))]
-        public List<string> SurvivingPlayers { get; set; }
+        public List<string> SurvivingPlayers { get; set; } = new();
 
         [Header(nameof(Translation.WarheadStatsTitle))]
         [Translation(nameof(Translation.ButtonUnlocked))]

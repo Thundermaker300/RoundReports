@@ -13,6 +13,7 @@ using Exiled.API.Extensions;
 using Scp914;
 
 using Scp914Object = Exiled.API.Features.Scp914;
+using EBroadcast = Exiled.API.Features.Broadcast;
 
 namespace RoundReports
 {
@@ -143,9 +144,10 @@ namespace RoundReports
             SendData();
 
             // Broadcast
-            if (MainPlugin.Singleton.Config.EndingBroadcast?.Show == true)
+            EBroadcast br = MainPlugin.Singleton.Config.EndingBroadcast;
+            if (br is not null && br.Show == true)
             {
-                Map.Broadcast(MainPlugin.Singleton.Config.EndingBroadcast, true);
+                Map.Broadcast(br, true);
             }
         }
 
