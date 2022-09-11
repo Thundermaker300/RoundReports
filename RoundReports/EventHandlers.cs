@@ -142,13 +142,6 @@ namespace RoundReports
 
             // Send stats
             SendData();
-
-            // Broadcast
-            EBroadcast br = MainPlugin.Singleton.Config.EndingBroadcast;
-            if (br is not null && br.Show == true)
-            {
-                Map.Broadcast(br, true);
-            }
         }
 
         public void OnLeft(LeftEventArgs ev)

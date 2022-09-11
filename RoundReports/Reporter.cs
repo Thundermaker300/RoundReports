@@ -13,6 +13,8 @@ using System.Text.RegularExpressions;
 using System.Collections;
 using Exiled.API.Enums;
 
+using EBroadcast = Exiled.API.Features.Broadcast;
+
 namespace RoundReports
 {
     public class Reporter
@@ -216,7 +218,17 @@ namespace RoundReports
                 else
                 {
                     if (MainPlugin.Singleton.Config.SendInConsole)
+                    {
                         Log.Info($"Report uploaded successfully! Access it here: {response.link}");
+                    }
+
+                    // Broadcast
+                    EBroadcast br = MainPlugin.Singleton.Config.EndingBroadcast;
+                    if (br is not null && br.Show == true)
+                    {
+                        Map.Broadcast(br, true);
+                    }
+
                     if (!string.IsNullOrEmpty(MainPlugin.Singleton.Config.DiscordWebhook))
                     {
                         string winText = MainPlugin.Translations.WinText;
