@@ -15,7 +15,7 @@ namespace RoundReports
         {
             get
             {
-                PropertyInfo info = Reporter.TranslationType.GetProperty(KeyName);
+                PropertyInfo info = typeof(Translation).GetProperty(KeyName);
                 return info.GetValue(MainPlugin.Translations).ToString();
             }
         }

@@ -20,7 +20,6 @@ namespace RoundReports
     public class Reporter
     {
         private List<IReportStat> Stats { get; set; }
-        public static readonly Type TranslationType = typeof(Translation);
         public static Dictionary<Player, string> NameStore { get; set; }
         public bool HasSent { get; private set; } = false;
         public LeadingTeam WinTeam { get; set; } = LeadingTeam.Draw;
@@ -114,7 +113,7 @@ namespace RoundReports
                     var titleAttr = type.GetProperty("Title").GetCustomAttribute<TranslationAttribute>();
                     if (titleAttr is not null)
                     {
-                        PropertyInfo propInfo = TranslationType.GetProperty(titleAttr.KeyName);
+                        PropertyInfo propInfo = typeof(Translation).GetProperty(titleAttr.KeyName);
                         string val = propInfo.GetValue(MainPlugin.Translations).ToString();
                         sectionTitle = val;
                     }
