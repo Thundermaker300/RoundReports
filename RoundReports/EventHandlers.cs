@@ -159,7 +159,6 @@ namespace RoundReports
         {
             if (!Round.InProgress || !ev.IsAllowed) return;
             int amount = (int)Math.Round(ev.Amount);
-            if (!ev.IsAllowed) return;
             if (ev.Amount == -1 || ev.Amount > 150) amount = 150;
 
             // Stats
