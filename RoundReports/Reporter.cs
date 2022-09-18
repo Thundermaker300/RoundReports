@@ -297,13 +297,13 @@ namespace RoundReports
                                 Log.Info("Report sent to Discord successfully.");
                             }
                         }
+                    }
 
-                        // Broadcast
-                        EBroadcast br = MainPlugin.Singleton.Config.EndingBroadcast;
-                        if (br is not null && br.Show == true && Server.Broadcast is not null)
-                        {
-                            Map.Broadcast(br, true);
-                        }
+                    // Broadcast
+                    EBroadcast br = MainPlugin.Singleton.Config.EndingBroadcast;
+                    if (br is not null && br.Show == true && Server.Broadcast is not null)
+                    {
+                        Map.Broadcast(br, true);
                     }
                 }
             }
