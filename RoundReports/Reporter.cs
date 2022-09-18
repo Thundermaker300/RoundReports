@@ -320,31 +320,17 @@ namespace RoundReports
             if (val is null)
                 return MainPlugin.Translations.NoData;
             if (val is bool b)
-                return b == true ? MainPlugin.Translations.Yes : MainPlugin.Translations.No;
+                return b ? MainPlugin.Translations.Yes : MainPlugin.Translations.No;
             if (val is Player plr)
             {
                 if (!plr.IsConnected)
-                    if (NameStore.ContainsKey(plr))
-                        return $"[DC] {NameStore[plr]}";
-                    else
-                        return $"[DC] {MainPlugin.Translations.Unknown}";
-                if (plr.DoNotTrack)
-                    return DoNotTrackText;
-                else
-                    return plr.Nickname;
+                    return NameStore.ContainsKey(plr) ? $"[DC] {NameStore[plr]}" : $"[DC] {MainPlugin.Translations.Unknown}";
+                return plr.DoNotTrack ? DoNotTrackText : plr.Nickname;
             }
             else if (val is DateTime dt)
-            {
-                if (dt == DateTime.MinValue)
-                    return MainPlugin.Translations.NoData;
-                return dt.ToString(MainPlugin.Singleton.Config.TimeFormat);
-            }
+                return dt == DateTime.MinValue ? MainPlugin.Translations.NoData : dt.ToString(MainPlugin.Singleton.Config.TimeFormat);
             else if (val is TimeSpan ts)
-            {
-                if (ts == TimeSpan.Zero)
-                    return MainPlugin.Translations.NoData;
-                return $"{ts.Minutes}m{ts.Seconds}s";
-            }
+                return ts == TimeSpan.Zero ? MainPlugin.Translations.NoData : $"{ts.Minutes}m{ts.Seconds}s";
             else if (val is IDictionary dict)
             {
                 if (dict.Count == 0)
