@@ -230,9 +230,7 @@ namespace RoundReports
                 else
                 {
                     if (MainPlugin.Singleton.Config.SendInConsole)
-                    {
                         Log.Info($"Report uploaded successfully! Access it here: {response.link}");
-                    }
 
                     if (!string.IsNullOrEmpty(MainPlugin.Singleton.Config.DiscordWebhook))
                     {
@@ -287,16 +285,10 @@ namespace RoundReports
                         discordWWW.SetRequestHeader("Content-Type", "application/json");
                         yield return Timing.WaitUntilDone(discordWWW.SendWebRequest());
                         if (discordWWW.isHttpError || discordWWW.isNetworkError)
-                        {
                             Log.Warn($"Error when attempting to send report to discord log: {discordWWW.error}");
-                        }
                         else
-                        {
                             if (MainPlugin.Singleton.Config.SendInConsole)
-                            {
                                 Log.Info("Report sent to Discord successfully.");
-                            }
-                        }
                     }
 
                     // Broadcast
@@ -332,24 +324,14 @@ namespace RoundReports
             if (val is Player plr)
             {
                 if (!plr.IsConnected)
-                {
                     if (NameStore.ContainsKey(plr))
-                    {
                         return $"[DC] {NameStore[plr]}";
-                    }
                     else
-                    {
                         return $"[DC] {MainPlugin.Translations.Unknown}";
-                    }
-                }
                 if (plr.DoNotTrack)
-                {
                     return DoNotTrackText;
-                }
                 else
-                {
                     return plr.Nickname;
-                }
             }
             else if (val is DateTime dt)
             {
@@ -366,9 +348,7 @@ namespace RoundReports
             else if (val is IDictionary dict)
             {
                 if (dict.Count == 0)
-                {
                     return MainPlugin.Translations.NoData;
-                }
 
                 List<DictionaryEntry> internalList = new();
 
@@ -398,10 +378,9 @@ namespace RoundReports
                 // Check for zero results
                 int i = 0;
                 foreach (var item in list) i++;
+
                 if (i == 0)
-                {
                     return MainPlugin.Translations.NoData;
-                }
 
                 // Hacky solution: Convert IEnumerable to a List<object> to sort it
                 List<object> internalList = new();
@@ -411,9 +390,7 @@ namespace RoundReports
                     bldr2.AppendLine();
 
                 foreach (var item in list)
-                {
                     internalList.Add(item);
-                }
 
                 // Alphabetical rule
                 if (rules.HasFlag(Rule.Alphabetical))
@@ -432,9 +409,7 @@ namespace RoundReports
                 return display;
             }
             else
-            {
                 return val.ToString();
-            }
         }
     }
 }
