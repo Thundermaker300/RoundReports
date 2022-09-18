@@ -233,13 +233,6 @@ namespace RoundReports
                         Log.Info($"Report uploaded successfully! Access it here: {response.link}");
                     }
 
-                    // Broadcast
-                    EBroadcast br = MainPlugin.Singleton.Config.EndingBroadcast;
-                    if (br is not null && br.Show == true)
-                    {
-                        Map.Broadcast(br, true);
-                    }
-
                     if (!string.IsNullOrEmpty(MainPlugin.Singleton.Config.DiscordWebhook))
                     {
                         string winText = MainPlugin.Translations.WinText;
@@ -302,6 +295,13 @@ namespace RoundReports
                             {
                                 Log.Info("Report sent to Discord successfully.");
                             }
+                        }
+
+                        // Broadcast
+                        EBroadcast br = MainPlugin.Singleton.Config.EndingBroadcast;
+                        if (br is not null && br.Show == true && Server.Broadcast is not null)
+                        {
+                            Map.Broadcast(br, true);
                         }
                     }
                 }
