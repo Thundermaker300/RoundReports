@@ -34,8 +34,7 @@ namespace RoundReports
         public T GetStat<T>()
             where T: class, IReportStat, new()
         {
-            var value = Holding.FirstOrDefault(r => r.GetType() == typeof(T)) as T;
-            if (value is null)
+            if (Holding.FirstOrDefault(r => r.GetType() == typeof(T)) is not T value)
                 value = new T();
             return value;
         }

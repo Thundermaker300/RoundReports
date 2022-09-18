@@ -82,8 +82,8 @@ namespace RoundReports
 
         public PasteEntry BuildReport()
         {
-            var entry = new PasteEntry() { description = $"{MainPlugin.Singleton.Config.ServerName} | {DateTime.Now.ToString("MMMM dd, yyyy hh:mm:ss tt")}", sections = new(1) };
-            entry.expiration = StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime);
+            var entry = new PasteEntry() { Description = $"{MainPlugin.Singleton.Config.ServerName} | {DateTime.Now.ToString("MMMM dd, yyyy hh:mm:ss tt")}", Sections = new(1) };
+            entry.Expiration = StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime);
             foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IReportStat))))
             {
                 if (!Stats.Any(r => r.GetType() == type))
@@ -103,16 +103,16 @@ namespace RoundReports
             {
                 var section = new PasteSection()
                 {
-                    name = MainPlugin.Singleton.Translation.RoundRemarks,
-                    syntax = "text",
-                    contents = string.Empty,
+                    Name = MainPlugin.Singleton.Translation.RoundRemarks,
+                    Syntax = "text",
+                    Contents = string.Empty,
 
                 };
                 StringBuilder bldr = StringBuilderPool.Shared.Rent();
                 foreach (var remark in Remarks)
                     bldr.AppendLine(remark);
-                section.contents = bldr.ToString();
-                entry.sections.Add(section);
+                section.Contents = bldr.ToString();
+                entry.Sections.Add(section);
                 StringBuilderPool.Shared.Return(bldr);
             }
             // Stats
@@ -132,9 +132,9 @@ namespace RoundReports
                     }
                     var section = new PasteSection()
                     {
-                        name = sectionTitle,
-                        syntax = "text",
-                        contents = MainPlugin.Singleton.Translation.NoData,
+                        Name = sectionTitle,
+                        Syntax = "text",
+                        Contents = MainPlugin.Singleton.Translation.NoData,
                     };
                     StringBuilder bldr = StringBuilderPool.Shared.Rent();
                     foreach (PropertyInfo pinfo in type.GetProperties())
@@ -163,9 +163,9 @@ namespace RoundReports
                             bldr.AppendLine($"{attr.Text}: {GetDisplay(val, ruleAttr?.Rule ?? Rule.None)}");
                         }
                     }
-                    section.contents = StringBuilderPool.Shared.ToStringReturn(bldr).Trim();
-                    if (string.IsNullOrEmpty(section.contents)) section.contents = MainPlugin.Singleton.Translation.NoData;
-                    entry.sections.Add(section);
+                    section.Contents = StringBuilderPool.Shared.ToStringReturn(bldr).Trim();
+                    if (string.IsNullOrEmpty(section.Contents)) section.Contents = MainPlugin.Singleton.Translation.NoData;
+                    entry.Sections.Add(section);
                 }
                 catch (Exception e)
                 {
@@ -221,7 +221,7 @@ namespace RoundReports
                     Timing.RunCoroutine(TryUpload(data, iter + 1));
                     yield break;
                 }
-                if (response is null || !response.success)
+                if (response is null || !response.Success)
                 {
                     Log.Warn("Unknown error when uploading the report. Retrying upload.");
                     Timing.RunCoroutine(TryUpload(data, iter + 1));
@@ -230,7 +230,7 @@ namespace RoundReports
                 else
                 {
                     if (MainPlugin.Singleton.Config.SendInConsole)
-                        Log.Info($"Report uploaded successfully! Access it here: {response.link}");
+                        Log.Info($"Report uploaded successfully! Access it here: {response.Link}");
 
                     if (!string.IsNullOrEmpty(MainPlugin.Singleton.Config.DiscordWebhook))
                     {
@@ -260,7 +260,7 @@ namespace RoundReports
                                         LeadingTeam.Draw => 10197915,
                                         _ => 10197915,
                                     },
-                                    Description = winText + "\n" + response.link,
+                                    Description = winText + "\n" + response.Link,
                                     Fields = new()
                                     {
                                         new()
