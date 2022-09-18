@@ -14,6 +14,7 @@ using EBroadcast = Exiled.API.Features.Broadcast;
 using System;
 using Exiled.Loader;
 using System.Reflection;
+using Exiled.API.Enums;
 
 namespace RoundReports
 {
@@ -23,6 +24,7 @@ namespace RoundReports
         public override string Author => "Thunder";
         public override Version Version => new(0, 2, 3);
         public override Version RequiredExiledVersion => new(5, 2, 2);
+        public override PluginPriority Priority => PluginPriority.Last;
 
 
         public static Reporter Reporter { get; set; }
