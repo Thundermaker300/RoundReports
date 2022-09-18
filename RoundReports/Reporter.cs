@@ -274,7 +274,7 @@ namespace RoundReports
                                         new()
                                         {
                                             Name = MainPlugin.Singleton.Translation.ExpireDate,
-                                            Value = StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime) == 0 ? "Never" : $"<t:{DateTimeOffset.UtcNow.AddSeconds(StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime)).ToUnixTimeSeconds()}:D>",
+                                            Value = StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime) == 0 ? MainPlugin.Translations.Never : $"<t:{DateTimeOffset.UtcNow.AddSeconds(StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime)).ToUnixTimeSeconds()}:D>",
                                             Inline = true,
                                         }
                                     },

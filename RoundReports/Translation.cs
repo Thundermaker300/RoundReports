@@ -19,6 +19,8 @@ namespace RoundReports
         public string Stalemate { get; set; } = "Stalemate";
         public string Yes { get; set; } = "Yes";
         public string No { get; set; } = "No";
+        [Description("Only shown on Discord embed if expiration is set to \"Never\" in configs.")]
+        public string Never { get; set; } = "Never";
 
         [Description("Generally should never show, but JUST in case.")]
         public string Unknown { get; set; } = "Unknown";
