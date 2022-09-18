@@ -48,6 +48,15 @@ namespace RoundReports
             return player.Role.Type.ToString();
         }
 
+        public string GetTeam(Player player)
+        {
+            if (player.SessionVariables.ContainsKey("IsSH"))
+                return "SH";
+            else if (player.SessionVariables.ContainsKey("IsUIU"))
+                return "UIU";
+            return player.Role.Team.ToString();
+        }
+
         public void OnWaitingForPlayers()
         {
             FirstEscape = false;
@@ -111,6 +120,7 @@ namespace RoundReports
             // Fill out door destroyed stat
             var stats = GetStat<FinalStats>();
             stats.DoorsDestroyed = Door.List.Count(d => d.IsBroken);
+
             // Fill out final stats
             stats.EndTime = DateTime.Now;
             stats.WinningTeam = ev.LeadingTeam switch
@@ -134,6 +144,50 @@ namespace RoundReports
             SendData();
         }
 
+        // Credit to RespawnTimer for this method
+        private bool IsSerpentsHandTeamSpawnable()
+        {
+            if (MainPlugin.SerpentsHandAssembly == null)
+                return false;
+
+            Type type = MainPlugin.SerpentsHandAssembly.GetType("SerpentsHand");
+            var singleton = type.GetField("Singleton").GetValue(null);
+            return (bool)type.GetField("IsSpawnable").GetValue(singleton);
+        }
+
+        // and this method
+        private bool IsUIUTeamSpawnable()
+        {
+            if (MainPlugin.UIURescueSquadAssembly == null)
+                return false;
+
+            return (bool)MainPlugin.UIURescueSquadAssembly.GetType("UIURescueSquad.EventHandlers")?.GetField("IsSpawnable").GetValue(null);
+        }
+
+        public void OnRespawningTeam(RespawningTeamEventArgs ev)
+        {
+            if (!Round.InProgress) return;
+            if (!ev.IsAllowed) return;
+            RespawnStats stats = GetStat<RespawnStats>();
+
+            if (ev.NextKnownTeam is Respawning.SpawnableTeamType.NineTailedFox)
+            {
+                if (IsUIUTeamSpawnable())
+                    stats.SpawnWaves.Add("UIU");
+                else if (ev.IsAllowed)
+                    stats.SpawnWaves.Add("Nine Tailed Fox");
+            }
+            else if (ev.NextKnownTeam is Respawning.SpawnableTeamType.ChaosInsurgency)
+            {
+                if (IsSerpentsHandTeamSpawnable())
+                    stats.SpawnWaves.Add("Serpent's Hand");
+                else if (ev.IsAllowed)
+                    stats.SpawnWaves.Add("Chaos Insurgency");
+            }
+
+            Hold(stats);
+        }
+
         public void OnLeft(LeftEventArgs ev)
         {
             if (!Reporter.NameStore.ContainsKey(ev.Player))
@@ -143,6 +197,15 @@ namespace RoundReports
                 else
                     Reporter.NameStore.Add(ev.Player, Reporter.DoNotTrackText);
             }
+        }
+
+        public void OnSpawned(SpawnedEventArgs ev)
+        {
+            if (!Round.InProgress || GetTeam(ev.Player) is not "SH" or "UIU" or "MTF" or "CHI") return;
+            RespawnStats stats = GetStat<RespawnStats>();
+            stats.TotalRespawnedPlayers++;
+            stats.Respawns.Add($"[{DateTime.Now.ToString(MainPlugin.Singleton.Config.ShortTimeFormat)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player)).Replace("{ROLE}", GetRole(ev.Player)));
+            Hold(stats);
         }
 
         public void OnHurting(HurtingEventArgs ev)

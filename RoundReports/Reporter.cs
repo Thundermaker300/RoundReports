@@ -65,7 +65,7 @@ namespace RoundReports
 
         public void AddRemark(string remark)
         {
-            Remarks.Add($"[{DateTime.Now.ToString("HH:mm:ss")}] {remark}");
+            Remarks.Add($"[{DateTime.Now.ToString(MainPlugin.Singleton.Config.ShortTimeFormat)}] {remark}");
         }
 
         public static long StringLengthToLong(string length) => length.ToLower() switch
@@ -328,7 +328,7 @@ namespace RoundReports
                 return plr.DoNotTrack ? DoNotTrackText : plr.Nickname;
             }
             else if (val is DateTime dt)
-                return dt == DateTime.MinValue ? MainPlugin.Translations.NoData : dt.ToString(MainPlugin.Singleton.Config.TimeFormat);
+                return dt == DateTime.MinValue ? MainPlugin.Translations.NoData : dt.ToString(MainPlugin.Singleton.Config.FullTimeFormat);
             else if (val is TimeSpan ts)
                 return ts == TimeSpan.Zero ? MainPlugin.Translations.NoData : $"{ts.Minutes}m{ts.Seconds}s";
             else if (val is IDictionary dict)

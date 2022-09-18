@@ -140,6 +140,13 @@ namespace RoundReports
         public string Detonated { get; set; } = "Detonated";
         public string DetonationTime { get; set; } = "Detonation Time";
 
+        // Respawn Stats
+        public string RespawnTitle { get; set; } = "Respawn Statistics";
+        public string SpawnWaves { get; set; } = "Spawn Waves";
+        public string TotalRespawnedPlayers { get; set; } = "Total Respawned Players";
+        public string Respawns { get; set; } = "Respawns";
+        public string RespawnLog { get; set; } = "{PLAYER} respawned as {ROLE}.";
+
         // Remarks
         public string DoorRemark { get; set; } = "{PLAYER} [{ROLE}] was the first to open a door ({MILLISECOND}ms)!";
         public string EscapeRemark { get; set; } = "{PLAYER} [{ROLE}] was the first to escape ({MINUTE}m{SECOND}s)!";

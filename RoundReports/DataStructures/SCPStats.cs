@@ -14,7 +14,7 @@ namespace RoundReports
     {
         [Translation(nameof(Translation.ScpTitle))]
         public string Title => "SCP Statistics";
-        public int Order => 6;
+        public int Order => 7;
 
         [Translation(nameof(Translation.FemurBreakerActivated))]
         public bool FemurBreakerActivated { get; set; }

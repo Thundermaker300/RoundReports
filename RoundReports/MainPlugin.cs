@@ -12,6 +12,8 @@ using Scp914Events = Exiled.Events.Handlers.Scp914;
 using WarheadEvents = Exiled.Events.Handlers.Warhead;
 using EBroadcast = Exiled.API.Features.Broadcast;
 using System;
+using Exiled.Loader;
+using System.Reflection;
 
 namespace RoundReports
 {
@@ -26,6 +28,9 @@ namespace RoundReports
         public static Reporter Reporter { get; set; }
         public static MainPlugin Singleton { get; private set; }
         public static EventHandlers Handlers { get; private set; }
+
+        public static Assembly SerpentsHandAssembly;
+        public static Assembly UIURescueSquadAssembly;
 
         public static Translation Translations => Singleton.Translation;
 
@@ -55,9 +60,11 @@ namespace RoundReports
             // Server Events
             ServerEvents.RoundStarted += Handlers.OnRoundStarted;
             ServerEvents.RoundEnded += Handlers.OnRoundEnded;
+            ServerEvents.RespawningTeam += Handlers.OnRespawningTeam;
 
             // Player Events
             PlayerEvents.Left += Handlers.OnLeft;
+            PlayerEvents.Spawned += Handlers.OnSpawned;
             PlayerEvents.Hurting += Handlers.OnHurting;
             PlayerEvents.Dying += Handlers.OnDying;
             PlayerEvents.UsedItem += Handlers.OnUsedItem;
@@ -82,6 +89,22 @@ namespace RoundReports
             WarheadEvents.Starting += Handlers.OnWarheadStarting;
             WarheadEvents.Detonated += Handlers.OnWarheadDetonated;
 
+            // Load SH and UIU assemblies
+            // Credit to RespawnTimer for this code
+            foreach (IPlugin<IConfig> plugin in Loader.Plugins)
+            {
+                if (plugin.Name == "SerpentsHand" && plugin.Config.IsEnabled)
+                {
+                    SerpentsHandAssembly = plugin.Assembly;
+                }
+
+                if (plugin.Name == "UIURescueSquad" && plugin.Config.IsEnabled)
+                {
+                    UIURescueSquadAssembly = plugin.Assembly;
+                }
+            }
+
+
             base.OnEnabled();
         }
 
@@ -94,6 +117,7 @@ namespace RoundReports
             // Server Events
             ServerEvents.RoundStarted -= Handlers.OnRoundStarted;
             ServerEvents.RoundEnded -= Handlers.OnRoundEnded;
+            ServerEvents.RespawningTeam -= Handlers.OnRespawningTeam;
 
             // Player Events
             PlayerEvents.Left -= Handlers.OnLeft;
@@ -152,6 +176,7 @@ namespace RoundReports
         public string ServerName { get; set; } = string.Empty;
 
         [Description("Determines the format of timestamps.")]
-        public string TimeFormat { get; set; } = "MMMM dd, yyyy hh:mm:ss tt";
+        public string FullTimeFormat { get; set; } = "MMMM dd, yyyy hh:mm:ss tt";
+        public string ShortTimeFormat { get; set; } = "HH:mm:ss";
     }
 }
