@@ -70,6 +70,7 @@ namespace RoundReports
 
         public static long StringLengthToLong(string length) => length.ToLower() switch
         {
+            "1d" => 86400,
             "7d" => 604800,
             "14d" => 1211100,
             "1m" => 2631000,
