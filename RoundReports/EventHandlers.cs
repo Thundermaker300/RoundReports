@@ -82,6 +82,15 @@ namespace RoundReports
             ListPool<IReportStat>.Shared.Return(Holding);
         }
 
+        // This is to account for plugins such as SCPSwap, as well as SCP deaths early on, etc.
+        private IEnumerator<float> RecordSCPsStats()
+        {
+            yield return Timing.WaitForSeconds(60f);
+            StartingStats stats = GetStat<StartingStats>();
+            stats.SCPs = Player.Get(Team.SCP).Select(player => player.Role.Type).ToList();
+            Hold(stats);
+        }
+
         public void OnRoundStarted()
         {
             Timing.CallDelayed(.5f, () =>
@@ -101,6 +110,7 @@ namespace RoundReports
                     stats.Players.Add($"{Reporter.GetDisplay(player)} [{GetRole(player)}]");
                 }
                 Hold(stats);
+                Timing.RunCoroutine(RecordSCPsStats().CancelWith(Server.Host.GameObject));
             });
         }
 
