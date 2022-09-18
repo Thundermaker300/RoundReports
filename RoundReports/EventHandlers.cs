@@ -201,10 +201,10 @@ namespace RoundReports
 
         public void OnSpawned(SpawnedEventArgs ev)
         {
-            if (!Round.InProgress || GetTeam(ev.Player) is not "SH" or "UIU" or "MTF" or "CHI") return;
+            if (!Round.InProgress || GetTeam(ev.Player) is not ("SH" or "UIU" or "MTF" or "CHI")) return;
             RespawnStats stats = GetStat<RespawnStats>();
             stats.TotalRespawnedPlayers++;
-            stats.Respawns.Add($"[{DateTime.Now.ToString(MainPlugin.Singleton.Config.ShortTimeFormat)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player)).Replace("{ROLE}", GetRole(ev.Player)));
+            stats.Respawns.Insert(0, $"[{DateTime.Now.ToString(MainPlugin.Singleton.Config.ShortTimeFormat)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player)).Replace("{ROLE}", GetRole(ev.Player)));
             Hold(stats);
         }
 
@@ -247,7 +247,7 @@ namespace RoundReports
                 // Kill logs
                 string killerRole = GetRole(ev.Killer);
                 string dyingRole = GetRole(ev.Target);
-                killStats.PlayerKills.Insert(0, $"[{DateTime.Now.ToString("hh:mm:ss tt")}] {Reporter.GetDisplay(ev.Killer)} [{killerRole}] killed {Reporter.GetDisplay(ev.Target)} [{dyingRole}]");
+                killStats.PlayerKills.Insert(0, $"[{DateTime.Now.ToString(MainPlugin.Singleton.Config.ShortTimeFormat)}] {Reporter.GetDisplay(ev.Killer)} [{killerRole}] killed {Reporter.GetDisplay(ev.Target)} [{dyingRole}]");
                 // Kill by player
                 if (!killStats.KillsByPlayer.ContainsKey(ev.Killer))
                     killStats.KillsByPlayer.Add(ev.Killer, 1);

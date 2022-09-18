@@ -128,6 +128,7 @@
     <Compile Include="DataStructures\IReportStat.cs" />
     <Compile Include="DataStructures\OrganizedDamageStats.cs" />
     <Compile Include="DataStructures\OrganizedKillsStats.cs" />
+    <Compile Include="DataStructures\RespawnStats.cs" />
     <Compile Include="DataStructures\StartingStats.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="MainPlugin.cs" />

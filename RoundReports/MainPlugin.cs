@@ -124,6 +124,7 @@ namespace RoundReports
             // Player Events
             PlayerEvents.Left -= Handlers.OnLeft;
             PlayerEvents.Hurting -= Handlers.OnHurting;
+            PlayerEvents.Spawned -= Handlers.OnSpawned;
             PlayerEvents.Dying -= Handlers.OnDying;
             PlayerEvents.UsedItem -= Handlers.OnUsedItem;
             PlayerEvents.InteractingDoor -= Handlers.OnInteractingDoor;
