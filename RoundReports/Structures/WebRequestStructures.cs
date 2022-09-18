@@ -9,6 +9,7 @@ namespace RoundReports
     public class PasteEntry
     {
         public string description { get; set; }
+        public long expiration { get; set; }
         public List<PasteSection> sections { get; set; }
     }
 

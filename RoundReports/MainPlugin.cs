@@ -138,6 +138,9 @@ namespace RoundReports
         [Description("Your Paste.ee key. Get this from https://paste.ee/account/api after creating a paste.ee account. The plugin cannot function without a valid Pastee key!")]
         public string PasteKey { get; set; } = "";
 
+        [Description("Time until reports expire. Valid values: never, 7D, 14D, 1M, 3M, 6M")]
+        public string ExpiryTime { get; set; } = "1M";
+
         [Description("Provide a Discord webhook to send reports to.")]
         public string DiscordWebhook { get; set; } = string.Empty;
         [Description("Send report links in server console when compiled?")]

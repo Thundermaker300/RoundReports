@@ -68,9 +68,21 @@ namespace RoundReports
             Remarks.Add($"[{DateTime.Now.ToString("HH:mm:ss")}] {remark}");
         }
 
+        public static long StringLengthToLong(string length) => length.ToLower() switch
+        {
+            "7d" => 604800,
+            "14d" => 1211100,
+            "1m" => 2631000,
+            "3m" => 7890000,
+            "6m" => 15770000,
+            "never" => 0,
+            _ => StringLengthToLong("1M"),
+        };
+
         public PasteEntry BuildReport()
         {
             var entry = new PasteEntry() { description = $"{MainPlugin.Singleton.Config.ServerName} | {DateTime.Now.ToString("MMMM dd, yyyy hh:mm:ss tt")}", sections = new(1) };
+            entry.expiration = StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime);
             foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IReportStat))))
             {
                 if (!Stats.Any(r => r.GetType() == type))
@@ -268,7 +280,7 @@ namespace RoundReports
                                         new()
                                         {
                                             Name = MainPlugin.Singleton.Translation.ExpireDate,
-                                            Value = $"<t:{DateTimeOffset.UtcNow.AddDays(28).ToUnixTimeSeconds()}:D>",
+                                            Value = StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime) == 0 ? "Never" : $"<t:{DateTimeOffset.UtcNow.AddSeconds(StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime)).ToUnixTimeSeconds()}:D>",
                                             Inline = true,
                                         }
                                     },
@@ -283,6 +295,13 @@ namespace RoundReports
                         if (discordWWW.isHttpError || discordWWW.isNetworkError)
                         {
                             Log.Warn($"Error when attempting to send report to discord log: {discordWWW.error}");
+                        }
+                        else
+                        {
+                            if (MainPlugin.Singleton.Config.SendInConsole)
+                            {
+                                Log.Info("Report sent to Discord successfully.");
+                            }
                         }
                     }
                 }
