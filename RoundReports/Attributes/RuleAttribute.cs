@@ -14,7 +14,7 @@ namespace RoundReports
         /// <summary>
         /// Can be used on lists and dictionaries to sort them alphabetically. Dictionaries will sort by key.
         /// </summary>
-        Alphabetical = 1,
+        Alphabetical = 1, // note: this currently does not work lol
 
         /// <summary>
         /// Can be used on lists to turn them into a comma separated list, rather than the default setting.
