@@ -407,7 +407,7 @@ namespace RoundReports
 
         public void OnScp079TriggeringDoor(TriggeringDoorEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed || ev.Door.IsOpen) return;
             if (Player.List.Count(plr => plr != ev.Player && GetTeam(plr) is "SCP" && Vector3.Distance(ev.Door.Transform.position, plr.GameObject.transform.position) <= 20) == 0)
                 return;
             
