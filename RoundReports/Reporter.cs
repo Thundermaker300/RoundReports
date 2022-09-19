@@ -14,6 +14,7 @@ using System.Collections;
 using Exiled.API.Enums;
 
 using EBroadcast = Exiled.API.Features.Broadcast;
+using System.Security.Policy;
 
 namespace RoundReports
 {
@@ -39,9 +40,11 @@ namespace RoundReports
         }
 
         public T GetStat<T>()
-            where T: class, IReportStat
+            where T: class, IReportStat, new()
         {
-            return Stats.FirstOrDefault(r => r is T) as T;
+            if (Stats.FirstOrDefault(r => r is T) is not T stat)
+                return new T();
+            return stat;
         }
 
         public void SetStat(IReportStat stat)
@@ -251,6 +254,7 @@ namespace RoundReports
                                 new()
                                 {
                                     Title = MainPlugin.Singleton.Translation.RoundReport,
+                                    Url = "https://github.com/Thundermaker300/RoundReports",
                                     TimeStamp = DateTime.Now,
                                     Color = WinTeam switch
                                     {
@@ -265,13 +269,13 @@ namespace RoundReports
                                     {
                                         new()
                                         {
-                                            Name = MainPlugin.Singleton.Translation.PostDate,
+                                            Name = MainPlugin.Translations.PostDate,
                                             Value = $"<t:{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}:D>",
                                             Inline = true
                                         },
                                         new()
                                         {
-                                            Name = MainPlugin.Singleton.Translation.ExpireDate,
+                                            Name = MainPlugin.Translations.ExpireDate,
                                             Value = StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime) == 0 ? MainPlugin.Translations.Never : $"<t:{DateTimeOffset.UtcNow.AddSeconds(StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime)).ToUnixTimeSeconds()}:D>",
                                             Inline = true,
                                         }
@@ -282,8 +286,7 @@ namespace RoundReports
                                         .Replace("{PLAYERCOUNT}", Player.List.Count().ToString())
                                         .Replace("{ROUNDTIME}", GetDisplay(Round.ElapsedTime))
                                         .Replace("{TOTALKILLS}", GetStat<FinalStats>().TotalKills.ToString())
-                                        .Replace("{TOTALDEATHS}", GetStat<FinalStats>().TotalDeaths.ToString())
-                                        + " | [Get the Plugin](https://github.com/Thundermaker300/RoundReports)",
+                                        .Replace("{TOTALDEATHS}", GetStat<FinalStats>().TotalDeaths.ToString()),
                                     }
                                 }
                             },
