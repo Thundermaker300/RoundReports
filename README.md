@@ -35,4 +35,5 @@ MVP is calculated by granting players points for specific actions. These points 
 | Die (Warhead, Decontamination, Tesla) | -2               |
 | Take 3 Candies                        | -10              |
 | Kill Teammate                         | -10              |
+
 \*+1 for each player in the room. Does not include SCPs, Tutorials, and Serpent's Hand (if the plugin is installed).
