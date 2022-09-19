@@ -278,7 +278,12 @@ namespace RoundReports
                                     },
                                     Footer = new()
                                     {
-                                        Text = MainPlugin.Translations.ConnectedPlayers.Replace("{PLAYERS}", Player.List.Count().ToString()) + " | [Get the Plugin](https://github.com/Thundermaker300/RoundReports)",
+                                        Text = MainPlugin.Singleton.Config.FooterText
+                                        .Replace("{PLAYERCOUNT}", Player.List.Count().ToString())
+                                        .Replace("{ROUNDTIME}", GetDisplay(Round.ElapsedTime))
+                                        .Replace("{TOTALKILLS}", GetStat<FinalStats>().TotalKills.ToString())
+                                        .Replace("{TOTALDEATHS}", GetStat<FinalStats>().TotalDeaths.ToString())
+                                        + " | [Get the Plugin](https://github.com/Thundermaker300/RoundReports)",
                                     }
                                 }
                             },
