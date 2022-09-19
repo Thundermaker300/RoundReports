@@ -20,20 +20,35 @@ Note: Statistics from users with Do Not Track (DNT) enabled will still be shown,
 ## MVP Statistic Info
 MVP is calculated by granting players points for specific actions. These points can also be taken away by other actions. There are two separate point systems, and as such two separate MVPs: One for SCPs, and one for humans. Full list of actions and the points they grant or remove below. (Configurable: Coming soon)
 
+### Human Points
+
 | **Action**                            | **Point Change** |
 |---------------------------------------|------------------|
 | Kill SCP                              | +10              |
-| Level Up (SCP-079)                    | +10              |
 | Sacrifice in Femur Breaker            | +6               |
 | Escape                                | +5               |
 | Press Femur Breaker Button            | +4               |
 | Kill Scientist                        | +3               |
 | Kill Player (Not Scientist)           | +2               |
 | Open Warhead Panel (Surface)          | +2               |
-| Lockdown Room (SCP-079)               | +1*              |
 | Die (Most Causes)                     | -1               |
 | Die (Warhead, Decontamination, Tesla) | -2               |
 | Take 3 Candies                        | -10              |
 | Kill Teammate                         | -10              |
 
-\*+1 for each player in the room. Does not include SCPs, Tutorials, and Serpent's Hand (if the plugin is installed).
+
+### SCP Points
+
+| **Action**                            | **Point Change** |
+|---------------------------------------|------------------|
+| Level Up (SCP-079)                    | +5               |
+| Kill Scientist                        | +3               |
+| Kill Player (Not Scientist)           | +2               |
+| Open Door (SCP-079)                   | +1-3\*\*         |
+| Call Elevator (SCP Nearby) (SCP-079)  | +2               |
+| Lockdown Room (SCP-079)               | +1\*             |
+| Die (Most Causes)                     | -5               |
+| Die (Warhead, Decontamination, Tesla) | -10              |
+
+\*+1 for each player in the room. Does not include SCPs, Tutorials, and Serpent's Hand (if the plugin is installed).  
+\*\*+1 if there is an SCP nearby. +2 if the door is a keycard door and there is an SCP nearby. +3 for keycarded gate with SCP nearby.

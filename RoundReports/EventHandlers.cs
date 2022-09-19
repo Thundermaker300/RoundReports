@@ -14,6 +14,7 @@ using Scp914;
 
 using Scp914Object = Exiled.API.Features.Scp914;
 using UnityEngine.Assertions.Must;
+using UnityEngine;
 
 namespace RoundReports
 {
@@ -344,13 +345,13 @@ namespace RoundReports
 
                 // Killer points
                 if (ev.Target.Role.Side == ev.Killer.Role.Side)
-                    RemovePoints(ev.Killer, 10);
+                    RemovePoints(ev.Killer, 10); // Kill teammate
                 else if (GetTeam(ev.Target) == "SCP")
-                    AddPoints(ev.Killer, 10);
+                    AddPoints(ev.Killer, 10); // Kill SCP
                 else if (GetTeam(ev.Target) == "RSC")
-                    AddPoints(ev.Killer, 3);
+                    AddPoints(ev.Killer, 3); // Kill scientist
                 else
-                    AddPoints(ev.Killer, 2);
+                    AddPoints(ev.Killer, 2); // Other kills
             }
 
             // Kill by type
@@ -363,11 +364,11 @@ namespace RoundReports
 
             // Target Points
             if (ev.Handler.Type is DamageType.FemurBreaker)
-                AddPoints(ev.Target, 6);
+                AddPoints(ev.Target, 6); // Sacrifice
             else if (ev.Handler.Type is DamageType.Warhead or DamageType.Decontamination or DamageType.Tesla)
-                RemovePoints(ev.Target, 2);
+                RemovePoints(ev.Target, ev.Target.IsScp ? 10 : 2); // Dumb causes
             else
-                RemovePoints(ev.Target, 1);
+                RemovePoints(ev.Target, ev.Target.IsScp ? 5 : 1); // Other causes
         }
 
         public void OnDroppingItem(DroppingItemEventArgs ev)
@@ -392,16 +393,31 @@ namespace RoundReports
         public void OnScp079GainingLevel(GainingLevelEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed) return;
-            AddPoints(ev.Player, 10);
+            AddPoints(ev.Player, 5);
         }
 
         public void OnScp079Lockdown(LockingDownEventArgs ev)
         {
             Timing.CallDelayed(1.15f, () =>
             {
-                int count = Player.List.Count(plr => plr.CurrentRoom.RoomIdentifier == ev.RoomGameObject && GetTeam(plr) is not "SCP" or "SH" && GetRole(plr) is not "Tutorial");
+                int count = Player.List.Count(plr => plr.CurrentRoom.RoomIdentifier == ev.RoomGameObject && GetTeam(plr) is not ("SCP" or "SH") && GetRole(plr) is not "Tutorial");
                 AddPoints(ev.Player, count);
             });
+        }
+
+        public void OnScp079TriggeringDoor(TriggeringDoorEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed) return;
+            if (Player.List.Count(plr => plr != ev.Player && GetTeam(plr) is "SCP" && Vector3.Distance(ev.Door.Transform.position, plr.GameObject.transform.position) <= 20) == 0)
+                return;
+            
+            int pts = 1;
+            if (ev.Door.IsKeycardDoor)
+            {
+                if (ev.Door.IsGate) pts++;
+                pts++;
+            };
+            AddPoints(ev.Player, pts);
         }
 
         public void OnScp096Charge(ChargingEventArgs ev)
