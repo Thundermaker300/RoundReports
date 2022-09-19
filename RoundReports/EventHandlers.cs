@@ -263,7 +263,7 @@ namespace RoundReports
                     switch (ev.Killer.Role.Team)
                     {
                         case Team.SCP:
-                            stats.MTFKills++;
+                            stats.SCPKills++;
                             break;
                         case Team.CDP:
                             stats.DClassKills++;
