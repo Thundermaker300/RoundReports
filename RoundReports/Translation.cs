@@ -149,7 +149,9 @@ namespace RoundReports
 
         // MVPs
         public string MVPTitle { get; set; } = "Round MVPs";
-        public string MVP { get; set; } = "MVP";
+        public string HumanMVP { get; set; } = "Human MVP";
+        public string SCPMVP { get; set; } = "SCP MVP";
+        public string SCPPlayers { get; set; } = "SCP Players";
 
         // Remarks
         public string DoorRemark { get; set; } = "{PLAYER} [{ROLE}] was the first to open a door ({MILLISECOND}ms)!";

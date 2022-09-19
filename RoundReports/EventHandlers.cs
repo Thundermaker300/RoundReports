@@ -17,10 +17,16 @@ using UnityEngine.Assertions.Must;
 
 namespace RoundReports
 {
+    public enum PointTeam
+    {
+        Human,
+        SCP,
+    }
+
     public class EventHandlers
     {
         public List<IReportStat> Holding { get; set; }
-        public Dictionary<Player, int> Points { get; set; } = new();
+        public Dictionary<PointTeam, Dictionary<Player, int>> Points { get; set; } = new();
         public bool FirstEscape { get; set; } = false;
         public bool FirstUpgrade { get; set; } = false;
         public bool FirstKill { get; set; } = false;
@@ -61,20 +67,24 @@ namespace RoundReports
 
         public void AddPoints(Player plr, int amount)
         {
+            var PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
             if (plr.DoNotTrack || GetRole(plr) == "Tutorial")
                 return;
-            if (Points.ContainsKey(plr))
-                Points[plr] += amount;
-            Points[plr] = amount;
+            if (Points[PT].ContainsKey(plr))
+                Points[PT][plr] += amount;
+            else
+                Points[PT][plr] = amount;
         }
 
         public void RemovePoints(Player plr, int amount)
         {
+            var PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
             if (plr.DoNotTrack || GetRole(plr) == "Tutorial")
                 return;
-            if (Points.ContainsKey(plr))
-                Points[plr] -= amount;
-            Points[plr] = 0 - amount;
+            if (Points[PT].ContainsKey(plr))
+                Points[PT][plr] -= amount;
+            else
+                Points[PT][plr] = 0 - amount;
         }
 
         public void OnWaitingForPlayers()
@@ -85,6 +95,8 @@ namespace RoundReports
             FirstDoor = false;
             Holding = ListPool<IReportStat>.Shared.Rent();
             Points.Clear();
+            Points[PointTeam.SCP] = new();
+            Points[PointTeam.Human] = new();
             MainPlugin.Reporter = new Reporter();
         }
 
@@ -94,10 +106,13 @@ namespace RoundReports
                 return;
 
             // Compile MVP info
-            var sortedData = Points.OrderBy(data => data.Value);
+            var sortedHumanData = Points[PointTeam.Human].OrderBy(data => data.Value);
+            var sortedSCPData = Points[PointTeam.SCP].OrderBy(data => data.Value);
             MVPStats MVPInfo = GetStat<MVPStats>();
-            MVPInfo.MVP = sortedData.First().Key;
-            MVPInfo.Players = sortedData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
+            MVPInfo.HumanMVP = sortedHumanData.First().Key;
+            MVPInfo.SCPMVP = sortedSCPData.First().Key;
+            MVPInfo.Players = sortedHumanData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
+            MVPInfo.SCPPlayers = sortedSCPData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
             Hold(MVPInfo);
 
             // Set Stats
@@ -377,7 +392,7 @@ namespace RoundReports
         public void OnScp079GainingLevel(GainingLevelEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed) return;
-            AddPoints(ev.Player, 8);
+            AddPoints(ev.Player, 10);
         }
 
         public void OnScp079Lockdown(LockingDownEventArgs ev)

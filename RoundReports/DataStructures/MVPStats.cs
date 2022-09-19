@@ -13,9 +13,13 @@ namespace RoundReports
         [Translation(nameof(Translation.MVPTitle))]
         public string Title => "MVPs";
         public int Order => 51;
-        [Translation(nameof(Translation.MVP))]
-        public Player MVP { get; set; }
+        [Translation(nameof(Translation.HumanMVP))]
+        public Player HumanMVP { get; set; }
+
+        [Translation(nameof(Translation.SCPMVP))]
+        public Player SCPMVP { get; set; }
         [Translation(nameof(Translation.Players))]
         public Dictionary<Player, int> Players { get; set; }
+        public Dictionary<Player, int> SCPPlayers { get; set; }
     }
 }

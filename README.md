@@ -18,12 +18,12 @@ Note: Statistics from users with Do Not Track (DNT) enabled will still be shown,
  Adds a remark to the report. Can be used to specify event rounds & etc.
 
 ## MVP Statistic Info
-MVP is calculated by granting players points for specific actions. These points can also be taken away by other actions. Full list of actions and the points they grant or remove below. (Configurable: Coming soon)
+MVP is calculated by granting players points for specific actions. These points can also be taken away by other actions. There are two separate point systems, and as such two separate MVPs: One for SCPs, and one for humans. Full list of actions and the points they grant or remove below. (Configurable: Coming soon)
 
 | **Action**                            | **Point Change** |
 |---------------------------------------|------------------|
 | Kill SCP                              | +10              |
-| Level Up (SCP-079)                    | +8               |
+| Level Up (SCP-079)                    | +10              |
 | Sacrifice in Femur Breaker            | +6               |
 | Escape                                | +5               |
 | Press Femur Breaker Button            | +4               |
