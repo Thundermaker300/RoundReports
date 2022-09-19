@@ -177,7 +177,6 @@ namespace RoundReports
             }
 
             // Conclude
-            Kill();
             return entry;
         }
 
@@ -264,7 +263,7 @@ namespace RoundReports
                                         LeadingTeam.Draw => 10197915,
                                         _ => 10197915,
                                     },
-                                    Description = winText + "\n" + response.Link,
+                                    Description = winText + "\n" + $"[{MainPlugin.Translations.ViewReport}]({response.Link})",
                                     Fields = new()
                                     {
                                         new()
@@ -309,6 +308,7 @@ namespace RoundReports
                     {
                         Map.Broadcast(br, true);
                     }
+                    Timing.CallDelayed(.25f, Kill);
                 }
             }
             else
