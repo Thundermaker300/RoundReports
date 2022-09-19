@@ -45,7 +45,6 @@ MVP is calculated by granting players points for specific actions. These points 
 | Kill Scientist                        | +3               |
 | Kill Player (Not Scientist)           | +2               |
 | Open Door (SCP-079)                   | +1-3\*\*         |
-| Call Elevator (SCP Nearby) (SCP-079)  | +2               |
 | Lockdown Room (SCP-079)               | +1\*             |
 | Die (Most Causes)                     | -5               |
 | Die (Warhead, Decontamination, Tesla) | -10              |
