@@ -4,6 +4,7 @@ using System.ComponentModel;
 
 using ServerEvents = Exiled.Events.Handlers.Server;
 using PlayerEvents = Exiled.Events.Handlers.Player;
+using Scp079Events = Exiled.Events.Handlers.Scp079;
 using Scp096Events = Exiled.Events.Handlers.Scp096;
 using Scp106Events = Exiled.Events.Handlers.Scp106;
 using Scp173Events = Exiled.Events.Handlers.Scp173;
@@ -74,6 +75,7 @@ namespace RoundReports
             PlayerEvents.Escaping += Handlers.OnEscaping;
             PlayerEvents.DroppingItem += Handlers.OnDroppingItem;
 
+            Scp079Events.GainingLevel += Handlers.OnScp079GainingLevel;
             Scp096Events.Charging += Handlers.OnScp096Charge;
             Scp096Events.Enraging += Handlers.OnScp096Enrage;
             Scp106Events.Containing += Handlers.OnContaining106;
@@ -131,6 +133,7 @@ namespace RoundReports
             PlayerEvents.Escaping -= Handlers.OnEscaping;
             PlayerEvents.DroppingItem -= Handlers.OnDroppingItem;
 
+            Scp079Events.GainingLevel -= Handlers.OnScp079GainingLevel;
             Scp096Events.Charging -= Handlers.OnScp096Charge;
             Scp096Events.Enraging -= Handlers.OnScp096Enrage;
             Scp106Events.Containing -= Handlers.OnContaining106;

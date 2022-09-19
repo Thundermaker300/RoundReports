@@ -126,6 +126,7 @@
     <Compile Include="Attributes\HideIfDefaultAttribute.cs" />
     <Compile Include="DataStructures\FinalStats.cs" />
     <Compile Include="DataStructures\IReportStat.cs" />
+    <Compile Include="DataStructures\MVPStats.cs" />
     <Compile Include="DataStructures\OrganizedDamageStats.cs" />
     <Compile Include="DataStructures\OrganizedKillsStats.cs" />
     <Compile Include="DataStructures\RespawnStats.cs" />

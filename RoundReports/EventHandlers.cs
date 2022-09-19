@@ -13,12 +13,14 @@ using Exiled.API.Extensions;
 using Scp914;
 
 using Scp914Object = Exiled.API.Features.Scp914;
+using UnityEngine.Assertions.Must;
 
 namespace RoundReports
 {
     public class EventHandlers
     {
         public List<IReportStat> Holding { get; set; }
+        public Dictionary<Player, int> Points { get; set; } = new();
         public bool FirstEscape { get; set; } = false;
         public bool FirstUpgrade { get; set; } = false;
         public bool FirstKill { get; set; } = false;
@@ -57,6 +59,24 @@ namespace RoundReports
             return player.Role.Team.ToString();
         }
 
+        public void AddPoints(Player plr, int amount)
+        {
+            if (plr.DoNotTrack || GetRole(plr) == "Tutorial")
+                return;
+            if (Points.ContainsKey(plr))
+                Points[plr] += amount;
+            Points[plr] = amount;
+        }
+
+        public void RemovePoints(Player plr, int amount)
+        {
+            if (plr.DoNotTrack || GetRole(plr) == "Tutorial")
+                return;
+            if (Points.ContainsKey(plr))
+                Points[plr] -= amount;
+            Points[plr] = 0 - amount;
+        }
+
         public void OnWaitingForPlayers()
         {
             FirstEscape = false;
@@ -64,6 +84,7 @@ namespace RoundReports
             FirstKill = false;
             FirstDoor = false;
             Holding = ListPool<IReportStat>.Shared.Rent();
+            Points.Clear();
             MainPlugin.Reporter = new Reporter();
         }
 
@@ -72,10 +93,21 @@ namespace RoundReports
             if (MainPlugin.Reporter is null)
                 return;
 
+            // Compile MVP info
+            var sortedData = Points.OrderBy(data => data.Value);
+            MVPStats MVPInfo = GetStat<MVPStats>();
+            MVPInfo.MVP = sortedData.First().Key;
+            MVPInfo.Players = sortedData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
+            Hold(MVPInfo);
+
+            // Set Stats
             foreach (var stat in Holding)
                 MainPlugin.Reporter.SetStat(stat);
+
+            // Send
             if (!MainPlugin.Reporter.HasSent)
                 MainPlugin.Reporter.SendReport();
+
             ListPool<IReportStat>.Shared.Return(Holding);
         }
 
@@ -253,6 +285,7 @@ namespace RoundReports
                     killStats.KillsByPlayer.Add(ev.Killer, 1);
                 else
                     killStats.KillsByPlayer[ev.Killer]++;
+
                 stats.TotalKills++;
                 if (GetRole(ev.Killer) == "UIU")
                     stats.UIUKills++;
@@ -293,7 +326,18 @@ namespace RoundReports
                     MainPlugin.Reporter.AddRemark(killText);
                     FirstKill = true;
                 }
+
+                // Killer points
+                if (ev.Target.Role.Side == ev.Killer.Role.Side)
+                    RemovePoints(ev.Killer, 10);
+                else if (GetTeam(ev.Target) == "SCP")
+                    AddPoints(ev.Killer, 10);
+                else if (GetTeam(ev.Target) == "RSC")
+                    AddPoints(ev.Killer, 3);
+                else
+                    AddPoints(ev.Killer, 2);
             }
+
             // Kill by type
             if (!killStats.KillsByType.ContainsKey(ev.Handler.Type))
                 killStats.KillsByType.Add(ev.Handler.Type, 1);
@@ -301,6 +345,14 @@ namespace RoundReports
                 killStats.KillsByType[ev.Handler.Type]++;
             Hold(killStats);
             Hold(stats);
+
+            // Target Points
+            if (ev.Handler.Type is DamageType.FemurBreaker)
+                AddPoints(ev.Target, 6);
+            else if (ev.Handler.Type is DamageType.Warhead or DamageType.Decontamination or DamageType.Tesla)
+                RemovePoints(ev.Target, 2);
+            else
+                RemovePoints(ev.Target, 1);
         }
 
         public void OnDroppingItem(DroppingItemEventArgs ev)
@@ -320,6 +372,21 @@ namespace RoundReports
             else
                 stats.PlayerDrops[ev.Player] = 1;
             Hold(stats);
+        }
+
+        public void OnScp079GainingLevel(GainingLevelEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed) return;
+            AddPoints(ev.Player, 8);
+        }
+
+        public void OnScp079Lockdown(LockingDownEventArgs ev)
+        {
+            Timing.CallDelayed(1.15f, () =>
+            {
+                int count = Player.List.Count(plr => plr.CurrentRoom.RoomIdentifier == ev.RoomGameObject && GetTeam(plr) is not "SCP" or "SH" && GetRole(plr) is not "Tutorial");
+                AddPoints(ev.Player, count);
+            });
         }
 
         public void OnScp096Charge(ChargingEventArgs ev)
@@ -344,6 +411,7 @@ namespace RoundReports
             var stats = GetStat<SCPStats>();
             stats.FemurBreakerActivated = true;
             Hold(stats);
+            AddPoints(ev.ButtonPresser, 4);
         }
 
         public void OnScp106Teleport(TeleportingEventArgs ev)
@@ -465,7 +533,10 @@ namespace RoundReports
 
             // Hands
             if (ev.ShouldSever)
+            {
                 stats.SeveredHands++;
+                RemovePoints(ev.Player, 10);
+            }
 
             // Candies Taken
             if (!stats.CandiesTaken.ContainsKey(ev.Candy))
@@ -488,6 +559,7 @@ namespace RoundReports
                     .Replace("{SECOND}", Round.ElapsedTime.Seconds.ToString());
                 MainPlugin.Reporter.AddRemark(escapeText);
             }
+            AddPoints(ev.Player, 5);
         }
 
         public void OnActivatingScp914(ActivatingEventArgs ev)
@@ -551,7 +623,10 @@ namespace RoundReports
             var stats = GetStat<FinalStats>();
             stats.ButtonUnlocked = true;
             if (stats.ButtonUnlocker == null)
+            {
                 stats.ButtonUnlocker = ev.Player;
+                AddPoints(ev.Player, 2);
+            }
             Hold(stats);
         }
 
@@ -559,8 +634,7 @@ namespace RoundReports
         {
             if (!ev.IsAllowed || !Round.InProgress) return;
             var stats = GetStat<FinalStats>();
-            if (stats.FirstActivator == null)
-                stats.FirstActivator = ev.Player;
+            stats.FirstActivator ??= ev.Player;
             Hold(stats);
         }
 

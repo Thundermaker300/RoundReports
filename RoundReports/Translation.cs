@@ -147,6 +147,10 @@ namespace RoundReports
         public string Respawns { get; set; } = "Respawns";
         public string RespawnLog { get; set; } = "{PLAYER} respawned as {ROLE}.";
 
+        // MVPs
+        public string MVPTitle { get; set; } = "Round MVPs";
+        public string MVP { get; set; } = "MVP";
+
         // Remarks
         public string DoorRemark { get; set; } = "{PLAYER} [{ROLE}] was the first to open a door ({MILLISECOND}ms)!";
         public string EscapeRemark { get; set; } = "{PLAYER} [{ROLE}] was the first to escape ({MINUTE}m{SECOND}s)!";
