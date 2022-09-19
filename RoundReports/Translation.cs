@@ -21,7 +21,7 @@ namespace RoundReports
         public string No { get; set; } = "No";
         [Description("Only shown on Discord embed if expiration is set to \"Never\" in configs.")]
         public string Never { get; set; } = "Never";
-
+        public string ConnectedPlayers { get; set; } = "{PLAYERS} players connected";
         [Description("Generally should never show, but JUST in case.")]
         public string Unknown { get; set; } = "Unknown";
 

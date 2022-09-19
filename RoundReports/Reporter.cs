@@ -276,6 +276,10 @@ namespace RoundReports
                                             Inline = true,
                                         }
                                     },
+                                    Footer = new()
+                                    {
+                                        Text = MainPlugin.Translations.ConnectedPlayers.Replace("{PLAYERS}", Player.List.Count().ToString()) + " | [Get the Plugin](https://github.com/Thundermaker300/RoundReports)",
+                                    }
                                 }
                             },
                         };
