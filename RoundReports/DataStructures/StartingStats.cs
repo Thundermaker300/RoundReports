@@ -12,7 +12,7 @@ namespace RoundReports
     {
         [Translation(nameof(Translation.StartingTitle))]
         public string Title => "Starting Statistics";
-        public int Order => 2;
+        public int Order => 3;
 
         [Translation(nameof(Translation.StartTime))]
         public DateTime StartTime { get; set; }

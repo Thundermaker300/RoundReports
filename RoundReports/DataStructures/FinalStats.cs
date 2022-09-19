@@ -12,7 +12,7 @@ namespace RoundReports
     {
         [Translation(nameof(Translation.FinalStatsTitle))]
         public string Title => "Final Statistics";
-        public int Order => 1;
+        public int Order => 2;
 
         [Header(nameof(Translation.EndofRoundSummary))]
         [Translation(nameof(Translation.WinningTeam))]

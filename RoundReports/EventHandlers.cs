@@ -68,9 +68,10 @@ namespace RoundReports
 
         public void AddPoints(Player plr, int amount)
         {
-            var PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
             if (plr.DoNotTrack || GetRole(plr) == "Tutorial")
                 return;
+
+            var PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
             if (Points[PT].ContainsKey(plr))
                 Points[PT][plr] += amount;
             else
@@ -79,9 +80,10 @@ namespace RoundReports
 
         public void RemovePoints(Player plr, int amount)
         {
-            var PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
             if (plr.DoNotTrack || GetRole(plr) == "Tutorial")
                 return;
+
+            var PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
             if (Points[PT].ContainsKey(plr))
                 Points[PT][plr] -= amount;
             else
@@ -110,10 +112,19 @@ namespace RoundReports
             var sortedHumanData = Points[PointTeam.Human].OrderBy(data => data.Value);
             var sortedSCPData = Points[PointTeam.SCP].OrderBy(data => data.Value);
             MVPStats MVPInfo = GetStat<MVPStats>();
-            MVPInfo.HumanMVP = sortedHumanData.First().Key;
-            MVPInfo.SCPMVP = sortedSCPData.First().Key;
-            MVPInfo.Players = sortedHumanData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
-            MVPInfo.SCPPlayers = sortedSCPData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
+
+            if (sortedHumanData.Count() >= 1)
+            {
+                var mvp = sortedHumanData.First();
+                MVPInfo.HumanMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
+            }
+            if (sortedSCPData.Count() >= 1)
+            {
+                var mvp = sortedSCPData.First();
+                MVPInfo.SCPMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
+            }
+            MVPInfo.HumanPoints = sortedHumanData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
+            MVPInfo.SCPPoints = sortedSCPData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
             Hold(MVPInfo);
 
             // Set Stats

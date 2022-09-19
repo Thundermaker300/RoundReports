@@ -12,14 +12,16 @@ namespace RoundReports
     {
         [Translation(nameof(Translation.MVPTitle))]
         public string Title => "MVPs";
-        public int Order => 51;
+        public int Order => 1;
         [Translation(nameof(Translation.HumanMVP))]
         public Player HumanMVP { get; set; }
 
         [Translation(nameof(Translation.SCPMVP))]
         public Player SCPMVP { get; set; }
-        [Translation(nameof(Translation.Players))]
-        public Dictionary<Player, int> Players { get; set; }
-        public Dictionary<Player, int> SCPPlayers { get; set; }
+        [Translation(nameof(Translation.HumanPoints))]
+        public Dictionary<Player, int> HumanPoints { get; set; }
+
+        [Translation(nameof(Translation.SCPPoints))]
+        public Dictionary<Player, int> SCPPoints { get; set; }
     }
 }
