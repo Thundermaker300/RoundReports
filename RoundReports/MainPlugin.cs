@@ -77,6 +77,7 @@ namespace RoundReports
 
             Scp079Events.GainingLevel += Handlers.OnScp079GainingLevel;
             Scp079Events.LockingDown += Handlers.OnScp079Lockdown;
+            Scp079Events.TriggeringDoor += Handlers.OnScp079TriggeringDoor;
             Scp096Events.Charging += Handlers.OnScp096Charge;
             Scp096Events.Enraging += Handlers.OnScp096Enrage;
             Scp106Events.Containing += Handlers.OnContaining106;
@@ -136,6 +137,7 @@ namespace RoundReports
 
             Scp079Events.GainingLevel -= Handlers.OnScp079GainingLevel;
             Scp079Events.LockingDown -= Handlers.OnScp079Lockdown;
+            Scp079Events.TriggeringDoor -= Handlers.OnScp079TriggeringDoor;
             Scp096Events.Charging -= Handlers.OnScp096Charge;
             Scp096Events.Enraging -= Handlers.OnScp096Enrage;
             Scp106Events.Containing -= Handlers.OnContaining106;
