@@ -68,7 +68,7 @@ namespace RoundReports
 
         public void AddPoints(Player plr, int amount)
         {
-            if (plr.DoNotTrack || GetRole(plr) == "Tutorial")
+            if (plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead)
                 return;
 
             var PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
@@ -80,7 +80,7 @@ namespace RoundReports
 
         public void RemovePoints(Player plr, int amount)
         {
-            if (plr.DoNotTrack || GetRole(plr) == "Tutorial")
+            if (plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead)
                 return;
 
             var PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
