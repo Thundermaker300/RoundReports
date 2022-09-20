@@ -313,7 +313,7 @@ namespace RoundReports
             }
             else
             {
-                Log.Warn($"Report failed to post to pastee, retrying. Error: {pasteWWW.error}");
+                Log.Warn($"Report failed to post to Pastee, retrying. Error: {pasteWWW.error}");
                 Timing.RunCoroutine(TryUpload(data, iter + 1));
             }
         }
