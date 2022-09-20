@@ -108,25 +108,6 @@ namespace RoundReports
             if (MainPlugin.Reporter is null)
                 return;
 
-            // Compile MVP info
-            var sortedHumanData = Points[PointTeam.Human].OrderByDescending(data => data.Value);
-            var sortedSCPData = Points[PointTeam.SCP].OrderByDescending(data => data.Value);
-            MVPStats MVPInfo = GetStat<MVPStats>();
-
-            if (sortedHumanData.Count() >= 1)
-            {
-                var mvp = sortedHumanData.First();
-                MVPInfo.HumanMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
-            }
-            if (sortedSCPData.Count() >= 1)
-            {
-                var mvp = sortedSCPData.First();
-                MVPInfo.SCPMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
-            }
-            MVPInfo.HumanPoints = sortedHumanData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
-            MVPInfo.SCPPoints = sortedSCPData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
-            Hold(MVPInfo);
-
             // Set Stats
             foreach (var stat in Holding)
                 MainPlugin.Reporter.SetStat(stat);
@@ -168,13 +149,7 @@ namespace RoundReports
             });
         }
 
-        public void OnRestarting()
-        {
-            if (MainPlugin.Reporter is not null && !MainPlugin.Reporter.HasSent)
-                SendData();
-        }
-
-        public void OnRoundEnded(RoundEndedEventArgs ev)
+        private void FillOutFinalStats(LeadingTeam leadingTeam = LeadingTeam.Draw)
         {
             // Fill out door destroyed stat
             var stats = GetStat<FinalStats>();
@@ -182,7 +157,7 @@ namespace RoundReports
 
             // Fill out final stats
             stats.EndTime = DateTime.Now;
-            stats.WinningTeam = ev.LeadingTeam switch
+            stats.WinningTeam = leadingTeam switch
             {
                 LeadingTeam.Anomalies => MainPlugin.Translations.ScpTeam,
                 LeadingTeam.ChaosInsurgency => MainPlugin.Translations.InsurgencyTeam,
@@ -191,16 +166,53 @@ namespace RoundReports
                 _ => MainPlugin.Translations.Unknown
             };
 
+            // Set Leading Team
             if (MainPlugin.Reporter is not null)
-                MainPlugin.Reporter.WinTeam = ev.LeadingTeam;
+                MainPlugin.Reporter.WinTeam = leadingTeam;
 
+            // Finish with final stats
             stats.RoundTime = Round.ElapsedTime;
             foreach (var player in Player.Get(plr => plr.IsAlive))
                 stats.SurvivingPlayers.Add($"{Reporter.GetDisplay(player)} ({GetRole(player)})");
+
             Hold(stats);
 
-            // Send stats
-            SendData();
+            // Compile MVP info
+            var sortedHumanData = Points[PointTeam.Human].OrderByDescending(data => data.Value);
+            var sortedSCPData = Points[PointTeam.SCP].OrderByDescending(data => data.Value);
+            MVPStats MVPInfo = GetStat<MVPStats>();
+
+            if (sortedHumanData.Count() >= 1)
+            {
+                var mvp = sortedHumanData.First();
+                MVPInfo.HumanMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
+            }
+            if (sortedSCPData.Count() >= 1)
+            {
+                var mvp = sortedSCPData.First();
+                MVPInfo.SCPMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
+            }
+            MVPInfo.HumanPoints = sortedHumanData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
+            MVPInfo.SCPPoints = sortedSCPData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
+            Hold(MVPInfo);
+        }
+
+        public void OnRestarting()
+        {
+            if (MainPlugin.Reporter is not null && !MainPlugin.Reporter.HasSent)
+            {
+                FillOutFinalStats();
+                SendData();
+            }
+        }
+
+        public void OnRoundEnded(RoundEndedEventArgs ev)
+        {
+            if (MainPlugin.Reporter is not null && !MainPlugin.Reporter.HasSent)
+            {
+                FillOutFinalStats(ev.LeadingTeam);
+                SendData();
+            }
         }
 
         // Credit to RespawnTimer for this method
