@@ -180,7 +180,7 @@ namespace RoundReports
                         }
                     }
                     section.Contents = StringBuilderPool.Shared.ToStringReturn(bldr).Trim();
-                    if (string.IsNullOrEmpty(section.Contents)) section.Contents = MainPlugin.Singleton.Translation.NoData;
+                    if (string.IsNullOrEmpty(section.Contents)) continue;
                     entry.Sections.Add(section);
                 }
                 catch (Exception e)
