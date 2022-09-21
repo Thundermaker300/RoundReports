@@ -16,12 +16,15 @@ namespace RoundReports
 
         [Rule(Rule.CommaSeparatedList)]
         [Translation(nameof(Translation.SpawnWaves))]
+        [BindStat(StatType.SpawnWaves)]
         public List<string> SpawnWaves { get; set; } = new();
 
         [Translation(nameof(Translation.TotalRespawnedPlayers))]
+        [BindStat(StatType.TotalRespawnedPlayers)]
         public int TotalRespawnedPlayers { get; set; } = 0;
 
         [Translation(nameof(Translation.Respawns))]
+        [BindStat(StatType.Respawns)]
         public List<string> Respawns { get; set; } = new();
     }
 }

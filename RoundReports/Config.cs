@@ -8,12 +8,104 @@ namespace RoundReports
 {
     public enum StatType
     {
+        // Start Stats
         StartTime,
         StartClassD,
         StartScientist,
         StartSCP,
         StartFacilityGuard,
         StartPlayers,
+
+        // MVP Stats
+        HumanMVP,
+        SCPMVP,
+        HumanPoints,
+        SCPPoints,
+
+        // Final Stats
+        WinningTeam,
+        EndTime,
+        RoundTime,
+        TotalDeaths,
+        TotalKills,
+        SCPKills,
+        DClassKills,
+        ScientistKills,
+        MTFKills,
+        ChaosKills,
+        SerpentsHandKills,
+        UIUKills,
+        TutorialKills,
+        SurvivingPlayers,
+
+        //-- Warhead
+        ButtonUnlocked,
+        ButtonUnlocker,
+        FirstWarheadActivator,
+        Detonated,
+        DetonationTime,
+
+        //-- Doors
+        DoorsOpened,
+        DoorsClosed,
+        DoorsDestroyed,
+        PlayerDoorsOpened,
+        PlayerDoorsClosed,
+
+        // Respawn Stats
+        SpawnWaves,
+        TotalRespawnedPlayers,
+        Respawns,
+
+        // Item Stats
+        TotalDrops,
+        Drops,
+        PlayerDrops,
+        KeycardScans,
+        PainkillersConsumed,
+        MedkitsConsumed,
+        AdrenalinesConsumed,
+        SCP500sConsumed,
+
+        // SCP Stats
+        FemurBreakerActivated,
+        Scp096Charges,
+        Scp096Enrages,
+        Scp106Teleports,
+        Scp173Blinks,
+        Scp018sThrown,
+        Scp207sDrank,
+        Scp268Uses,
+        Scp1853Uses,
+
+        //-- SCP-330
+        First330Use,
+        First330User,
+        TotalCandiesTaken,
+        SeveredHands,
+        CandiesTaken,
+        CandiesByPlayer,
+
+        //-- SCP-914
+        First914Activation,
+        First914Activator,
+        Total914Activations,
+        TotalItemUpgrades,
+        KeycardUpgrades,
+        FirearmUpgrades,
+        AllActivations,
+        AllUpgrades,
+
+        // Kill Stats
+        KillsByPlayer,
+        KillsByType,
+        PlayerKills,
+
+        // Damage Stats
+        TotalDamage,
+        PlayerDamage,
+        DamageByPlayer,
+        DamageByType,
     }
 
     public class Config : IConfig
@@ -43,7 +135,7 @@ namespace RoundReports
         [Description("Determines the format of timestamps.")]
         public string FullTimeFormat { get; set; } = "MMMM dd, yyyy hh:mm:ss tt";
         public string ShortTimeFormat { get; set; } = "HH:mm:ss";
-        [Description("Determine which statistics are included in the report.")]
+        [Description("Determine which statistics are included in the report. Some stats will only be shown if applicable (eg. Serpent's Hand kills will only show if the server has Serpent's Hand installed).")]
         public Dictionary<StatType, bool> AllowedStats { get; set; } = (System.Enum.GetValues(typeof(StatType)) as StatType[]).ToDictionary(stat => stat, stat => true);
     }
 }

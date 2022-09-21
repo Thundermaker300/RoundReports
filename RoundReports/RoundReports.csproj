@@ -118,6 +118,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\BindStatAttribute.cs" />
     <Compile Include="Attributes\HeaderAttribute.cs" />
     <Compile Include="Attributes\RuleAttribute.cs" />
     <Compile Include="Attributes\TranslationAttribute.cs" />

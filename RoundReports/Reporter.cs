@@ -15,7 +15,6 @@ using Exiled.API.Enums;
 
 using EBroadcast = Exiled.API.Features.Broadcast;
 using System.Security.Policy;
-using RoundReports.Attributes;
 
 namespace RoundReports
 {
