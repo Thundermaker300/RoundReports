@@ -36,6 +36,9 @@ namespace RoundReports
         public static Assembly UIURescueSquadAssembly;
 
         public static Translation Translations => Singleton.Translation;
+        public static Config Configs => Singleton.Config;
+
+        public static bool Check(StatType type) => Configs.AllowedStats.ContainsKey(type) ? Configs.AllowedStats[type] : false;
 
         public override void OnEnabled()
         {

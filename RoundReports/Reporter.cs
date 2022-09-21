@@ -15,6 +15,7 @@ using Exiled.API.Enums;
 
 using EBroadcast = Exiled.API.Features.Broadcast;
 using System.Security.Policy;
+using RoundReports.Attributes;
 
 namespace RoundReports
 {
@@ -143,17 +144,30 @@ namespace RoundReports
                     foreach (PropertyInfo pinfo in type.GetProperties())
                     {
                         if (pinfo.Name is "Title" or "Order") continue;
+
+                        // Show headers
+                        var headerAttribute = pinfo.GetCustomAttribute<HeaderAttribute>();
+                        if (headerAttribute is not null)
+                        {
+                            bldr.AppendLine($"\n====== {headerAttribute.Header} ======");
+                        }
+
+                        // Hide if default value
                         var hideAttr = pinfo.GetCustomAttribute<HideIfDefaultAttribute>();
                         var propertyValue = pinfo.GetValue(stat);
                         if (hideAttr is not null && object.Equals(propertyValue, GetDefault(pinfo.PropertyType)))
                         {
                             continue;
                         }
-                        var headerAttribute = pinfo.GetCustomAttribute<HeaderAttribute>();
-                        if (headerAttribute is not null)
+
+                        // Hide if server disabled
+                        var bindAttribute = pinfo.GetCustomAttribute<BindStatAttribute>();
+                        if (bindAttribute is not null && !MainPlugin.Check(bindAttribute.Type))
                         {
-                            bldr.AppendLine($"\n====== {headerAttribute.Header} ======");
+                            continue;
                         }
+
+                        // Rules & Translation
                         var ruleAttr = pinfo.GetCustomAttribute<RuleAttribute>();
                         var attr = pinfo.GetCustomAttribute<TranslationAttribute>();
                         if (attr is null)

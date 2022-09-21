@@ -1,9 +1,21 @@
 ﻿using Exiled.API.Interfaces;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using EBroadcast = Exiled.API.Features.Broadcast;
 
 namespace RoundReports
 {
+    public enum StatType
+    {
+        StartTime,
+        StartClassD,
+        StartScientist,
+        StartSCP,
+        StartFacilityGuard,
+        StartPlayers,
+    }
+
     public class Config : IConfig
     {
         [Description("Whether or not the plugin is active.")]
@@ -31,5 +43,7 @@ namespace RoundReports
         [Description("Determines the format of timestamps.")]
         public string FullTimeFormat { get; set; } = "MMMM dd, yyyy hh:mm:ss tt";
         public string ShortTimeFormat { get; set; } = "HH:mm:ss";
+        [Description("Determine which statistics are included in the report.")]
+        public Dictionary<StatType, bool> AllowedStats { get; set; } = (System.Enum.GetValues(typeof(StatType)) as StatType[]).ToDictionary(stat => stat, stat => true);
     }
 }
