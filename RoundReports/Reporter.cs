@@ -72,12 +72,17 @@ namespace RoundReports
 
         public static long StringLengthToLong(string length) => length.ToLower() switch
         {
-            "1d" => 86400,
-            "7d" => 604800,
-            "14d" => 1211100,
-            "1m" => 2631000,
-            "3m" => 7890000,
-            "6m" => 15770000,
+            "1h" => 3600,
+            "12h" => StringLengthToLong("1H") * 12,
+            "1d" => StringLengthToLong("12H") * 2,
+            "7d" => StringLengthToLong("1D") * 7,
+            "14d" => StringLengthToLong("7D") * 2,
+            "1m" => StringLengthToLong("1D") * 30,
+            "2m" => StringLengthToLong("1M") * 2,
+            "3m" => StringLengthToLong("1M") * 3,
+            "6m" => StringLengthToLong("3M") * 2,
+            "1y" => StringLengthToLong("6M") * 2,
+            "2y" => StringLengthToLong("1Y") * 2,
             "never" => 0,
             _ => StringLengthToLong("1M"),
         };
