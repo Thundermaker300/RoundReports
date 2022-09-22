@@ -64,7 +64,7 @@ namespace RoundReports
 
         public void AddPoints(Player plr, int amount)
         {
-            if (plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead)
+            if (plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
                 return;
 
             var PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;

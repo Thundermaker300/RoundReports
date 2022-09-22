@@ -123,7 +123,7 @@ namespace RoundReports
         public string DiscordWebhook { get; set; } = string.Empty;
         [Description("Send report links in server console when compiled?")]
         public bool SendInConsole { get; set; } = true;
-        [Description("If set to true, users with Do Not Track enabled will be excluded from all stats entirely. If set to false, they will be included with a removed name (including in round remarks). For single-player stats (eg. warhead button opener) and kill logs, they will be shown as a do not track player.")]
+        [Description("If set to true, users with Do Not Track enabled will be excluded from all stats entirely. If set to false, they will be included with a removed name (including in round remarks). For single-player stats (eg. warhead button opener) and kill logs, they will be shown as a do not track player. DNT Players will never be shown in the MVP stats.")]
         public bool ExcludeDNTUsers { get; set; } = false;
         [Description("Broadcast to show at the end of the round.")]
         public EBroadcast EndingBroadcast { get; set; } = new EBroadcast("View the end-of-round report on our Discord server!");
@@ -139,7 +139,7 @@ namespace RoundReports
         public string ShortTimeFormat { get; set; } = "HH:mm:ss";
         [Description("Determine which statistics are included in the report. Some stats will only be shown if applicable (eg. Serpent's Hand kills will only show if the server has Serpent's Hand installed).")]
         public Dictionary<StatType, bool> AllowedStats { get; set; } = (System.Enum.GetValues(typeof(StatType)) as StatType[]).ToDictionary(stat => stat, stat => true);
-        [Description("A list of players who will be ignored from stats, regardless of their do not track setting. For single-player stats (eg. warhead button opener) and kill logs, they will be shown as a do not track player.")]
+        [Description("A list of players (by user id) who will be ignored from stats, regardless of their do not track setting. For single-player stats (eg. warhead button opener) and kill logs, they will be shown as a do not track player.")]
         public List<string> IgnoredUsers { get; set; } = new() { "12345@steam" };
     }
 }
