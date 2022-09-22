@@ -125,6 +125,8 @@ namespace RoundReports
         public bool SendInConsole { get; set; } = true;
         [Description("If set to true, users with Do Not Track enabled will be excluded from all stats entirely. If set to false, they will be included with a removed name (including in round remarks). For single-player stats (eg. warhead button opener) and kill logs, they will be shown as a do not track player. DNT Players will never be shown in the MVP stats.")]
         public bool ExcludeDNTUsers { get; set; } = false;
+        [Description("If set to true, stats from tutorial users will be entirely ignored. Does not affect Serpent's Hand (if installed).")]
+        public bool ExcludeTutorials { get; set; } = false;
         [Description("Broadcast to show at the end of the round.")]
         public EBroadcast EndingBroadcast { get; set; } = new EBroadcast("View the end-of-round report on our Discord server!");
 

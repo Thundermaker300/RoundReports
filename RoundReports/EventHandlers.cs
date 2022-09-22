@@ -44,7 +44,7 @@ namespace RoundReports
             return value;
         }
 
-        public string GetRole(Player player)
+        public static string GetRole(Player player)
         {
             if (player.SessionVariables.ContainsKey("IsSH"))
                 return "SerpentsHand";
@@ -129,8 +129,13 @@ namespace RoundReports
             bool flag = true;
             if (ply is not null)
             {
+
+                if (GetRole(ply) == "Tutorial" && MainPlugin.Configs.ExcludeTutorials)
+                    return false; // Exit func early (we don't want to show hidden message for tutorial exclusion)
+
                 if (ply.DoNotTrack && MainPlugin.Configs.ExcludeDNTUsers)
                     flag = false;
+
                 if (MainPlugin.Configs.IgnoredUsers.Contains(ply.UserId))
                     flag = false;
             }
@@ -283,7 +288,7 @@ namespace RoundReports
 
         public void OnSpawned(SpawnedEventArgs ev)
         {
-            if (!Round.InProgress || ECheck(ev.Player) || GetTeam(ev.Player) is not ("SH" or "UIU" or "MTF" or "CHI")) return;
+            if (!Round.InProgress || !ECheck(ev.Player) || GetTeam(ev.Player) is not ("SH" or "UIU" or "MTF" or "CHI")) return;
             RespawnStats stats = GetStat<RespawnStats>();
             stats.TotalRespawnedPlayers++;
             stats.Respawns.Insert(0, $"[{DateTime.Now.ToString(MainPlugin.Singleton.Config.ShortTimeFormat)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player)).Replace("{ROLE}", GetRole(ev.Player)));
