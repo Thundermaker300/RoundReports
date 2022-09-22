@@ -126,13 +126,17 @@ namespace RoundReports
 
         public static bool ECheck(Player ply)
         {
-            if (ply is null)
-                return true;
-            if (ply.DoNotTrack && MainPlugin.Configs.ExcludeDNTUsers)
-                return false;
-            if (MainPlugin.Configs.IgnoredUsers.Contains(ply.UserId))
-                return false;
-            return true;
+            bool flag = true;
+            if (ply is not null)
+            {
+                if (ply.DoNotTrack && MainPlugin.Configs.ExcludeDNTUsers)
+                    flag = false;
+                if (MainPlugin.Configs.IgnoredUsers.Contains(ply.UserId))
+                    flag = false;
+            }
+            if (!flag && MainPlugin.Reporter is not null)
+                MainPlugin.Reporter.AtLeastOneHidden = true;
+            return flag;
         }
 
         public void OnRoundStarted()

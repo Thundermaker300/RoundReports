@@ -24,6 +24,7 @@ namespace RoundReports
         public LeadingTeam WinTeam { get; set; } = LeadingTeam.Draw;
         private List<string> Remarks { get; set; }
         public static string DoNotTrackText => MainPlugin.Translations.DoNotTrack;
+        public bool AtLeastOneHidden { get; set; } = false;
 
         public Reporter()
         {
@@ -110,6 +111,8 @@ namespace RoundReports
 
                 };
                 StringBuilder bldr = StringBuilderPool.Shared.Rent();
+                if (AtLeastOneHidden)
+                    bldr.AppendLine(MainPlugin.Translations.HiddenUsersNotice);
                 foreach (var remark in Remarks)
                     bldr.AppendLine(remark);
                 section.Contents = bldr.ToString();

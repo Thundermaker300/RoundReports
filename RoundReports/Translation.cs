@@ -155,6 +155,7 @@ namespace RoundReports
         public string SCPPoints { get; set; } = "SCP Points";
 
         // Remarks
+        public string HiddenUsersNotice { get; set; } = "[Notice] Due to server settings, some users and their statistics have been hidden from this report.";
         public string DoorRemark { get; set; } = "{PLAYER} [{ROLE}] was the first to open a door ({MILLISECOND}ms)!";
         public string EscapeRemark { get; set; } = "{PLAYER} [{ROLE}] was the first to escape ({MINUTE}m{SECOND}s)!";
         public string KillRemark { get; set; } = "{PLAYER} [{ROLE}] killed first! They killed {TARGET} [{TARGETROLE}].";
