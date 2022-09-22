@@ -124,21 +124,23 @@ namespace RoundReports
             Hold(stats);
         }
 
+        public static bool DNTCheck(Player ply) => MainPlugin.Configs.ExcludeDNTUsers && ply.DoNotTrack;
+
         public void OnRoundStarted()
         {
             Timing.CallDelayed(.5f, () =>
             {
                 StartingStats stats = new()
                 {
-                    ClassDPersonnel = Player.Get(RoleType.ClassD).Count(),
-                    SCPs = Player.Get(Team.SCP).Select(player => player.Role.Type).ToList(),
-                    FacilityGuards = Player.Get(RoleType.FacilityGuard).Count(),
-                    Scientists = Player.Get(RoleType.Scientist).Count(),
+                    ClassDPersonnel = Player.Get(RoleType.ClassD).Count(player => !DNTCheck(player)),
+                    SCPs = Player.Get(Team.SCP).Where(player => !DNTCheck(player)).Select(player => player.Role.Type).ToList(),
+                    FacilityGuards = Player.Get(RoleType.FacilityGuard).Count(player => !DNTCheck(player)),
+                    Scientists = Player.Get(RoleType.Scientist).Count(player => !DNTCheck(player)),
                     StartTime = DateTime.Now,
-                    PlayersAtStart = Player.List.Where(r => !r.IsDead).Count(),
+                    PlayersAtStart = Player.List.Where(r => !r.IsDead).Count(player => !DNTCheck(player)),
                     Players = new()
                 };
-                foreach (var player in Player.List)
+                foreach (var player in Player.List.Where(player => !DNTCheck(player) && !player.IsDead))
                     stats.Players.Add($"{Reporter.GetDisplay(player)} [{GetRole(player)}]");
                 Hold(stats);
                 Timing.RunCoroutine(RecordSCPsStats().CancelWith(Server.Host.GameObject));

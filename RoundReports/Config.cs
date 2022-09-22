@@ -123,6 +123,8 @@ namespace RoundReports
         public string DiscordWebhook { get; set; } = string.Empty;
         [Description("Send report links in server console when compiled?")]
         public bool SendInConsole { get; set; } = true;
+        [Description("If set to true, users with Do Not Track enabled will be excluded from all stats entirely. If set to false, they will be included with a removed name (including in round remarks). DNT users will be shown in kill logs regardless of this setting.")]
+        public bool ExcludeDNTUsers { get; set; } = false;
         [Description("Broadcast to show at the end of the round.")]
         public EBroadcast EndingBroadcast { get; set; } = new EBroadcast("View the end-of-round report on our Discord server!");
 
