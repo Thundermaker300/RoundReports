@@ -348,7 +348,7 @@ namespace RoundReports
             {
                 if (!plr.IsConnected)
                     return NameStore.ContainsKey(plr) ? $"[DC] {NameStore[plr]}" : $"[DC] {MainPlugin.Translations.Unknown}";
-                return plr.DoNotTrack ? DoNotTrackText : plr.Nickname;
+                return (plr.DoNotTrack || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId)) ? DoNotTrackText : plr.Nickname;
             }
             else if (val is DateTime dt)
                 return dt == DateTime.MinValue ? MainPlugin.Translations.NoData : dt.ToString(MainPlugin.Singleton.Config.FullTimeFormat);

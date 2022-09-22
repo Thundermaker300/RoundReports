@@ -124,7 +124,16 @@ namespace RoundReports
             Hold(stats);
         }
 
-        public static bool DNTCheck(Player ply) => MainPlugin.Configs.ExcludeDNTUsers && ply.DoNotTrack;
+        public static bool ECheck(Player ply)
+        {
+            if (ply is null)
+                return true;
+            if (ply.DoNotTrack && MainPlugin.Configs.ExcludeDNTUsers)
+                return false;
+            if (MainPlugin.Configs.IgnoredUsers.Contains(ply.UserId))
+                return false;
+            return true;
+        }
 
         public void OnRoundStarted()
         {
@@ -132,15 +141,15 @@ namespace RoundReports
             {
                 StartingStats stats = new()
                 {
-                    ClassDPersonnel = Player.Get(RoleType.ClassD).Count(player => !DNTCheck(player)),
-                    SCPs = Player.Get(Team.SCP).Where(player => !DNTCheck(player)).Select(player => player.Role.Type).ToList(),
-                    FacilityGuards = Player.Get(RoleType.FacilityGuard).Count(player => !DNTCheck(player)),
-                    Scientists = Player.Get(RoleType.Scientist).Count(player => !DNTCheck(player)),
+                    ClassDPersonnel = Player.Get(RoleType.ClassD).Count(player => ECheck(player)),
+                    SCPs = Player.Get(Team.SCP).Where(player => ECheck(player)).Select(player => player.Role.Type).ToList(),
+                    FacilityGuards = Player.Get(RoleType.FacilityGuard).Count(player => ECheck(player)),
+                    Scientists = Player.Get(RoleType.Scientist).Count(player => ECheck(player)),
                     StartTime = DateTime.Now,
-                    PlayersAtStart = Player.List.Where(r => !r.IsDead).Count(player => !DNTCheck(player)),
+                    PlayersAtStart = Player.List.Where(r => !r.IsDead).Count(player => ECheck(player)),
                     Players = new()
                 };
-                foreach (var player in Player.List.Where(player => !DNTCheck(player) && !player.IsDead))
+                foreach (var player in Player.List.Where(player => ECheck(player) && !player.IsDead))
                     stats.Players.Add($"{Reporter.GetDisplay(player)} [{GetRole(player)}]");
                 Hold(stats);
                 Timing.RunCoroutine(RecordSCPsStats().CancelWith(Server.Host.GameObject));
@@ -170,7 +179,7 @@ namespace RoundReports
 
             // Finish with final stats
             stats.RoundTime = Round.ElapsedTime;
-            foreach (var player in Player.Get(plr => plr.IsAlive))
+            foreach (var player in Player.Get(plr => plr.IsAlive && ECheck(plr)))
                 stats.SurvivingPlayers.Add($"{Reporter.GetDisplay(player)} ({GetRole(player)})");
 
             Hold(stats);
@@ -261,7 +270,7 @@ namespace RoundReports
         {
             if (!Reporter.NameStore.ContainsKey(ev.Player))
             {
-                if (!ev.Player.DoNotTrack)
+                if (!ev.Player.DoNotTrack && !MainPlugin.Configs.IgnoredUsers.Contains(ev.Player.UserId))
                     Reporter.NameStore.Add(ev.Player, ev.Player.Nickname);
                 else
                     Reporter.NameStore.Add(ev.Player, Reporter.DoNotTrackText);
@@ -270,7 +279,7 @@ namespace RoundReports
 
         public void OnSpawned(SpawnedEventArgs ev)
         {
-            if (!Round.InProgress || GetTeam(ev.Player) is not ("SH" or "UIU" or "MTF" or "CHI")) return;
+            if (!Round.InProgress || ECheck(ev.Player) || GetTeam(ev.Player) is not ("SH" or "UIU" or "MTF" or "CHI")) return;
             RespawnStats stats = GetStat<RespawnStats>();
             stats.TotalRespawnedPlayers++;
             stats.Respawns.Insert(0, $"[{DateTime.Now.ToString(MainPlugin.Singleton.Config.ShortTimeFormat)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player)).Replace("{ROLE}", GetRole(ev.Player)));
@@ -283,18 +292,22 @@ namespace RoundReports
             int amount = (int)Math.Round(ev.Amount);
             if (ev.Amount == -1 || ev.Amount > 150) amount = 150;
 
-            // Stats
             var stats = GetStat<OrganizedDamageStats>();
-            stats.TotalDamage += amount;
 
-            // Check damage type
-            if (!stats.DamageByType.ContainsKey(ev.Handler.Type))
-                stats.DamageByType.Add(ev.Handler.Type, amount);
-            else
-                stats.DamageByType[ev.Handler.Type] += amount;
+            if (ECheck(ev.Target))
+            {
+                // Stats
+                stats.TotalDamage += amount;
+
+                // Check damage type
+                if (!stats.DamageByType.ContainsKey(ev.Handler.Type))
+                    stats.DamageByType.Add(ev.Handler.Type, amount);
+                else
+                    stats.DamageByType[ev.Handler.Type] += amount;
+            }
 
             // Check Attacker
-            if (ev.Attacker is not null)
+            if (ev.Attacker is not null && ECheck(ev.Attacker))
             {
                 stats.PlayerDamage += amount;
                 if (!stats.DamageByPlayer.ContainsKey(ev.Attacker))
@@ -353,7 +366,7 @@ namespace RoundReports
                     }
                 }
                 // First kill check
-                if (!FirstKill && MainPlugin.Reporter is not null)
+                if (!FirstKill && MainPlugin.Reporter is not null && ECheck(ev.Killer))
                 {
                     string killText = MainPlugin.Translations.KillRemark
                         .Replace("{PLAYER}", Reporter.GetDisplay(ev.Killer))
@@ -394,7 +407,7 @@ namespace RoundReports
 
         public void OnDroppingItem(DroppingItemEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed)
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player))
                 return;
             var stats = GetStat<ItemStats>();
             stats.TotalDrops++;
@@ -443,7 +456,7 @@ namespace RoundReports
 
         public void OnScp096Charge(ChargingEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             var stats = GetStat<SCPStats>();
             stats.Scp096Charges++;
             Hold(stats);
@@ -451,7 +464,7 @@ namespace RoundReports
 
         public void OnScp096Enrage(EnragingEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             var stats = GetStat<SCPStats>();
             stats.Scp096Enrages++;
             Hold(stats);
@@ -459,7 +472,7 @@ namespace RoundReports
 
         public void OnContaining106(ContainingEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed) return; // Todo: Add ECheck and femur breaker activator
             var stats = GetStat<SCPStats>();
             stats.FemurBreakerActivated = true;
             Hold(stats);
@@ -468,7 +481,7 @@ namespace RoundReports
 
         public void OnScp106Teleport(TeleportingEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             var stats = GetStat<SCPStats>();
             stats.Scp106Teleports++;
             Hold(stats);
@@ -476,7 +489,7 @@ namespace RoundReports
 
         public void OnScp173Blink(BlinkingEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             var stats = GetStat<SCPStats>();
             stats.Scp173Blinks++;
             Hold(stats);
@@ -484,7 +497,7 @@ namespace RoundReports
 
         public void OnUsedItem(UsedItemEventArgs ev)
         {
-            if (!Round.InProgress) return;
+            if (!Round.InProgress || !ECheck(ev.Player)) return;
             if (ev.Item.IsScp)
             {
                 var stats = GetStat<SCPStats>();
@@ -529,7 +542,7 @@ namespace RoundReports
 
         public void OnInteractingDoor(InteractingDoorEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             if (ev.Player is null) return;
             var stats = GetStat<FinalStats>();
             if (ev.Door.IsOpen)
@@ -569,7 +582,7 @@ namespace RoundReports
 
         public void OnInteractingScp330(InteractingScp330EventArgs ev)
         {
-            if (!ev.IsAllowed || !Round.InProgress) return;
+            if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
             var stats = GetStat<SCPStats>();
             if (stats.FirstUse == DateTime.MinValue)
             {
@@ -600,7 +613,7 @@ namespace RoundReports
 
         public void OnEscaping(EscapingEventArgs ev)
         {
-            if (!ev.IsAllowed || !Round.InProgress) return;
+            if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
             if (!FirstEscape && MainPlugin.Reporter is not null)
             {
                 FirstEscape = true;
@@ -616,7 +629,7 @@ namespace RoundReports
 
         public void OnActivatingScp914(ActivatingEventArgs ev)
         {
-            if (!ev.IsAllowed || !Round.InProgress) return;
+            if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
             var stats = GetStat<SCPStats>();
             if (stats.FirstActivation == DateTime.MinValue && ev.Player is not null)
             {
@@ -665,7 +678,7 @@ namespace RoundReports
 
         public void On914UpgradingInventoryItem(UpgradingInventoryItemEventArgs ev)
         {
-            if (!ev.IsAllowed || !Round.InProgress) return;
+            if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
             UpgradeItemLog(ev.Item.Type, ev.KnobSetting);
         }
 
