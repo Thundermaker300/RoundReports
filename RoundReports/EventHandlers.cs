@@ -288,7 +288,7 @@ namespace RoundReports
 
         public void OnSpawned(SpawnedEventArgs ev)
         {
-            if (!Round.InProgress || !ECheck(ev.Player) || GetTeam(ev.Player) is not ("SH" or "UIU" or "MTF" or "CHI")) return;
+            if (!Round.InProgress || !ECheck(ev.Player) || GetTeam(ev.Player) is not ("SH" or "UIU" or "MTF" or "CHI") || GetRole(ev.Player) is "FacilityGuard") return;
             RespawnStats stats = GetStat<RespawnStats>();
             stats.TotalRespawnedPlayers++;
             stats.Respawns.Insert(0, $"[{DateTime.Now.ToString(MainPlugin.Singleton.Config.ShortTimeFormat)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player)).Replace("{ROLE}", GetRole(ev.Player)));
