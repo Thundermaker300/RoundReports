@@ -120,7 +120,9 @@ namespace RoundReports
         {
             yield return Timing.WaitForSeconds(60f);
             StartingStats stats = GetStat<StartingStats>();
-            stats.SCPs = Player.Get(Team.SCP).Select(player => player.Role.Type).ToList();
+            List<RoleType> SCPs = Player.Get(Team.SCP).Where(plr => ECheck(plr)).Select(player => player.Role.Type).ToList();
+            SCPs.Sort();
+            stats.SCPs = SCPs;
             Hold(stats);
         }
 
