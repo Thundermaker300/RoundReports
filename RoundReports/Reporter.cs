@@ -222,6 +222,7 @@ namespace RoundReports
             if (iter == 10)
             {
                 Log.Warn("Failed to post round report to Pastee ten times. Request discarded.");
+                Timing.CallDelayed(.25f, Kill);
                 yield break;
             }
             var pasteWWW = UnityWebRequest.Put("https://api.paste.ee/v1/pastes", JsonConvert.SerializeObject(data));
@@ -317,16 +318,19 @@ namespace RoundReports
                         if (discordWWW.isHttpError || discordWWW.isNetworkError)
                             Log.Warn($"Error when attempting to send report to discord log: {discordWWW.error}");
                         else
+                        {
                             if (MainPlugin.Singleton.Config.SendInConsole)
                                 Log.Info("Report sent to Discord successfully.");
+
+                            // Broadcast
+                            EBroadcast br = MainPlugin.Singleton.Config.EndingBroadcast;
+                            if (br is not null && br.Show == true && Server.Broadcast is not null)
+                            {
+                                Map.Broadcast(br, true);
+                            }
+                        }
                     }
 
-                    // Broadcast
-                    EBroadcast br = MainPlugin.Singleton.Config.EndingBroadcast;
-                    if (br is not null && br.Show == true && Server.Broadcast is not null)
-                    {
-                        Map.Broadcast(br, true);
-                    }
                     Timing.CallDelayed(.25f, Kill);
                 }
             }
