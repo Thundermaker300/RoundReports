@@ -67,6 +67,10 @@ namespace RoundReports
         AdrenalinesConsumed,
         SCP500sConsumed,
 
+        //-- Firearm
+        TotalShotsFired,
+        TotalReloads,
+
         // SCP Stats
         FemurBreakerActivated,
         Scp096Charges,

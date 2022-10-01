@@ -441,6 +441,22 @@ namespace RoundReports
             AddPoints(ev.Scp106, 1);
         }
 
+        public void OnShooting(ShootingEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed) return;
+            var stats = GetStat<ItemStats>();
+            stats.TotalShotsFired++;
+            Hold(stats);
+        }
+
+        public void OnReloadingWeapon(ReloadingWeaponEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed) return;
+            var stats = GetStat<ItemStats>();
+            stats.TotalReloads++;
+            Hold(stats);
+        }
+
         public void OnScp079GainingLevel(GainingLevelEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed) return;

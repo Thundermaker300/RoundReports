@@ -62,7 +62,7 @@ namespace RoundReports
         public string SurvivingPlayers { get; set; } = "Surviving Players";
         public string FemurBreakerActivated { get; set; } = "Femur Breaker Activated";
 
-        // Medical Stats
+        // Item Stats
         public string ItemStatsTitle { get; set; } = "Item Statistics";
         public string ItemTransfersTitle { get; set; } = "Item Transfers";
         public string ItemUsesTitle { get; set; } = "Item Uses";
@@ -74,6 +74,11 @@ namespace RoundReports
         public string MedkitsConsumed { get; set; } = "Medkits Consumed";
         public string AdrenalinesConsumed { get; set; } = "Adrenalines Consumed";
         public string Scp500sConsumed { get; set; } = "SCP-500s Consumed";
+
+        // Firearm Stats
+        public string FirearmTitle { get; set; } = "Firearm Stats";
+        public string TotalShotsFired { get; set; } = "Total Shots Fired";
+        public string TotalReloads { get; set; } = "Total Reloads";
 
         // Organized Damage Stats
         public string OrganizedDamageTitle { get; set; } = "Damage Dealt";
