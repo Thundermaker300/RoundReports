@@ -131,13 +131,13 @@ namespace RoundReports
         public bool ExcludeDNTUsers { get; set; } = false;
         [Description("If set to true, stats from tutorial users will be entirely ignored. Does not affect Serpent's Hand (if installed).")]
         public bool ExcludeTutorials { get; set; } = false;
-        [Description("Broadcast(s) to show at the end of the round. A full list of arguments are available on the plugin's GitHub page. Set to [] (or set broadcast's show value to false) to disable.")]
+        [Description("Broadcast(s) to show at the end of the round. A full list of arguments are available on the plugin's GitHub page. Set to [] (or set broadcast's show value to false) to disable. Additional broadcasts can be added and removed.")]
         public List<EBroadcast> EndingBroadcasts { get; set; } = new List<EBroadcast> { new("<b>{HUMANMVP}</b> was the human MVP of this round!", duration: 3), new("<b>{SCPMVP}</b> was the SCP MVP of this round!", duration: 3), new("View the end-of-round report on our Discord server!", duration: 3) };
 
         [Description("Name of the server, without any formatting tags, as it will be shown in the report.")]
         public string ServerName { get; set; } = string.Empty;
 
-        [Description("Determines the footer text, as shown on the Discord embed. Valid arguments: {PLAYERCOUNT}, {ROUNDTIME}, {TOTALKILLS}, {TOTALDEATHS}")]
+        [Description("Determines the footer text, as shown on the Discord embed. A full list of arguments are available on the plugin's GitHub page.")]
         public string FooterText { get; set; } = "{PLAYERCOUNT} players connected";
 
         [Description("Determines the format of timestamps.")]

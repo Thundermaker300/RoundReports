@@ -11,11 +11,42 @@ Note: Statistics from users with Do Not Track (DNT) enabled will still be shown,
  ## Commands
  ### pausereport
  Permission: rr.pause  
- Disables reporting for the duration of the round. Automatically unpauses at the start of the next round.
+ Disables reporting for the duration of the round. Automatically unpauses at the start of the next round.  
 
  ### addremark / remark
  Permission: rr.remark  
- Adds a remark to the report. Can be used to specify event rounds & etc.
+ Adds a remark to the report. Can be used to specify event rounds & etc.  
+
+ ## Broadcast & Embed Arguments
+ All of the following arguments can be used in end-of-round broadcasts, and the Discord embed footer config. Note that arguments must be surrounded by curly braces (`{}`, eg. `{HUMANMVP}`).
+| **Key**           | **Stat Type** | **Description**                                                |
+|-------------------|---------------|----------------------------------------------------------------|
+| HUMANMVP          | string        | The human MVP of the round.                                    |
+| SCPMVP            | number        | The SCP MVP of the round.                                      |
+| TOTALKILLS        | number        | The total amount of kills in the round.                        |
+| SCPKILLS          | number        | The total amount of SCP kills in the round.                    |
+| MTFKILLS          | number        | The total amount of MTF kills in the round.                    |
+| CLASSDKILLS       | number        | The total amount of Class-D kills in the round.                |
+| CHAOSKILLS        | number        | The total amount of Chaos Insurgency kills in the round.       |
+| SCIENTISTKILLS    | number        | The total amount of scientist kills in the round.              |
+| HUMANKILLS        | number        | The total amount of human kills in the round.                  |
+| TOTALDEATHS       | number        | The total amount of deaths.                                    |
+| TOTALDAMAGE       | number        | The total amount of damage dealt.                              |
+| WINTEAM           | string        | The winning team of the round.                                 |
+| ROUNDTIME         | string        | The total time of the round.                                   |
+| STARTTIME         | string        | The time that the round started.                               |
+| PLAYERCOUNT       | number        | The total amount of players currently connected to the server. |
+| TOTALDROPS        | number        | The total amount of items dropped.                             |
+| KEYCARDSCANS      | number        | The total amount of keycard scans.                             |
+| TOTALRESPAWNED    | number        | The total amount of respawned players.                         |
+| TOTALRESPAWNWAVES | number        | The total amount of respawn waves.                             |
+| TOTALSHOTSFIRED   | number        | The total amount of shots fired.                               |
+| TOTALRELOADS      | number        | The total amount of firearm reloads.                           |
+| DOORSOPENED       | number        | The total amount of open door interactions.                    |
+| DOORSCLOSED       | number        | The total amount of close door interactions.                   |
+| DOORSDESTROYED    | number        | The total amount of destroyed doors.                           |
+| CANDIESTAKEN      | number        | The total amount of candies taken from SCP-330.                |
+| 914ACTIVATIONS    | number        | The total amount of times SCP-914 was activated.               |
 
 ## MVP Statistic Info
 MVP is calculated by granting players points for specific actions. These points can also be taken away by other actions. There are two separate point systems, and as such two separate MVPs: One for SCPs, and one for humans. Full list of actions and the points they grant or remove below. (Configurable: Coming soon)
@@ -46,6 +77,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | Kill Player (Not Scientist)           | +2               |
 | Open Door (SCP-079)                   | +1-3\*\*         |
 | Lockdown Room (SCP-079)               | +1\*             |
+| Capture Player (SCP-106)              | +1               |
 | Die (Most Causes)                     | -5               |
 | Die (Warhead, Decontamination, Tesla) | -10              |
 
