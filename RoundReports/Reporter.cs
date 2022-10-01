@@ -67,7 +67,7 @@ namespace RoundReports
 
         public void AddRemark(string remark)
         {
-            Remarks.Add($"[{GetDisplay(Round.ElapsedTime)}] {remark}");
+            Remarks.Insert(0, $"[{GetDisplay(Round.ElapsedTime)}] {remark}");
         }
 
         public static long StringLengthToLong(string length) => length.ToLower() switch
