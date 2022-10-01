@@ -75,6 +75,7 @@ namespace RoundReports
             PlayerEvents.InteractingDoor += Handlers.OnInteractingDoor;
             PlayerEvents.Escaping += Handlers.OnEscaping;
             PlayerEvents.DroppingItem += Handlers.OnDroppingItem;
+            PlayerEvents.EnteringPocketDimension += Handlers.OnEnteringPocketDimension;
 
             Scp079Events.GainingLevel += Handlers.OnScp079GainingLevel;
             Scp079Events.LockingDown += Handlers.OnScp079Lockdown;
@@ -135,6 +136,7 @@ namespace RoundReports
             PlayerEvents.InteractingDoor -= Handlers.OnInteractingDoor;
             PlayerEvents.Escaping -= Handlers.OnEscaping;
             PlayerEvents.DroppingItem -= Handlers.OnDroppingItem;
+            PlayerEvents.EnteringPocketDimension -= Handlers.OnEnteringPocketDimension;
 
             Scp079Events.GainingLevel -= Handlers.OnScp079GainingLevel;
             Scp079Events.LockingDown -= Handlers.OnScp079Lockdown;

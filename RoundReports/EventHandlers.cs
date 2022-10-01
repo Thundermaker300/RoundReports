@@ -435,6 +435,12 @@ namespace RoundReports
             Hold(stats);
         }
 
+        public void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed || ev.Scp106 is null) return;
+            AddPoints(ev.Scp106, 1);
+        }
+
         public void OnScp079GainingLevel(GainingLevelEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed) return;
