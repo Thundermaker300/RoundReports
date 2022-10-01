@@ -4,9 +4,9 @@
 # Round Reports
  An SCP:SL Exiled plugin which generates reports at the end of each round, and shares them in your Discord server.  This plugin supports Serpent's Hand and UIU Rescue Squad, and will display stats accordingly.
   
-This plugin uses [paste.ee](https://paste.ee/) for hosting reports. This service is provided entirely for free. Reports automatically expire after 30 days; however, they can be saved with a simple tool like the [Wayback Machine](https://web.archive.org/).  
+This plugin uses [paste.ee](https://paste.ee/) for hosting reports. This service is provided entirely for free. By default, reports automatically expire after 30 days; however, this can be configured, and reports can be saved with a simple tool like the [Wayback Machine](https://web.archive.org/).  
   
-Note: Statistics from users with Do Not Track (DNT) enabled will still be shown, but all personal information relating to them (Username, SteamId, etc) will be hidden. Do Not Track users will not be present in the MVP stats.
+Note: Statistics from users with Do Not Track (DNT) enabled are treated differently, please see "Note on DNT Players" section below.
 
  ## Commands
  ### pausereport
@@ -16,6 +16,9 @@ Note: Statistics from users with Do Not Track (DNT) enabled will still be shown,
  ### addremark / remark
  Permission: rr.remark  
  Adds a remark to the report. Can be used to specify event rounds & etc.  
+  
+## Note on DNT Players
+Players with Do Not Track enabled will never have their username present on reports. How their stats are handled is based on the `ExcludeDNTUsers` config. If this config is set to `true`, no stats at all will be recorded except for kill logs (in which case their name will be removed). If this config is set to `false`, their stats will still be included but their name will be removed. Do Not Track players will never be included in the MVP statistics, regardless of this setting's value.
 
 ## MVP Statistic Info
 MVP is calculated by granting players points for specific actions. These points can also be taken away by other actions. There are two separate point systems, and as such two separate MVPs: One for SCPs, and one for humans. Full list of actions and the points they grant or remove below. (Configurable: Coming soon)
