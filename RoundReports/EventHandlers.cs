@@ -74,10 +74,16 @@ namespace RoundReports
                 Points[PT][plr] = amount;
 
             var logs = GetStat<MVPStats>();
-            logs.PointLogs.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] {plr.Nickname} gained {amount} points. Reason: {reason}");
+            string str = MainPlugin.Translations.AddPointsLog
+                .Replace("{PLAYER}", plr.Nickname)
+                .Replace("{ROLE}", GetRole(plr))
+                .Replace("{AMOUNT}", amount.ToString())
+                .Replace("{REASON}", reason);
+            logs.PointLogs.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] {str}");
+            Hold(logs);
         }
 
-        public void RemovePoints(Player plr, int amount)
+        public void RemovePoints(Player plr, int amount, string reason = "Unknown")
         {
             if (plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead)
                 return;
@@ -87,6 +93,15 @@ namespace RoundReports
                 Points[PT][plr] -= amount;
             else
                 Points[PT][plr] = 0 - amount;
+
+            var logs = GetStat<MVPStats>();
+            string str = MainPlugin.Translations.RemovePointsLog
+                .Replace("{PLAYER}", plr.Nickname)
+                .Replace("{ROLE}", GetRole(plr))
+                .Replace("{AMOUNT}", amount.ToString())
+                .Replace("{REASON}", reason);
+            logs.PointLogs.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] {str}");
+            Hold(logs);
         }
 
         public void OnWaitingForPlayers()
@@ -393,13 +408,13 @@ namespace RoundReports
 
                 // Killer points
                 if (ev.Target.Role.Side == ev.Killer.Role.Side)
-                    RemovePoints(ev.Killer, 10); // Kill teammate
+                    RemovePoints(ev.Killer, 10, MainPlugin.Translations.KilledTeammate); // Kill teammate
                 else if (GetTeam(ev.Target) == "SCP")
-                    AddPoints(ev.Killer, 10); // Kill SCP
+                    AddPoints(ev.Killer, 10, MainPlugin.Translations.KilledSCP); // Kill SCP
                 else if (GetTeam(ev.Target) == "RSC")
-                    AddPoints(ev.Killer, 3); // Kill scientist
+                    AddPoints(ev.Killer, 3, MainPlugin.Translations.KilledScientist); // Kill scientist
                 else
-                    AddPoints(ev.Killer, 2); // Other kills
+                    AddPoints(ev.Killer, 2, MainPlugin.Translations.KilledEnemy); // Other kills
             }
 
             // Kill by type
@@ -412,11 +427,11 @@ namespace RoundReports
 
             // Target Points
             if (ev.Handler.Type is DamageType.FemurBreaker)
-                AddPoints(ev.Target, 6); // Sacrifice
+                AddPoints(ev.Target, 6, MainPlugin.Translations.FemurBreakerSacrifice); // Sacrifice
             else if (ev.Handler.Type is DamageType.Warhead or DamageType.Decontamination or DamageType.Tesla)
-                RemovePoints(ev.Target, ev.Target.IsScp ? 10 : 2); // Dumb causes
+                RemovePoints(ev.Target, ev.Target.IsScp ? 10 : 2, MainPlugin.Translations.Death); // Dumb causes
             else
-                RemovePoints(ev.Target, ev.Target.IsScp ? 5 : 1); // Other causes
+                RemovePoints(ev.Target, ev.Target.IsScp ? 5 : 1, MainPlugin.Translations.Death); // Other causes
         }
 
         public void OnDroppingItem(DroppingItemEventArgs ev)
@@ -441,7 +456,7 @@ namespace RoundReports
         public void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || ev.Scp106 is null) return;
-            AddPoints(ev.Scp106, 1);
+            AddPoints(ev.Scp106, 1, MainPlugin.Translations.GrabbedPlayer);
         }
 
         public void OnShooting(ShootingEventArgs ev)
@@ -463,7 +478,7 @@ namespace RoundReports
         public void OnScp079GainingLevel(GainingLevelEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed) return;
-            AddPoints(ev.Player, 5);
+            AddPoints(ev.Player, 5, MainPlugin.Translations.LeveledUp);
         }
 
         public void OnScp079Lockdown(LockingDownEventArgs ev)
@@ -471,7 +486,7 @@ namespace RoundReports
             Timing.CallDelayed(1.15f, () =>
             {
                 int count = Player.List.Count(plr => plr.CurrentRoom.RoomIdentifier == ev.RoomGameObject && GetTeam(plr) is not ("SCP" or "SH") && GetRole(plr) is not "Tutorial");
-                AddPoints(ev.Player, count);
+                AddPoints(ev.Player, count, MainPlugin.Translations.RoomLockdown);
             });
         }
 
@@ -487,7 +502,7 @@ namespace RoundReports
                 if (ev.Door.IsGate) pts++;
                 pts++;
             };
-            AddPoints(ev.Player, pts);
+            AddPoints(ev.Player, pts, MainPlugin.Translations.OpenedDoor);
         }
 
         public void OnScp096Charge(ChargingEventArgs ev)
@@ -512,7 +527,7 @@ namespace RoundReports
             var stats = GetStat<SCPStats>();
             stats.FemurBreakerActivated = true;
             Hold(stats);
-            AddPoints(ev.ButtonPresser, 4);
+            AddPoints(ev.ButtonPresser, 4, MainPlugin.Translations.FemurBreakerActivator);
         }
 
         public void OnScp106Teleport(TeleportingEventArgs ev)
@@ -636,7 +651,7 @@ namespace RoundReports
             if (ev.ShouldSever)
             {
                 stats.SeveredHands++;
-                RemovePoints(ev.Player, 10);
+                RemovePoints(ev.Player, 10, MainPlugin.Translations.Took3Candies);
             }
 
             // Candies Taken
@@ -660,7 +675,7 @@ namespace RoundReports
                     .Replace("{SECOND}", Round.ElapsedTime.Seconds.ToString());
                 MainPlugin.Reporter.AddRemark(escapeText);
             }
-            AddPoints(ev.Player, 5);
+            AddPoints(ev.Player, 5, MainPlugin.Translations.Escaped);
         }
 
         public void OnActivatingScp914(ActivatingEventArgs ev)
@@ -726,7 +741,7 @@ namespace RoundReports
             if (stats.ButtonUnlocker == null)
             {
                 stats.ButtonUnlocker = ev.Player;
-                AddPoints(ev.Player, 2);
+                AddPoints(ev.Player, 2, MainPlugin.Translations.OpenedWarheadPanel);
             }
             Hold(stats);
         }

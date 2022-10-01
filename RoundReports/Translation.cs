@@ -165,5 +165,27 @@ namespace RoundReports
         public string EscapeRemark { get; set; } = "{PLAYER} [{ROLE}] was the first to escape ({MINUTE}m{SECOND}s)!";
         public string KillRemark { get; set; } = "{PLAYER} [{ROLE}] killed first! They killed {TARGET} [{TARGETROLE}].";
         public string UpgradeRemark { get; set; } = "The first item to be upgraded in SCP-914 was an {ITEM} on {MODE}.";
+
+        // MVP Points reasons
+        public string AddPointsLog { get; set; } = "{PLAYER} [{ROLE}] gained {AMOUNT} points. Reason: {REASON}";
+        public string RemovePointsLog { get; set; } = "{PLAYER} [{ROLE}] lost {AMOUNT} points. Reason: {REASON}";
+
+        //-- Positive
+        public string KilledSCP { get; set; } = "Killed SCP";
+        public string KilledScientist { get; set; } = "Killed Scientist";
+        public string KilledEnemy { get; set; } = "Killed Enemy";
+        public string FemurBreakerSacrifice { get; set; } = "Femur Breaker Sacrifice";
+        public string FemurBreakerActivator { get; set; } = "Femur Breaker Activator";
+        public string Escaped { get; set; } = "Escaped";
+        public string OpenedWarheadPanel { get; set; } = "Opened Warhead Panel";
+        public string GrabbedPlayer { get; set; } = "Grabbed Player";
+        public string LeveledUp { get; set; } = "Leveled Up";
+        public string RoomLockdown { get; set; } = "Room Lockdown";
+        public string OpenedDoor { get; set; } = "Opened Door";
+
+        //-- Negative
+        public string Death { get; set; } = "Death";
+        public string Took3Candies { get; set; } = "Took 3 Candies";
+        public string KilledTeammate { get; set; } = "Killed Teammate";
     }
 }
