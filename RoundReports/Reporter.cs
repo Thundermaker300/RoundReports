@@ -317,22 +317,22 @@ namespace RoundReports
                         {
                             if (MainPlugin.Singleton.Config.SendInConsole)
                                 Log.Info("Report sent to Discord successfully.");
+                        }
+                    }
 
-                            // Broadcast
-                            List<EBroadcast> brList = MainPlugin.Singleton.Config.EndingBroadcasts;
-                            if (brList is not null && brList.Count > 0 && Server.Broadcast is not null)
-                            {
-                                if (brList.Any(br => br.Show))
-                                    Map.ClearBroadcasts();
+                    // Broadcast
+                    List<EBroadcast> brList = MainPlugin.Singleton.Config.EndingBroadcasts;
+                    if (brList is not null && brList.Count > 0 && Server.Broadcast is not null)
+                    {
+                        if (brList.Any(br => br.Show))
+                            Map.ClearBroadcasts();
 
-                                foreach (EBroadcast br in brList)
-                                {
-                                    if (br.Show is false)
-                                        continue;
-                                    br.Content = ProcessReportArgs(br.Content);
-                                    Map.Broadcast(br);
-                                }
-                            }
+                        foreach (EBroadcast br in brList)
+                        {
+                            if (br.Show is false || Server.Broadcast is null)
+                                continue;
+                            br.Content = ProcessReportArgs(br.Content);
+                            Map.Broadcast(br);
                         }
                     }
 
