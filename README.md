@@ -69,8 +69,8 @@ MVP is calculated by granting players points for specific actions. These points 
 | TOTALDEATHS       | number        | The total amount of deaths.                                    |
 | TOTALDAMAGE       | number        | The total amount of damage dealt.                              |
 | WINTEAM           | string        | The winning team of the round.                                 |
-| ROUNDTIME         | string        | The total time of the round.                                   |
-| STARTTIME         | string        | The time that the round started.                               |
+| ROUNDTIME*        | string        | The total time of the round.                                   |
+| STARTTIME*        | string        | The time that the round started.                               |
 | PLAYERCOUNT       | number        | The total amount of players currently connected to the server. |
 | TOTALDROPS        | number        | The total amount of items dropped.                             |
 | KEYCARDSCANS      | number        | The total amount of keycard scans.                             |
@@ -83,3 +83,5 @@ MVP is calculated by granting players points for specific actions. These points 
 | DOORSDESTROYED    | number        | The total amount of destroyed doors.                           |
 | CANDIESTAKEN      | number        | The total amount of candies taken from SCP-330.                |
 | 914ACTIVATIONS    | number        | The total amount of times SCP-914 was activated.               |
+
+\* Arguments will be formatted as specified in the config file.

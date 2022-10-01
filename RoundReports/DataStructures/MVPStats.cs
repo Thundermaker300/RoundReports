@@ -22,5 +22,8 @@ namespace RoundReports
         [Translation(nameof(Translation.SCPPoints))]
         [BindStat(StatType.SCPPoints)]
         public Dictionary<Player, int> SCPPoints { get; set; }
+
+        [BindStat(StatType.SCPPoints)]
+        public List<string> PointLogs { get; set; }
     }
 }

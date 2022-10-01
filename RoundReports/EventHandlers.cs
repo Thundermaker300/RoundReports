@@ -62,7 +62,7 @@ namespace RoundReports
             return player.Role.Team.ToString();
         }
 
-        public void AddPoints(Player plr, int amount)
+        public void AddPoints(Player plr, int amount, string reason = "Unknown")
         {
             if (plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
                 return;
@@ -72,6 +72,9 @@ namespace RoundReports
                 Points[PT][plr] += amount;
             else
                 Points[PT][plr] = amount;
+
+            var logs = GetStat<MVPStats>();
+            logs.PointLogs.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] {plr.Nickname} gained {amount} points. Reason: {reason}");
         }
 
         public void RemovePoints(Player plr, int amount)
@@ -293,7 +296,7 @@ namespace RoundReports
             if (!Round.InProgress || !ECheck(ev.Player) || GetTeam(ev.Player) is not ("SH" or "UIU" or "MTF" or "CHI") || GetRole(ev.Player) is "FacilityGuard") return;
             RespawnStats stats = GetStat<RespawnStats>();
             stats.TotalRespawnedPlayers++;
-            stats.Respawns.Insert(0, $"[{DateTime.Now.ToString(MainPlugin.Singleton.Config.ShortTimeFormat)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player)).Replace("{ROLE}", GetRole(ev.Player)));
+            stats.Respawns.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player)).Replace("{ROLE}", GetRole(ev.Player)));
             Hold(stats);
         }
 
@@ -340,7 +343,7 @@ namespace RoundReports
                 // Kill logs
                 string killerRole = GetRole(ev.Killer);
                 string dyingRole = GetRole(ev.Target);
-                killStats.PlayerKills.Insert(0, $"[{DateTime.Now.ToString(MainPlugin.Singleton.Config.ShortTimeFormat)}] {Reporter.GetDisplay(ev.Killer)} [{killerRole}] killed {Reporter.GetDisplay(ev.Target)} [{dyingRole}]");
+                killStats.PlayerKills.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] {Reporter.GetDisplay(ev.Killer)} [{killerRole}] killed {Reporter.GetDisplay(ev.Target)} [{dyingRole}]");
                 // Kill by player
                 if (!killStats.KillsByPlayer.ContainsKey(ev.Killer))
                     killStats.KillsByPlayer.Add(ev.Killer, 1);

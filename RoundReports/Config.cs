@@ -21,6 +21,7 @@ namespace RoundReports
         SCPMVP,
         HumanPoints,
         SCPPoints,
+        PointLogs,
 
         // Final Stats
         WinningTeam,

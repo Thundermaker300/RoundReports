@@ -67,7 +67,7 @@ namespace RoundReports
 
         public void AddRemark(string remark)
         {
-            Remarks.Add($"[{DateTime.Now.ToString(MainPlugin.Singleton.Config.ShortTimeFormat)}] {remark}");
+            Remarks.Add($"[{GetDisplay(Round.ElapsedTime)}] {remark}");
         }
 
         public static long StringLengthToLong(string length) => length.ToLower() switch
