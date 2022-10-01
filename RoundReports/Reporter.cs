@@ -461,6 +461,8 @@ namespace RoundReports
             .Replace("{KEYCARDSCANS}", GetStat<ItemStats>().KeycardScans.ToString())
             .Replace("{TOTALRESPAWNED}", GetStat<RespawnStats>().TotalRespawnedPlayers.ToString())
             .Replace("{TOTALRESPAWNWAVES}", GetStat<RespawnStats>().SpawnWaves.Count.ToString())
+            .Replace("{TOTALSHOTSFIRED}", GetStat<ItemStats>().TotalShotsFired.ToString())
+            .Replace("{TOTALRELOADS}", GetStat<ItemStats>().TotalReloads.ToString())
             .Replace("{DOORSOPENED}", GetStat<FinalStats>().DoorsOpened.ToString())
             .Replace("{DOORSCLOSED}", GetStat<FinalStats>().DoorsClosed.ToString())
             .Replace("{DOORSDESTROYED}", GetStat<FinalStats>().DoorsDestroyed.ToString())
