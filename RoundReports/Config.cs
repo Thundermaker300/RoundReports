@@ -131,7 +131,7 @@ namespace RoundReports
         [Description("If set to true, users with Do Not Track enabled will be excluded from all stats entirely. If set to false, they will be included with a removed name (including in round remarks). See the plugin's GitHub page for more information.")]
         public bool ExcludeDNTUsers { get; set; } = false;
         [Description("If set to true, stats from tutorial users will be entirely ignored. Does not affect Serpent's Hand (if installed).")]
-        public bool ExcludeTutorials { get; set; } = false;
+        public bool ExcludeTutorials { get; set; } = true;
         [Description("Broadcast(s) to show at the end of the round. A full list of arguments are available on the plugin's GitHub page. Set to [] (or set broadcast's show value to false) to disable. Additional broadcasts can be added and removed.")]
         public List<EBroadcast> EndingBroadcasts { get; set; } = new List<EBroadcast> { new("<b>{HUMANMVP}</b> was the human MVP of this round!", duration: 3), new("<b>{SCPMVP}</b> was the SCP MVP of this round!", duration: 3), new("View the end-of-round report on our Discord server!", duration: 3) };
 
