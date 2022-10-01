@@ -77,6 +77,9 @@ namespace RoundReports
             PlayerEvents.DroppingItem += Handlers.OnDroppingItem;
             PlayerEvents.EnteringPocketDimension += Handlers.OnEnteringPocketDimension;
 
+            PlayerEvents.Shooting += Handlers.OnShooting;
+            PlayerEvents.ReloadingWeapon += Handlers.OnReloadingWeapon;
+
             Scp079Events.GainingLevel += Handlers.OnScp079GainingLevel;
             Scp079Events.LockingDown += Handlers.OnScp079Lockdown;
             Scp079Events.TriggeringDoor += Handlers.OnScp079TriggeringDoor;
@@ -137,6 +140,9 @@ namespace RoundReports
             PlayerEvents.Escaping -= Handlers.OnEscaping;
             PlayerEvents.DroppingItem -= Handlers.OnDroppingItem;
             PlayerEvents.EnteringPocketDimension -= Handlers.OnEnteringPocketDimension;
+
+            PlayerEvents.Shooting -= Handlers.OnShooting;
+            PlayerEvents.ReloadingWeapon -= Handlers.OnReloadingWeapon;
 
             Scp079Events.GainingLevel -= Handlers.OnScp079GainingLevel;
             Scp079Events.LockingDown -= Handlers.OnScp079Lockdown;
