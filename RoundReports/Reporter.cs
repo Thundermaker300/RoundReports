@@ -301,11 +301,7 @@ namespace RoundReports
                                     },
                                     Footer = new()
                                     {
-                                        Text = MainPlugin.Singleton.Config.FooterText
-                                        .Replace("{PLAYERCOUNT}", Player.List.Count().ToString())
-                                        .Replace("{ROUNDTIME}", GetDisplay(Round.ElapsedTime))
-                                        .Replace("{TOTALKILLS}", GetStat<FinalStats>().TotalKills.ToString())
-                                        .Replace("{TOTALDEATHS}", GetStat<FinalStats>().TotalDeaths.ToString()),
+                                        Text = ProcessReportArgs(MainPlugin.Singleton.Config.FooterText),
                                     }
                                 }
                             },
@@ -323,15 +319,24 @@ namespace RoundReports
                                 Log.Info("Report sent to Discord successfully.");
 
                             // Broadcast
-                            EBroadcast br = MainPlugin.Singleton.Config.EndingBroadcast;
-                            if (br is not null && br.Show == true && Server.Broadcast is not null)
+                            List<EBroadcast> brList = MainPlugin.Singleton.Config.EndingBroadcasts;
+                            if (brList is not null && brList.Count > 0 && Server.Broadcast is not null)
                             {
-                                Map.Broadcast(br, true);
+                                if (brList.Any(br => br.Show))
+                                    Map.ClearBroadcasts();
+
+                                foreach (EBroadcast br in brList)
+                                {
+                                    if (br.Show is false)
+                                        continue;
+                                    br.Content = ProcessReportArgs(br.Content);
+                                    Map.Broadcast(br);
+                                }
                             }
                         }
                     }
 
-                    Timing.CallDelayed(.25f, Kill);
+                    Timing.CallDelayed(2f, Kill);
                 }
             }
             else
@@ -432,5 +437,34 @@ namespace RoundReports
             else
                 return val.ToString();
         }
+
+        // Todo: Slow AF
+        private string ProcessReportArgs(string input)
+        => input
+            .Replace("{HUMANMVP}", GetStat<MVPStats>().HumanMVP)
+            .Replace("{SCPMVP}", GetStat<MVPStats>().SCPMVP)
+            .Replace("{SCPMVP}", GetStat<MVPStats>().SCPMVP)
+            .Replace("{TOTALKILLS}", GetStat<FinalStats>().TotalKills.ToString())
+            .Replace("{SCPKILLS}", GetStat<FinalStats>().SCPKills.ToString())
+            .Replace("{MTFKILLS}", GetStat<FinalStats>().MTFKills.ToString())
+            .Replace("{CLASSDKILLS}", GetStat<FinalStats>().DClassKills.ToString())
+            .Replace("{CHAOSKILLS}", GetStat<FinalStats>().ChaosKills.ToString())
+            .Replace("{HUMANKILLS}", (GetStat<FinalStats>().TotalKills - GetStat<FinalStats>().SCPKills).ToString())
+            .Replace("{SCIENTISTKILLS}", GetStat<FinalStats>().TotalKills.ToString())
+            .Replace("{TOTALDEATHS}", GetStat<FinalStats>().TotalDeaths.ToString())
+            .Replace("{TOTALDAMAGE}", GetStat<OrganizedDamageStats>().TotalDamage.ToString())
+            .Replace("{WINTEAM}", GetStat<FinalStats>().WinningTeam)
+            .Replace("{ROUNDTIME}", GetDisplay(GetStat<FinalStats>().RoundTime))
+            .Replace("{STARTTIME}", GetDisplay(GetStat<StartingStats>().StartTime))
+            .Replace("{PLAYERCOUNT}", Player.List.Count().ToString())
+            .Replace("{TOTALDROPS}", GetStat<ItemStats>().TotalDrops.ToString())
+            .Replace("{KEYCARDSCANS}", GetStat<ItemStats>().KeycardScans.ToString())
+            .Replace("{TOTALRESPAWNED}", GetStat<RespawnStats>().TotalRespawnedPlayers.ToString())
+            .Replace("{TOTALRESPAWNWAVES}", GetStat<RespawnStats>().SpawnWaves.Count.ToString())
+            .Replace("{DOORSOPENED}", GetStat<FinalStats>().DoorsOpened.ToString())
+            .Replace("{DOORSCLOSED}", GetStat<FinalStats>().DoorsClosed.ToString())
+            .Replace("{DOORSDESTROYED}", GetStat<FinalStats>().DoorsDestroyed.ToString())
+            .Replace("{CANDIESTAKEN}", GetStat<SCPStats>().TotalCandiesTaken.ToString())
+            .Replace("{914ACTIVATIONS}", GetStat<SCPStats>().TotalActivations.ToString());
     }
 }
