@@ -61,7 +61,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | **Key**           | **Stat Type** | **Description**                                                |
 |-------------------|---------------|----------------------------------------------------------------|
 | HUMANMVP          | string        | The human MVP of the round.                                    |
-| SCPMVP            | number        | The SCP MVP of the round.                                      |
+| SCPMVP            | string        | The SCP MVP of the round.                                      |
 | TOTALKILLS        | number        | The total amount of kills in the round.                        |
 | SCPKILLS          | number        | The total amount of SCP kills in the round.                    |
 | MTFKILLS          | number        | The total amount of MTF kills in the round.                    |
