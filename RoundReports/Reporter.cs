@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System.Collections;
 using Exiled.API.Enums;
+using QuickChart;
 
 using EBroadcast = Exiled.API.Features.Broadcast;
 
