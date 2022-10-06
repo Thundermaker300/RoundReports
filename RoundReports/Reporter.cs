@@ -75,6 +75,7 @@ namespace RoundReports
             "1h" => 3600,
             "12h" => StringLengthToLong("1H") * 12,
             "1d" => StringLengthToLong("12H") * 2,
+            "3d" => StringLengthToLong("1D") * 3,
             "7d" => StringLengthToLong("1D") * 7,
             "14d" => StringLengthToLong("7D") * 2,
             "1m" => StringLengthToLong("1D") * 30,
