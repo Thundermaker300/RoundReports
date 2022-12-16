@@ -85,7 +85,7 @@ namespace RoundReports
             Scp079Events.TriggeringDoor += Handlers.OnScp079TriggeringDoor;
             Scp096Events.Charging += Handlers.OnScp096Charge;
             Scp096Events.Enraging += Handlers.OnScp096Enrage;
-            Scp106Events.Containing += Handlers.OnContaining106;
+            //Scp106Events.Containing += Handlers.OnContaining106;
             Scp106Events.Teleporting += Handlers.OnScp106Teleport;
             Scp173Events.Blinking += Handlers.OnScp173Blink;
 
@@ -149,7 +149,7 @@ namespace RoundReports
             Scp079Events.TriggeringDoor -= Handlers.OnScp079TriggeringDoor;
             Scp096Events.Charging -= Handlers.OnScp096Charge;
             Scp096Events.Enraging -= Handlers.OnScp096Enrage;
-            Scp106Events.Containing -= Handlers.OnContaining106;
+            //Scp106Events.Containing -= Handlers.OnContaining106;
             Scp106Events.Teleporting -= Handlers.OnScp106Teleport;
             Scp173Events.Blinking -= Handlers.OnScp173Blink;
 

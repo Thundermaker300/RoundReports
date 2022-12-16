@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PlayerRoles;
+using System;
 using System.Collections.Generic;
 
 namespace RoundReports
@@ -20,7 +21,7 @@ namespace RoundReports
         [Rule(Rule.Alphabetical | Rule.CommaSeparatedList)]
         [Translation(nameof(Translation.Scps))]
         [BindStat(StatType.StartSCP)]
-        public List<RoleType> SCPs { get; set; }
+        public List<RoleTypeId> SCPs { get; set; }
 
         [Translation(nameof(Translation.ClassDPersonnel))]
         [BindStat(StatType.StartClassD)]
