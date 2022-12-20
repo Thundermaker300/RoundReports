@@ -36,7 +36,7 @@ namespace RoundReports
         public static Translation Translations => Singleton.Translation;
         public static Config Configs => Singleton.Config;
 
-        public static bool Check(StatType type) => Configs.AllowedStats.ContainsKey(type) ? Configs.AllowedStats[type] : true;
+        public static bool Check(StatType type) => !Configs.IgnoredStats.Contains(type);
 
         public override void OnEnabled()
         {

@@ -147,8 +147,8 @@ namespace RoundReports
         [Description("Determines the format of timestamps.")]
         public string FullTimeFormat { get; set; } = "MMMM dd, yyyy hh:mm:ss tt";
         public string ShortTimeFormat { get; set; } = "HH:mm:ss";
-        [Description("Determine which statistics are included in the report. Some stats will only be shown if applicable (eg. Serpent's Hand kills will only show if the server has Serpent's Hand installed).")]
-        public Dictionary<StatType, bool> AllowedStats { get; set; } = (System.Enum.GetValues(typeof(StatType)) as StatType[]).ToDictionary(stat => stat, stat => true);
+        [Description("Determine which statistics are NOT included in the report. Some stats will only be shown if applicable (eg. Serpent's Hand kills will only show if the server has Serpent's Hand installed).")]
+        public List<StatType> IgnoredStats { get; set; } = new();
         [Description("A list of players (by user id) who will be ignored from stats, regardless of their do not track setting. For single-player stats (eg. warhead button opener) and kill logs, they will be shown as a do not track player.")]
         public List<string> IgnoredUsers { get; set; } = new() { "12345@steam" };
     }
