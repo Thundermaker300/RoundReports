@@ -31,6 +31,7 @@ namespace RoundReports.Commands
                 response = "Reporter is not active this round.";
                 return false;
             }
+            Log.Debug($"Kill request sent by {sender.LogName}.");
             MainPlugin.Reporter.Kill();
             response = "Reporter paused for this round. Reporter will resume next round.";
             return true;

@@ -105,11 +105,13 @@ namespace RoundReports
             {
                 if (plugin.Name == "SerpentsHand" && plugin.Config.IsEnabled)
                 {
+                    Log.Debug("Serpent's Hand Detected");
                     SerpentsHandAssembly = plugin.Assembly;
                 }
 
                 if (plugin.Name == "UIURescueSquad" && plugin.Config.IsEnabled)
                 {
+                    Log.Debug("UIU Rescue Squad");
                     UIURescueSquadAssembly = plugin.Assembly;
                 }
             }

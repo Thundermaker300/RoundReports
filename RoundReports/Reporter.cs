@@ -48,12 +48,14 @@ namespace RoundReports
 
         public void SetStat(IReportStat stat)
         {
+            Log.Debug($"Setting stat: {stat.GetType().Name}");
             Stats.RemoveAll(r => r.GetType() == stat.GetType());
             Stats.Add(stat);
         }
 
         public void ReturnLists()
         {
+            Log.Debug("Returning lists to pool...");
             ListPool<IReportStat>.Shared.Return(Stats);
             ListPool<string>.Shared.Return(Remarks);
             NameStore.Clear();
@@ -61,12 +63,14 @@ namespace RoundReports
 
         public void Kill()
         {
+            Log.Debug("Killing reporter...");
             ReturnLists();
             MainPlugin.Reporter = null;
         }
 
         public void AddRemark(string remark)
         {
+            Log.Debug($"Adding remark: {remark}");
             Remarks.Insert(0, $"[{GetDisplay(Round.ElapsedTime)}] {remark}");
         }
 
@@ -90,6 +94,7 @@ namespace RoundReports
 
         public PasteEntry BuildReport()
         {
+            Log.Debug("Building report...");
             var entry = new PasteEntry() { Description = $"{MainPlugin.Singleton.Config.ServerName} | {DateTime.Now.ToString("MMMM dd, yyyy hh:mm:ss tt")}", Sections = new(1) };
             entry.Expiration = StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime);
             foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IReportStat))))
@@ -109,6 +114,7 @@ namespace RoundReports
             // Remarks
             if (Remarks.Count > 0)
             {
+                Log.Debug($"{Remarks.Count} remarks saved.");
                 var section = new PasteSection()
                 {
                     Name = MainPlugin.Singleton.Translation.RoundRemarks,
@@ -116,6 +122,7 @@ namespace RoundReports
                     Contents = string.Empty,
 
                 };
+                Log.Debug($"Adding new section: REMARKS");
                 StringBuilder bldr = StringBuilderPool.Shared.Rent();
                 if (AtLeastOneHidden)
                     bldr.AppendLine(MainPlugin.Translations.HiddenUsersNotice);
@@ -140,6 +147,7 @@ namespace RoundReports
                         string val = propInfo.GetValue(MainPlugin.Translations).ToString();
                         sectionTitle = val;
                     }
+                    Log.Debug($"Adding new section: {sectionTitle}");
                     var section = new PasteSection()
                     {
                         Name = sectionTitle,
@@ -155,6 +163,7 @@ namespace RoundReports
                         var headerAttribute = pinfo.GetCustomAttribute<HeaderAttribute>();
                         if (headerAttribute is not null)
                         {
+                            Log.Debug($"Adding header: {headerAttribute.Header}");
                             bldr.AppendLine($"\n====== {headerAttribute.Header} ======");
                         }
 
@@ -178,10 +187,12 @@ namespace RoundReports
                         var attr = pinfo.GetCustomAttribute<TranslationAttribute>();
                         if (attr is null)
                         {
+                            Log.Debug($"Adding stat: {SplitString(pinfo.Name)}");
                             bldr.AppendLine($"{SplitString(pinfo.Name)}: {GetDisplay(pinfo.GetValue(stat), ruleAttr?.Rule ?? Rule.None)}");
                         }
                         else
                         {
+                            Log.Debug($"Adding stat: {attr.Text}");
                             object val = pinfo.GetValue(stat);
                             bldr.AppendLine($"{attr.Text}: {GetDisplay(val, ruleAttr?.Rule ?? Rule.None)}");
                         }
@@ -197,6 +208,7 @@ namespace RoundReports
             }
 
             // Conclude
+            Log.Debug("Report has been built.");
             return entry;
         }
 
@@ -230,6 +242,7 @@ namespace RoundReports
             pasteWWW.method = "POST";
             pasteWWW.SetRequestHeader("Content-Type", "application/json");
             pasteWWW.SetRequestHeader("X-Auth-Token", MainPlugin.Singleton.Config.PasteKey);
+            Log.Debug("Sending report to Pastee.");
             yield return Timing.WaitUntilDone(pasteWWW.SendWebRequest());
             if (!pasteWWW.isHttpError && !pasteWWW.isNetworkError)
             {
@@ -257,6 +270,7 @@ namespace RoundReports
 
                     if (!string.IsNullOrEmpty(MainPlugin.Singleton.Config.DiscordWebhook))
                     {
+                        Log.Debug("Sending report to Discord.");
                         string winText = MainPlugin.Translations.WinText;
                         winText = WinTeam switch
                         {
@@ -266,6 +280,7 @@ namespace RoundReports
                             LeadingTeam.Draw => MainPlugin.Translations.Stalemate,
                             _ => winText.Replace("{TEAM}", MainPlugin.Translations.Unknown),
                         };
+                        Log.Debug("Building webhook information.");
                         DiscordHook hookData = new()
                         {
                             Username = MainPlugin.Singleton.Translation.RoundReport,
@@ -322,6 +337,7 @@ namespace RoundReports
                     }
 
                     // Broadcast
+                    Log.Debug("Sending broadcasts.");
                     List<EBroadcast> brList = MainPlugin.Singleton.Config.EndingBroadcasts;
                     if (brList is not null && brList.Count > 0 && Server.Broadcast is not null)
                     {
@@ -332,7 +348,9 @@ namespace RoundReports
                         {
                             if (br.Show is false || Server.Broadcast is null)
                                 continue;
+
                             br.Content = ProcessReportArgs(br.Content);
+                            Log.Debug($"Queueing broadcast: {br.Content}");
                             Map.Broadcast(br);
                         }
                     }

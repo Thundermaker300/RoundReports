@@ -41,6 +41,7 @@ namespace RoundReports
         public void Hold<T>(T stat)
             where T: class, IReportStat
         {
+            Log.Debug($"Updating stat: {typeof(T).Name}");
             Holding.RemoveAll(r => r.GetType() == typeof(T));
             Holding.Add(stat);
         }
@@ -76,6 +77,8 @@ namespace RoundReports
             if (plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
                 return;
 
+            Log.Debug($"Adding {amount} points to {plr.Nickname}. {reason}");
+
             var PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
             if (Points[PT].ContainsKey(plr))
                 Points[PT][plr] += amount;
@@ -96,6 +99,8 @@ namespace RoundReports
         {
             if (plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead)
                 return;
+
+            Log.Debug($"Removing {amount} points from {plr.Nickname}. {reason}");
 
             var PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
             if (Points[PT].ContainsKey(plr))
