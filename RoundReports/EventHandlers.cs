@@ -332,7 +332,7 @@ namespace RoundReports
 
             var stats = GetStat<OrganizedDamageStats>();
 
-            if (ECheck(ev.Target))
+            if (ECheck(ev.Player))
             {
                 // Stats
                 stats.TotalDamage += amount;
@@ -345,13 +345,13 @@ namespace RoundReports
             }
 
             // Check Attacker
-            if (ev.Player is not null && ECheck(ev.Player))
+            if (ev.Attacker is not null && ECheck(ev.Attacker))
             {
                 stats.PlayerDamage += amount;
-                if (!stats.DamageByPlayer.ContainsKey(ev.Player))
-                    stats.DamageByPlayer.Add(ev.Player, amount);
+                if (!stats.DamageByPlayer.ContainsKey(ev.Attacker))
+                    stats.DamageByPlayer.Add(ev.Attacker, amount);
                 else
-                    stats.DamageByPlayer[ev.Player] += amount;
+                    stats.DamageByPlayer[ev.Attacker] += amount;
             }
             Hold(stats);
         }
@@ -362,26 +362,26 @@ namespace RoundReports
             var stats = GetStat<FinalStats>();
             var killStats = GetStat<OrganizedKillsStats>();
             stats.TotalDeaths++;
-            if (ev.Player is not null)
+            if (ev.Attacker is not null)
             {
                 // Kill logs
-                string killerRole = GetRole(ev.Player);
-                string dyingRole = GetRole(ev.Target);
-                killStats.PlayerKills.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] {Reporter.GetDisplay(ev.Player)} [{killerRole}] killed {Reporter.GetDisplay(ev.Target)} [{dyingRole}]");
+                string killerRole = GetRole(ev.Attacker);
+                string dyingRole = GetRole(ev.Player);
+                killStats.PlayerKills.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] {Reporter.GetDisplay(ev.Attacker)} [{killerRole}] killed {Reporter.GetDisplay(ev.Player)} [{dyingRole}]");
                 // Kill by player
-                if (!killStats.KillsByPlayer.ContainsKey(ev.Player))
-                    killStats.KillsByPlayer.Add(ev.Player, 1);
+                if (!killStats.KillsByPlayer.ContainsKey(ev.Attacker))
+                    killStats.KillsByPlayer.Add(ev.Attacker, 1);
                 else
-                    killStats.KillsByPlayer[ev.Player]++;
+                    killStats.KillsByPlayer[ev.Attacker]++;
 
                 stats.TotalKills++;
-                if (GetRole(ev.Player) == "UIU")
+                if (GetRole(ev.Attacker) == "UIU")
                     stats.UIUKills++;
-                else if (GetRole(ev.Player) == "SerpentsHand")
+                else if (GetRole(ev.Attacker) == "SerpentsHand")
                     stats.SerpentsHandKills++;
                 else
                 {
-                    switch (ev.Player.Role.Team)
+                    switch (ev.Attacker.Role.Team)
                     {
                         case Team.SCPs:
                             stats.SCPKills++;
@@ -404,26 +404,26 @@ namespace RoundReports
                     }
                 }
                 // First kill check
-                if (!FirstKill && MainPlugin.Reporter is not null && ECheck(ev.Player))
+                if (!FirstKill && MainPlugin.Reporter is not null && ECheck(ev.Attacker))
                 {
                     string killText = MainPlugin.Translations.KillRemark
-                        .Replace("{PLAYER}", Reporter.GetDisplay(ev.Player))
-                        .Replace("{ROLE}", GetRole(ev.Player))
-                        .Replace("{TARGET}", Reporter.GetDisplay(ev.Target))
+                        .Replace("{PLAYER}", Reporter.GetDisplay(ev.Attacker))
+                        .Replace("{ROLE}", GetRole(ev.Attacker))
+                        .Replace("{TARGET}", Reporter.GetDisplay(ev.Player))
                         .Replace("{TARGETROLE}", dyingRole);
                     MainPlugin.Reporter.AddRemark(killText);
                     FirstKill = true;
                 }
 
                 // Killer points
-                if (ev.Target.Role.Side == ev.Player.Role.Side)
-                    RemovePoints(ev.Player, 10, MainPlugin.Translations.KilledTeammate); // Kill teammate
-                else if (GetTeam(ev.Target) == "SCPs")
-                    AddPoints(ev.Player, 10, MainPlugin.Translations.KilledSCP); // Kill SCP
-                else if (GetTeam(ev.Target) == "Scientists")
-                    AddPoints(ev.Player, 3, MainPlugin.Translations.KilledScientist); // Kill scientist
+                if (ev.Player.Role.Side == ev.Attacker.Role.Side)
+                    RemovePoints(ev.Attacker, 10, MainPlugin.Translations.KilledTeammate); // Kill teammate
+                else if (GetTeam(ev.Player) == "SCPs")
+                    AddPoints(ev.Attacker, 10, MainPlugin.Translations.KilledSCP); // Kill SCP
+                else if (GetTeam(ev.Player) == "Scientists")
+                    AddPoints(ev.Attacker, 3, MainPlugin.Translations.KilledScientist); // Kill scientist
                 else
-                    AddPoints(ev.Player, 2, MainPlugin.Translations.KilledEnemy); // Other kills
+                    AddPoints(ev.Attacker, 2, MainPlugin.Translations.KilledEnemy); // Other kills
             }
 
             // Kill by type
@@ -436,11 +436,11 @@ namespace RoundReports
 
             // Target Points
             if (ev.DamageHandler.Type is DamageType.FemurBreaker)
-                AddPoints(ev.Target, 6, MainPlugin.Translations.FemurBreakerSacrifice); // Sacrifice
+                AddPoints(ev.Player, 6, MainPlugin.Translations.FemurBreakerSacrifice); // Sacrifice
             else if (ev.DamageHandler.Type is DamageType.Warhead or DamageType.Decontamination or DamageType.Tesla)
-                RemovePoints(ev.Target, ev.Target.IsScp ? 10 : 2, MainPlugin.Translations.Death); // Dumb causes
+                RemovePoints(ev.Player, ev.Player.IsScp ? 10 : 2, MainPlugin.Translations.Death); // Dumb causes
             else
-                RemovePoints(ev.Target, ev.Target.IsScp ? 5 : 1, MainPlugin.Translations.Death); // Other causes
+                RemovePoints(ev.Player, ev.Player.IsScp ? 5 : 1, MainPlugin.Translations.Death); // Other causes
         }
 
         public void OnDroppingItem(DroppingItemEventArgs ev)
@@ -529,15 +529,6 @@ namespace RoundReports
             stats.Scp096Enrages++;
             Hold(stats);
         }
-
-        /*public void OnContaining106(ContainingEventArgs ev)
-        {
-            if (!Round.InProgress || !ev.IsAllowed) return; // Todo: Add ECheck and femur breaker activator
-            var stats = GetStat<SCPStats>();
-            stats.FemurBreakerActivated = true;
-            Hold(stats);
-            AddPoints(ev.ButtonPresser, 4, MainPlugin.Translations.FemurBreakerActivator);
-        }*/
 
         public void OnScp106Teleport(TeleportingEventArgs ev)
         {

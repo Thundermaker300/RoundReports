@@ -22,7 +22,7 @@ namespace RoundReports
         public override string Name => "RoundReports";
         public override string Author => "Thunder";
         public override Version Version => new(0, 4, 0);
-        public override Version RequiredExiledVersion => new(5, 3, 0);
+        public override Version RequiredExiledVersion => new(6, 0, 0);
         public override PluginPriority Priority => PluginPriority.Last;
 
 
@@ -85,7 +85,6 @@ namespace RoundReports
             Scp079Events.TriggeringDoor += Handlers.OnScp079TriggeringDoor;
             Scp096Events.Charging += Handlers.OnScp096Charge;
             Scp096Events.Enraging += Handlers.OnScp096Enrage;
-            //Scp106Events.Containing += Handlers.OnContaining106;
             Scp106Events.Teleporting += Handlers.OnScp106Teleport;
             Scp173Events.Blinking += Handlers.OnScp173Blink;
 
@@ -149,7 +148,6 @@ namespace RoundReports
             Scp079Events.TriggeringDoor -= Handlers.OnScp079TriggeringDoor;
             Scp096Events.Charging -= Handlers.OnScp096Charge;
             Scp096Events.Enraging -= Handlers.OnScp096Enrage;
-            //Scp106Events.Containing -= Handlers.OnContaining106;
             Scp106Events.Teleporting -= Handlers.OnScp106Teleport;
             Scp173Events.Blinking -= Handlers.OnScp173Blink;
 

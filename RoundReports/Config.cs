@@ -118,6 +118,9 @@ namespace RoundReports
         [Description("Whether or not the plugin is active.")]
         public bool IsEnabled { get; set; } = true;
 
+        [Description("Whether or not to show debug logs.")]
+        public bool Debug { get; set; } = false;
+
         [Description("Your Paste.ee key. Get this from https://paste.ee/account/api after creating a paste.ee account. The plugin cannot function without a valid Pastee key!")]
         public string PasteKey { get; set; } = "";
 
