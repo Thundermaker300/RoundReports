@@ -12,10 +12,6 @@ namespace RoundReports
         public string Title => "SCP Statistics";
         public int Order => 7;
 
-        [Translation(nameof(Translation.FemurBreakerActivated))]
-        [BindStat(StatType.FemurBreakerActivated)]
-        public bool FemurBreakerActivated { get; set; }
-
         [HideIfDefault]
         [Translation(nameof(Translation.Scp096Charges))]
         [BindStat(StatType.Scp096Charges)]

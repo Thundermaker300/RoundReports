@@ -73,7 +73,6 @@ namespace RoundReports
         TotalReloads,
 
         // SCP Stats
-        FemurBreakerActivated,
         Scp096Charges,
         Scp096Enrages,
         Scp106Teleports,

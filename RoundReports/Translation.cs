@@ -60,7 +60,6 @@ namespace RoundReports
         [Description("This text will only be visible if at least one tutorial (not Serpents Hand or UIU) kills a player in the round.")]
         public string TutorialKills { get; set; } = "Tutorial Kills";
         public string SurvivingPlayers { get; set; } = "Surviving Players";
-        public string FemurBreakerActivated { get; set; } = "Femur Breaker Activated";
 
         // Item Stats
         public string ItemStatsTitle { get; set; } = "Item Statistics";
@@ -174,8 +173,6 @@ namespace RoundReports
         public string KilledSCP { get; set; } = "Killed SCP";
         public string KilledScientist { get; set; } = "Killed Scientist";
         public string KilledEnemy { get; set; } = "Killed Enemy";
-        public string FemurBreakerSacrifice { get; set; } = "Femur Breaker Sacrifice";
-        public string FemurBreakerActivator { get; set; } = "Femur Breaker Activator";
         public string Escaped { get; set; } = "Escaped";
         public string OpenedWarheadPanel { get; set; } = "Opened Warhead Panel";
         public string GrabbedPlayer { get; set; } = "Grabbed Player";

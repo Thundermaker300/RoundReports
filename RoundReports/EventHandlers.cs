@@ -440,9 +440,7 @@ namespace RoundReports
             Hold(stats);
 
             // Target Points
-            if (ev.DamageHandler.Type is DamageType.FemurBreaker)
-                AddPoints(ev.Player, 6, MainPlugin.Translations.FemurBreakerSacrifice); // Sacrifice
-            else if (ev.DamageHandler.Type is DamageType.Warhead or DamageType.Decontamination or DamageType.Tesla)
+            if (ev.DamageHandler.Type is DamageType.Warhead or DamageType.Decontamination or DamageType.Tesla)
                 RemovePoints(ev.Player, ev.Player.IsScp ? 10 : 2, MainPlugin.Translations.Death); // Dumb causes
             else
                 RemovePoints(ev.Player, ev.Player.IsScp ? 5 : 1, MainPlugin.Translations.Death); // Other causes
