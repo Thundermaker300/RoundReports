@@ -28,9 +28,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | **Action**                            | **Point Change** |
 |---------------------------------------|------------------|
 | Kill SCP                              | +10              |
-| Sacrifice in Femur Breaker            | +6               |
 | Escape                                | +5               |
-| Press Femur Breaker Button            | +4               |
 | Kill Scientist                        | +3               |
 | Kill Player (Not Scientist)           | +2               |
 | Open Warhead Panel (Surface)          | +2               |
