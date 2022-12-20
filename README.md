@@ -88,3 +88,86 @@ MVP is calculated by granting players points for specific actions. These points 
 | 914ACTIVATIONS    | number        | The total amount of times SCP-914 was activated.               |
 
 \* Arguments will be formatted as specified in the config file.
+
+## Stat Types
+The following values can be included in the "IgnoredStats" config to disable them in the report.
+
+| **Key**                | **Description**                                                |
+|------------------------|----------------------------------------------------------------|
+| AdrenalinesConsumed    | TBA                                                            |
+| AllActivations         | TBA                                                            |
+| AllUpgrades            | TBA                                                            |
+| ButtonUnlocked         | TBA                                                            |
+| ButtonUnlocker         | TBA                                                            |
+| CandiesByPlayer        | TBA                                                            |
+| CandiesTaken           | TBA                                                            |
+| ChaosKills             | TBA                                                            |
+| DamageByPlayer         | TBA                                                            |
+| DamageByType           | TBA                                                            |
+| DClassKills            | TBA                                                            |
+| Detonated              | TBA                                                            |
+| DetonationTime         | TBA                                                            |
+| DoorsClosed            | TBA                                                            |
+| DoorsDestroyed         | TBA                                                            |
+| DoorsOpened            | TBA                                                            |
+| Drops                  | TBA                                                            |
+| EndTime                | TBA                                                            |
+| FirearmUpgrades        | TBA                                                            |
+| First330Use            | TBA                                                            |
+| First330User           | TBA                                                            |
+| First914Activation     | TBA                                                            |
+| First914Activator      | TBA                                                            |
+| FirstWarheadActivator  | TBA                                                            |
+| HumanMVP               | TBA                                                            |
+| HumanPoints            | TBA                                                            |
+| KeycardScans           | TBA                                                            |
+| KeycardUpgrades        | TBA                                                            |
+| KillsByPlayer          | TBA                                                            |
+| KillsByType            | TBA                                                            |
+| MedkitsConsumed        | TBA                                                            |
+| MTFKills               | TBA                                                            |
+| PainkillersConsumed    | TBA                                                            |
+| PlayerDamage           | TBA                                                            |
+| PlayerDoorsClosed      | TBA                                                            |
+| PlayerDoorsOpened      | TBA                                                            |
+| PlayerDrops            | TBA                                                            |
+| PlayerKills            | TBA                                                            |
+| PointLogs              | TBA                                                            |
+| Respawns               | TBA                                                            |
+| RoundTime              | TBA                                                            |
+| ScientistKills         | TBA                                                            |
+| Scp018sThrown          | TBA                                                            |
+| Scp096Charges          | TBA                                                            |
+| Scp096Enrages          | TBA                                                            |
+| Scp106Teleports        | TBA                                                            |
+| Scp173Blinks           | TBA                                                            |
+| Scp1853Uses            | TBA                                                            |
+| Scp207sDrank           | TBA                                                            |
+| Scp268Uses             | TBA                                                            |
+| SCP500sConsumed        | TBA                                                            |
+| SCPKills               | TBA                                                            |
+| SCPMVP                 | TBA                                                            |
+| SCPPoints              | TBA                                                            |
+| SerpentsHandKills      | TBA                                                            |
+| SeveredHands           | TBA                                                            |
+| SpawnWaves             | TBA                                                            |
+| StartClassD            | TBA                                                            |
+| StartFacilityGuard     | TBA                                                            |
+| StartPlayers           | TBA                                                            |
+| StartScientist         | TBA                                                            |
+| StartSCP               | TBA                                                            |
+| StartTime              | TBA                                                            |
+| SurvivingPlayers       | TBA                                                            |
+| Total914Activations    | TBA                                                            |
+| TotalCandiesTaken      | TBA                                                            |
+| TotalDamage            | TBA                                                            |
+| TotalDeaths            | TBA                                                            |
+| TotalDrops             | TBA                                                            |
+| TotalItemUpgrades      | TBA                                                            |
+| TotalKills             | TBA                                                            |
+| TotalReloads           | TBA                                                            |
+| TotalRespawnedPlayers  | TBA                                                            |
+| TotalShotsFired        | TBA                                                            |
+| TutorialKills          | TBA                                                            |
+| UIUKills               | TBA                                                            |
+| WinningTeam            | TBA                                                            |
