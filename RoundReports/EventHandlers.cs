@@ -74,7 +74,7 @@ namespace RoundReports
 
         public void AddPoints(Player plr, int amount, string reason = "Unknown")
         {
-            if (plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
+            if (plr is null || plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
                 return;
 
             Log.Debug($"Adding {amount} points to {plr.Nickname}. {reason}");
@@ -97,7 +97,7 @@ namespace RoundReports
 
         public void RemovePoints(Player plr, int amount, string reason = "Unknown")
         {
-            if (plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead)
+            if (plr is null || plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead)
                 return;
 
             Log.Debug($"Removing {amount} points from {plr.Nickname}. {reason}");
