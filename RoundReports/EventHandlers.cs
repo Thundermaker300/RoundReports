@@ -429,6 +429,16 @@ namespace RoundReports
                     AddPoints(ev.Attacker, 3, MainPlugin.Translations.KilledScientist); // Kill scientist
                 else
                     AddPoints(ev.Attacker, 2, MainPlugin.Translations.KilledEnemy); // Other kills
+
+                // Grant points to SCP-079 if death in a locked down/blackout room
+                if (GetTeam(ev.Attacker) == "SCPs" && (!ev.Player.CurrentRoom.LightsOn || ev.Player.CurrentRoom.Doors.All(door => door.IsLocked)))
+                {
+                    foreach (var player in Player.List)
+                    {
+                        if (player.Role == RoleTypeId.Scp079)
+                            AddPoints(player, 1, MainPlugin.Translations.AssistKill);
+                    }
+                }
             }
 
             // Kill by type
@@ -493,13 +503,17 @@ namespace RoundReports
             AddPoints(ev.Player, 5, MainPlugin.Translations.LeveledUp);
         }
 
-        public void OnScp079Lockdown(LockingDownEventArgs ev)
+        public void OnScp079InteractTesla(InteractingTeslaEventArgs ev)
         {
-            Timing.CallDelayed(1.15f, () =>
+            if (!Round.InProgress || !ev.IsAllowed) return;
+            foreach (Player player in Player.List)
             {
-                int count = Player.List.Count(plr => plr.CurrentRoom.Identifier == ev.Room.GameObject && GetTeam(plr) is not ("SCPs" or "SH") && GetRole(plr) is not "Tutorial");
-                AddPoints(ev.Player, count, MainPlugin.Translations.RoomLockdown);
-            });
+                if (ev.Tesla.IsPlayerInHurtRange(player))
+                {
+                    AddPoints(ev.Player, 5, MainPlugin.Translations.TeslaKill);
+                    return;
+                }
+            }
         }
 
         public void OnScp079TriggeringDoor(TriggeringDoorEventArgs ev)
@@ -508,7 +522,7 @@ namespace RoundReports
             if (Player.List.Count(plr => plr != ev.Player && GetTeam(plr) is "SCPs" && Vector3.Distance(ev.Door.Transform.position, plr.GameObject.transform.position) <= 20) == 0)
                 return;
             
-            int pts = 1;
+            int pts = 0;
             if (ev.Door.IsKeycardDoor)
             {
                 if (ev.Door.IsGate) pts++;

@@ -177,8 +177,9 @@ namespace RoundReports
         public string OpenedWarheadPanel { get; set; } = "Opened Warhead Panel";
         public string GrabbedPlayer { get; set; } = "Grabbed Player";
         public string LeveledUp { get; set; } = "Leveled Up";
-        public string RoomLockdown { get; set; } = "Room Lockdown";
+        public string AssistKill { get; set; } = "Assist Kill";
         public string OpenedDoor { get; set; } = "Opened Door";
+        public string TeslaKill { get; set; } = "Tesla Gate Kill";
 
         //-- Negative
         public string Death { get; set; } = "Death";
