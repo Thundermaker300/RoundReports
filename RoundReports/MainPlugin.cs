@@ -81,8 +81,9 @@ namespace RoundReports
             PlayerEvents.ReloadingWeapon += Handlers.OnReloadingWeapon;
 
             Scp079Events.GainingLevel += Handlers.OnScp079GainingLevel;
-            Scp079Events.LockingDown += Handlers.OnScp079Lockdown;
+            //Scp079Events.LockingDown += Handlers.OnScp079Lockdown;
             Scp079Events.TriggeringDoor += Handlers.OnScp079TriggeringDoor;
+            Scp079Events.InteractingTesla += Handlers.OnScp079InteractTesla;
             Scp096Events.Charging += Handlers.OnScp096Charge;
             Scp096Events.Enraging += Handlers.OnScp096Enrage;
             Scp106Events.Teleporting += Handlers.OnScp106Teleport;
@@ -146,8 +147,9 @@ namespace RoundReports
             PlayerEvents.ReloadingWeapon -= Handlers.OnReloadingWeapon;
 
             Scp079Events.GainingLevel -= Handlers.OnScp079GainingLevel;
-            Scp079Events.LockingDown -= Handlers.OnScp079Lockdown;
+            //Scp079Events.LockingDown -= Handlers.OnScp079Lockdown;
             Scp079Events.TriggeringDoor -= Handlers.OnScp079TriggeringDoor;
+            Scp079Events.InteractingTesla -= Handlers.OnScp079InteractTesla;
             Scp096Events.Charging -= Handlers.OnScp096Charge;
             Scp096Events.Enraging -= Handlers.OnScp096Enrage;
             Scp106Events.Teleporting -= Handlers.OnScp106Teleport;
