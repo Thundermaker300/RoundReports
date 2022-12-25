@@ -43,16 +43,17 @@ MVP is calculated by granting players points for specific actions. These points 
 | **Action**                            | **Point Change** |
 |---------------------------------------|------------------|
 | Level Up (SCP-079)                    | +5               |
+| Tesla Gate Kill (SCP-079)             | +5               |
 | Kill Scientist                        | +3               |
 | Kill Player (Not Scientist)           | +2               |
-| Open Door (SCP-079)                   | +1-3\*\*         |
-| Lockdown Room (SCP-079)               | +1\*             |
+| Open Door (SCP-079)                   | +0-2\*\*         |
+| Kill Assist (SCP-079)                 | +1\*             |
 | Capture Player (SCP-106)              | +1               |
 | Die (Most Causes)                     | -5               |
 | Die (Warhead, Decontamination, Tesla) | -10              |
 
-\*+1 for each player in the room. Does not include SCPs, Tutorials, and Serpent's Hand (if the plugin is installed).  
-\*\*+1 if there is an SCP nearby. +2 if the door is a keycard door and there is an SCP nearby. +3 for keycarded gate with SCP nearby.
+\*+1 for each player in a room that SCP-079 has blacked out/locked down. Does not include SCPs, Tutorials, and Serpent's Hand (if the plugin is installed).  
+\*\*+1 if the door is a keycard door and there is an SCP nearby. +2 for keycarded gate with SCP nearby.
 
  ## Broadcast & Embed Arguments
  All of the following arguments can be used in end-of-round broadcasts, and the Discord embed footer config. Note that arguments must be surrounded by curly braces (`{}`, eg. `{HUMANMVP}`).
