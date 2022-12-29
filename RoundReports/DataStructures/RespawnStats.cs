@@ -14,8 +14,8 @@ namespace RoundReports
         public List<string> SpawnWaves { get; set; } = new();
 
         [Translation(nameof(Translation.TotalRespawnedPlayers))]
-        [BindStat(StatType.TotalRespawnedPlayers)]
-        public int TotalRespawnedPlayers { get; set; } = 0;
+        [BindStat(StatType.TotalRespawned)]
+        public int TotalRespawned { get; set; } = 0;
 
         [Translation(nameof(Translation.Respawns))]
         [BindStat(StatType.Respawns)]

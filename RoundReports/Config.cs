@@ -55,7 +55,7 @@ namespace RoundReports
 
         // Respawn Stats
         SpawnWaves,
-        TotalRespawnedPlayers,
+        TotalRespawned,
         Respawns,
 
         // Item Stats
