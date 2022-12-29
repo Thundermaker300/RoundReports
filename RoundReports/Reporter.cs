@@ -478,13 +478,13 @@ namespace RoundReports
             .Replace("{TOTALDROPS}", GetStat<ItemStats>().TotalDrops.ToString())
             .Replace("{KEYCARDSCANS}", GetStat<ItemStats>().KeycardScans.ToString())
             .Replace("{TOTALRESPAWNED}", GetStat<RespawnStats>().TotalRespawned.ToString())
-            .Replace("{TOTALRESPAWNWAVES}", GetStat<RespawnStats>().SpawnWaves.Count.ToString())
+            .Replace("{SPAWNWAVES}", GetStat<RespawnStats>().SpawnWaves.Count.ToString())
             .Replace("{TOTALSHOTSFIRED}", GetStat<ItemStats>().TotalShotsFired.ToString())
             .Replace("{TOTALRELOADS}", GetStat<ItemStats>().TotalReloads.ToString())
             .Replace("{DOORSOPENED}", GetStat<FinalStats>().DoorsOpened.ToString())
             .Replace("{DOORSCLOSED}", GetStat<FinalStats>().DoorsClosed.ToString())
             .Replace("{DOORSDESTROYED}", GetStat<FinalStats>().DoorsDestroyed.ToString())
             .Replace("{CANDIESTAKEN}", GetStat<SCPStats>().TotalCandiesTaken.ToString())
-            .Replace("{914ACTIVATIONS}", GetStat<SCPStats>().TotalActivations.ToString());
+            .Replace("{TOTAL914ACTIVATIONS}", GetStat<SCPStats>().TotalActivations.ToString());
     }
 }
