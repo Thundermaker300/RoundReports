@@ -57,86 +57,88 @@ MVP is calculated by granting players points for specific actions. These points 
 
  ## Stats
  Every stat below can be disabled in the config by adding its respective `key` to the `IgnoredStats` config. Some of the following stats can be used in end-of-round broadcasts, and the Discord embed footer config. Note that arguments must be surrounded by curly braces and capitalized (eg. `{HUMANMVP}`).
-| **Key**               | **Available as Argument**   | **Description**                                                                         |
+| **Key**               | **Available in Broadcasts** | **Description**                                                                         |
 |-----------------------|-----------------------------|-----------------------------------------------------------------------------------------|
-| AdrenalinesConsumed   |                             | TBA                                                                                     |
-| AllActivations        |                             | TBA                                                                                     |
-| AllUpgrades           |                             | TBA                                                                                     |
-| ButtonUnlocked        |                             | TBA                                                                                     |
-| ButtonUnlocker        |                             | TBA                                                                                     |
-| CandiesByPlayer       |                             | TBA                                                                                     |
+| AdrenalinesConsumed   |                             | The total amount of adrenalines consumed.                                               |
+| AllActivations        |                             | Each SCP-914 mode and the total amount of activations.                                  |
+| AllUpgrades           |                             | Each item type and the amount of times it's been upgraded in SCP-914.                   |
+| ButtonUnlocked        |                             | Yes/No if the warhead button was opened.                                                |
+| ButtonUnlocker        |                             | The name of the player who unlocked the warhead.                                        |
+| CandiesByPlayer       |                             | Each player and the amount of candies they've taken from SCP-330.                       |
 | CandiesTaken          | Yes                         | The total amount of candies taken from SCP-330.                                         |
 | ChaosKills            | Yes                         | The total amount of Chaos Insurgency kills in the round.                                |
-| DamageByPlayer        |                             | TBA                                                                                     |
-| DamageByType          |                             | TBA                                                                                     |
+| DamageByPlayer        |                             | Each player and the amount of damage they've dealt.                                     |
+| DamageByType          |                             | Each damage type and the amount of damage dealt.                                        |
 | DClassKills           | Yes                         | The total amount of Class-D kills in the round.                                         |
-| Detonated             |                             | TBA                                                                                     |
-| DetonationTime        |                             | TBA                                                                                     |
+| Detonated             |                             | Yes/No if the warhead was detonated.                                                    |
+| DetonationTime        |                             | The time the warhead was detonated.                                                     |
 | DoorsClosed           | Yes                         | The total amount of closed door interactions.                                           |
 | DoorsDestroyed        | Yes                         | The total amount of destroyed doors.                                                    |
 | DoorsOpened           | Yes                         | The total amount of open door interactions.                                             |
-| Drops                 |                             | TBA                                                                                     |
-| EndTime               |                             | TBA                                                                                     |
-| FirearmUpgrades       |                             | TBA                                                                                     |
-| First330Use           |                             | TBA                                                                                     |
-| First330User          |                             | TBA                                                                                     |
-| First914Activation    |                             | TBA                                                                                     |
-| First914Activator     |                             | TBA                                                                                     |
-| FirstWarheadActivator |                             | TBA                                                                                     |
+| Drops                 |                             | Each item type and the amount of times it's been dropped.                               |
+| EndTime               |                             | The end time of the round.                                                              |
+| FirearmUpgrades       |                             | The total amount of times a firearm was upgraded.                                       |
+| First330Use           |                             | The time in the round the first SCP-330 candy was obtained.                             |
+| First330User          |                             | The name of the player who used SCP-330 first.                                          |
+| First914Activation    |                             | The time in the round the first SCP-914 cycle was activated.                            |
+| First914Activator     |                             | The name of the player who activated SCP-914 first.                                     |
+| FirstWarheadActivator |                             | The name of the player who activated the warhead first.                                 |
 | HumanMVP              | Yes                         | The human MVP of the round.                                                             |
 | HumanKills            | Yes                         | The total amount of human kills in the round. Broadcast argument only.                  |
-| HumanPoints           |                             | TBA                                                                                     |
+| HumanPoints           |                             | Each player who has played a human role and the amount of points they've received.      |
 | KeycardScans          | Yes                         | The total amount of keycard scans.                                                      |
-| KeycardUpgrades       |                             | TBA                                                                                     |
-| KillsByPlayer         |                             | TBA                                                                                     |
-| KillsByType           |                             | TBA                                                                                     |
-| MedkitsConsumed       |                             | TBA                                                                                     |
+| KeycardUpgrades       |                             | The total amount of times a keycard was upgraded.                                       |
+| KillsByPlayer         |                             | Each player and their amount of kills.                                                  |
+| KillsByType           |                             | Each death type and the total amount of kills of that type.                             |
+| MedkitsConsumed       |                             | The total amount of medkits consumed.                                                   |
 | MTFKills              | Yes                         | The total amount of MTF kills in the round.                                             |
-| PainkillersConsumed   |                             | TBA                                                                                     |
+| PainkillersConsumed   |                             | The total amount of painkillers consumed.                                               |
 | PlayerCount           | Yes                         | The total amount of players currently connected to the server. Broadcast argument only. |
-| PlayerDamage          |                             | TBA                                                                                     |
-| PlayerDoorsClosed     |                             | TBA                                                                                     |
-| PlayerDoorsOpened     |                             | TBA                                                                                     |
-| PlayerDrops           |                             | TBA                                                                                     |
-| PlayerKills           |                             | TBA                                                                                     |
-| PointLogs             |                             | TBA                                                                                     |
-| Respawns              |                             | TBA                                                                                     |
+| PlayerDamage          |                             | The total amount of damage dealt by players.                                            |
+| PlayerDoorsClosed     |                             | Each player and the amount of doors they've closed.                                     |
+| PlayerDoorsOpened     |                             | Each player and the amount of doors they've opened.                                     |
+| PlayerDrops           |                             | Each player and the amount of items they've dropped.                                    |
+| PlayerKills           |                             | Each player and the amount of players they've killed.                                   |
+| PointLogs             |                             | A log for each time points are added or removed.                                        |
+| Respawns              |                             | Each respawn that occurs.                                                               |
 | RoundTime             | Yes                         | The total time of the round.                                                            |
 | ScientistKills        | Yes                         | The total amount of scientist kills in the round.                                       |
-| Scp018sThrown         |                             | TBA                                                                                     |
-| Scp096Charges         |                             | TBA                                                                                     |
-| Scp096Enrages         |                             | TBA                                                                                     |
-| Scp106Teleports       |                             | TBA                                                                                     |
-| Scp173Blinks          |                             | TBA                                                                                     |
-| Scp1853Uses           |                             | TBA                                                                                     |
-| Scp207sDrank          |                             | TBA                                                                                     |
-| Scp268Uses            |                             | TBA                                                                                     |
-| SCP500sConsumed       |                             | TBA                                                                                     |
+| Scp018sThrown         |                             | The total amount of SCP-018s thrown.                                                    |
+| Scp096Charges         |                             | The total amount of SCP-096 charges. Only shown if value is greater than 0.             |
+| Scp096Enrages         |                             | The total amount of SCP-096 enrages. Only shown if value is greater than 0.             |
+| Scp106Teleports       |                             | The total amount of SCP-106 teleports. Only shown if value is greater than 0.           |
+| Scp173Blinks          |                             | The total amount of SCP-173 blinks. Only shown if value is greater than 0.              |
+| Scp1853Uses           |                             | The total amount of SCP-1853 uses.                                                      |
+| Scp207sDrank          |                             | The total amount of SCP-207s drank.                                                     |
+| Scp268Uses            |                             | The total amount of SCP-268 uses.                                                       |
+| SCP500sConsumed       |                             | The total amount of SCP-500s consumed.                                                  |
 | SCPKills              | Yes                         | The total amount of SCP kills in the round.                                             |
 | SCPMVP                | Yes                         | The SCP MVP of the round.                                                               |
-| SCPPoints             |                             | TBA                                                                                     |
-| SerpentsHandKills     |                             | TBA                                                                                     |
-| SeveredHands          |                             | TBA                                                                                     |
+| SCPPoints             |                             | Each player who has played an SCP and the amount of points they received.               |
+| SerpentsHandKills     |                             | The total amount of Serpent's Hand kills (only if the plugin is installed).             |
+| SeveredHands          |                             | The total amount of hands severed from taking too many SCP-330 candies.                 |
 | SpawnWaves            | Yes                         | The total amount of respawn waves.                                                      |
-| StartClassD           |                             | TBA                                                                                     |
-| StartFacilityGuard    |                             | TBA                                                                                     |
-| StartPlayers          |                             | TBA                                                                                     |
-| StartScientist        |                             | TBA                                                                                     |
-| StartSCP              |                             | TBA                                                                                     |
+| StartClassD           |                             | The amount of Class-D personnel at the start of the round.                              |
+| StartFacilityGuard    |                             | The amount of Facility Guards at the start of the round.                                |
+| StartPlayers          |                             | The total amount of players at the start of the round.                                  |
+| StartScientist        |                             | The amount of Scientists at the start of the round.                                     |
+| StartSCP              |                             | A list of every SCP at the start of the round.*                                         |
 | StartTime             | Yes                         | The time that the round started.                                                        |
-| SurvivingPlayers      |                             | TBA                                                                                     |
+| SurvivingPlayers      |                             | Each player that is alive at the end of the round.                                      |
 | Total914Activations   | Yes                         | The total amount of times SCP-914 was activated.                                        |
-| TotalCandiesTaken     |                             | TBA                                                                                     |
+| TotalCandiesTaken     |                             | The total amount of candies taken.                                                      |
 | TotalDamage           | Yes                         | The total amount of damage dealt.                                                       |
 | TotalDeaths           | Yes                         | The total amount of deaths.                                                             |
 | TotalDrops            | Yes                         | The total amount of items dropped.                                                      |
-| TotalItemUpgrades     |                             | TBA                                                                                     |
+| TotalItemUpgrades     |                             | The total amount of item upgrades.                                                      |
 | TotalKills            | Yes                         | The total amount of kills in the round.                                                 |
 | TotalReloads          | Yes                         | The total amount of firearm reloads.                                                    |
 | TotalRespawned        | Yes                         | The total amount of respawned players.                                                  |
 | TotalShotsFired       | Yes                         | The total amount of shots fired.                                                        |
-| TutorialKills         |                             | TBA                                                                                     |
-| UIUKills              |                             | TBA                                                                                     |
-| WinningTeam           | Yes                         | The winning team of the round.                                                          |
+| TutorialKills         |                             | The total amount of tutorial kills. Only shown if value is greater than 0.              |
+| UIUKills              |                             | The total amount of UIU kills (only if the plugin is installed).                        |
+| WinningTeam           | Yes                         | The winning team of the round.                                                          |                                                   
+
+* This stat is updated 60 seconds into the round to account for early SCP deaths, SCPSwap, etc.
 
 Note: `HumanKills` and `PlayerCount` are only available as broadcast/embed arguments. These two stats cannot be used in IgnoredStats and will not show up on the round report.
