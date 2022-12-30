@@ -138,3 +138,5 @@ MVP is calculated by granting players points for specific actions. These points 
 | TutorialKills         |                             | TBA                                                                                     |
 | UIUKills              |                             | TBA                                                                                     |
 | WinningTeam           | Yes                         | The winning team of the round.                                                          |
+
+Note: `HumanKills` and `PlayerCount` are only available as broadcast/embed arguments. These two stats cannot be used in IgnoredStats and will not show up on the round report.
