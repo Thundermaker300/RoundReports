@@ -21,7 +21,7 @@ namespace RoundReports
     {
         public override string Name => "RoundReports";
         public override string Author => "Thunder";
-        public override Version Version => new(0, 5, 1);
+        public override Version Version => new(0, 5, 2);
         public override Version RequiredExiledVersion => new(6, 0, 0);
         public override PluginPriority Priority => PluginPriority.Last;
 
