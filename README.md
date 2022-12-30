@@ -139,6 +139,6 @@ MVP is calculated by granting players points for specific actions. These points 
 | UIUKills              |                             | The total amount of UIU kills (only if the plugin is installed).                        |
 | WinningTeam           | Yes                         | The winning team of the round.                                                          |                                                   
 
-* This stat is updated 60 seconds into the round to account for early SCP deaths, SCPSwap, etc.
+\* This stat is updated 60 seconds into the round to account for early SCP deaths, SCPSwap, etc.
 
 Note: `HumanKills` and `PlayerCount` are only available as broadcast/embed arguments. These two stats cannot be used in IgnoredStats and will not show up on the round report.
