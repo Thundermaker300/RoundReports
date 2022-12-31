@@ -21,7 +21,7 @@ namespace RoundReports
     {
         public override string Name => "RoundReports";
         public override string Author => "Thunder";
-        public override Version Version => new(0, 5, 2);
+        public override Version Version => new(0, 5, 3);
         public override Version RequiredExiledVersion => new(6, 0, 0);
         public override PluginPriority Priority => PluginPriority.Last;
 
@@ -92,7 +92,7 @@ namespace RoundReports
             Scp330Events.InteractingScp330 += Handlers.OnInteractingScp330;
 
             Scp914Events.Activating += Handlers.OnActivatingScp914;
-            Scp914Events.UpgradingItem += Handlers.On914UpgradingItem;
+            Scp914Events.UpgradingPickup += Handlers.On914UpgradingPickup;
             Scp914Events.UpgradingInventoryItem += Handlers.On914UpgradingInventoryItem;
 
             // Warhead
@@ -158,7 +158,7 @@ namespace RoundReports
             Scp330Events.InteractingScp330 -= Handlers.OnInteractingScp330;
 
             Scp914Events.Activating -= Handlers.OnActivatingScp914;
-            Scp914Events.UpgradingItem -= Handlers.On914UpgradingItem;
+            Scp914Events.UpgradingPickup -= Handlers.On914UpgradingPickup;
             Scp914Events.UpgradingInventoryItem -= Handlers.On914UpgradingInventoryItem;
 
             // Warhead

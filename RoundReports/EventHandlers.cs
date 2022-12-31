@@ -566,7 +566,7 @@ namespace RoundReports
         public void OnUsedItem(UsedItemEventArgs ev)
         {
             if (!Round.InProgress || !ECheck(ev.Player)) return;
-            if (ev.Item.IsScp)
+            if (ev.Item.Type.IsScp())
             {
                 var stats = GetStat<SCPStats>();
                 switch (ev.Item.Type)
@@ -738,7 +738,7 @@ namespace RoundReports
             Hold(stats);
         }
 
-        public void On914UpgradingItem(UpgradingItemEventArgs ev)
+        public void On914UpgradingPickup(UpgradingPickupEventArgs ev)
         {
             if (!ev.IsAllowed || !Round.InProgress) return;
             UpgradeItemLog(ev.Pickup.Type, ev.KnobSetting);
