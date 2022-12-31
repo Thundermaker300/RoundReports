@@ -23,12 +23,6 @@ using Exiled.Events.EventArgs.Warhead;
 
 namespace RoundReports
 {
-    public enum PointTeam
-    {
-        Human,
-        SCP,
-    }
-
     public class EventHandlers
     {
         public List<IReportStat> Holding { get; set; }

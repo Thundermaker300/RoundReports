@@ -95,6 +95,9 @@
     <Compile Include="DataStructures\OrganizedKillsStats.cs" />
     <Compile Include="DataStructures\RespawnStats.cs" />
     <Compile Include="DataStructures\StartingStats.cs" />
+    <Compile Include="Enums\PointTeam.cs" />
+    <Compile Include="Enums\Rule.cs" />
+    <Compile Include="Enums\StatType.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="MainPlugin.cs" />
     <Compile Include="Config.cs" />
