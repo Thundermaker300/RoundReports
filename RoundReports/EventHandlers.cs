@@ -425,7 +425,7 @@ namespace RoundReports
                     AddPoints(ev.Attacker, 2, MainPlugin.Translations.KilledEnemy); // Other kills
 
                 // Grant points to SCP-079 if death in a locked down/blackout room
-                if (GetTeam(ev.Attacker) == "SCPs" && (!ev.Player.CurrentRoom.LightsOn || ev.Player.CurrentRoom.Doors.All(door => door.IsLocked)))
+                if (GetTeam(ev.Attacker) == "SCPs" && (ev.Player.CurrentRoom.AreLightsOff || ev.Player.CurrentRoom.Doors.All(door => door.IsLocked)))
                 {
                     foreach (var player in Player.List)
                     {
