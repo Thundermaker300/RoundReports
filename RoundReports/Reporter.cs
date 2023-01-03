@@ -64,6 +64,10 @@ namespace RoundReports
         public void Kill()
         {
             Log.Debug("Killing reporter...");
+
+            foreach (IReportStat stat in Stats)
+                stat.Cleanup();
+
             ReturnLists();
             MainPlugin.Reporter = null;
         }
@@ -200,9 +204,6 @@ namespace RoundReports
                     section.Contents = StringBuilderPool.Shared.ToStringReturn(bldr).Trim();
                     if (string.IsNullOrEmpty(section.Contents)) continue;
                     entry.Sections.Add(section);
-
-                    // Cleanup stat
-                    stat.Cleanup();
                 }
                 catch (Exception e)
                 {
