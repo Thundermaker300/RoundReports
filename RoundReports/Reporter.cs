@@ -134,7 +134,7 @@ namespace RoundReports
             }
             // Stats
             var stats = Stats.OrderBy(stat => stat.Order);
-            foreach (var stat in stats)
+            foreach (IReportStat stat in stats)
             {
                 try
                 {
@@ -200,6 +200,9 @@ namespace RoundReports
                     section.Contents = StringBuilderPool.Shared.ToStringReturn(bldr).Trim();
                     if (string.IsNullOrEmpty(section.Contents)) continue;
                     entry.Sections.Add(section);
+
+                    // Cleanup stat
+                    stat.Cleanup();
                 }
                 catch (Exception e)
                 {

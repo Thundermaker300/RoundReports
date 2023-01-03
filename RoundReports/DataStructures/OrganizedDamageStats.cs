@@ -20,10 +20,20 @@ namespace RoundReports
 
         [Translation(nameof(Translation.DamageByPlayer))]
         [BindStat(StatType.DamageByPlayer)]
-        public Dictionary<Player, int> DamageByPlayer { get; set; } = new(0);
+        public Dictionary<Player, int> DamageByPlayer { get; set; }
 
         [Translation(nameof(Translation.DamageByType))]
         [BindStat(StatType.DamageByType)]
-        public Dictionary<DamageType, int> DamageByType { get; set; } = new(0);
+        public Dictionary<DamageType, int> DamageByType { get; set; }
+
+        public void Setup()
+        {
+            DamageByPlayer = new();
+            DamageByType = new();
+        }
+
+        public void Cleanup()
+        {
+        }
     }
 }

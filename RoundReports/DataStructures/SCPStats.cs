@@ -68,11 +68,11 @@ namespace RoundReports
 
         [Translation(nameof(Translation.CandiesTaken))]
         [BindStat(StatType.CandiesTaken)]
-        public Dictionary<CandyKindID, int> CandiesTaken { get; set; } = new(0);
+        public Dictionary<CandyKindID, int> CandiesTaken { get; set; }
 
         [Translation(nameof(Translation.CandiesByPlayer))]
         [BindStat(StatType.CandiesByPlayer)]
-        public Dictionary<Player, int> CandiesByPlayer { get; set; } = new(0);
+        public Dictionary<Player, int> CandiesByPlayer { get; set; }
 
         [Header(nameof(Translation.Scp914Title))]
         [Translation(nameof(Translation.FirstActivation))]
@@ -101,17 +101,29 @@ namespace RoundReports
 
         [Translation(nameof(Translation.Activations))]
         [BindStat(StatType.AllActivations)]
-        public Dictionary<Scp914KnobSetting, int> Activations { get; set; } = new()
-        {
-            [Scp914KnobSetting.Rough] = 0,
-            [Scp914KnobSetting.Coarse] = 0,
-            [Scp914KnobSetting.OneToOne] = 0,
-            [Scp914KnobSetting.Fine] = 0,
-            [Scp914KnobSetting.VeryFine] = 0,
-        };
+        public Dictionary<Scp914KnobSetting, int> Activations { get; set; }
 
         [Translation(nameof(Translation.Upgrades))]
         [BindStat(StatType.AllUpgrades)]
         public Dictionary<ItemType, int> Upgrades { get; set; } = new();
+
+        public void Setup()
+        {
+            CandiesTaken = new();
+            CandiesByPlayer = new();
+            Activations = new()
+            {
+                [Scp914KnobSetting.Rough] = 0,
+                [Scp914KnobSetting.Coarse] = 0,
+                [Scp914KnobSetting.OneToOne] = 0,
+                [Scp914KnobSetting.Fine] = 0,
+                [Scp914KnobSetting.VeryFine] = 0,
+            };
+            Upgrades = new();
+        }
+
+        public void Cleanup()
+        {
+        }
     }
 }

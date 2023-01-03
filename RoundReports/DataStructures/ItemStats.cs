@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Features;
+using NorthwoodLib.Pools;
 using System.Collections.Generic;
 
 namespace RoundReports
@@ -15,11 +16,11 @@ namespace RoundReports
 
         [Translation(nameof(Translation.Drops))]
         [BindStat(StatType.Drops)]
-        public Dictionary<ItemType, int> Drops { get; set; } = new(0);
+        public Dictionary<ItemType, int> Drops { get; set; }
 
         [Translation(nameof(Translation.PlayerDrops))]
         [BindStat(StatType.PlayerDrops)]
-        public Dictionary<Player, int> PlayerDrops { get; set; } = new(0);
+        public Dictionary<Player, int> PlayerDrops { get; set; }
 
         [Header(nameof(Translation.ItemUsesTitle))]
         [Translation(nameof(Translation.KeycardScans))]
@@ -50,5 +51,15 @@ namespace RoundReports
         [Translation(nameof(Translation.TotalReloads))]
         [BindStat(StatType.TotalReloads)]
         public int TotalReloads { get; set; }
+
+        public void Setup()
+        {
+            Drops = new();
+            PlayerDrops = new();
+        }
+
+        public void Cleanup()
+        {
+        }
     }
 }

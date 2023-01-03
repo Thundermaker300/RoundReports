@@ -44,7 +44,10 @@ namespace RoundReports
             where T: class, IReportStat, new()
         {
             if (Holding.FirstOrDefault(r => r.GetType() == typeof(T)) is not T value)
+            {
                 value = new T();
+                value.Setup();
+            }
             return value;
         }
 
@@ -184,7 +187,7 @@ namespace RoundReports
                     Scientists = Player.Get(RoleTypeId.Scientist).Count(player => ECheck(player)),
                     StartTime = DateTime.Now,
                     PlayersAtStart = Player.List.Where(r => !r.IsDead).Count(player => ECheck(player)),
-                    Players = new()
+                    Players = ListPool<string>.Shared.Rent()
                 };
                 foreach (var player in Player.List.Where(player => ECheck(player) && !player.IsDead))
                     stats.Players.Add($"{Reporter.GetDisplay(player)} [{GetRole(player)}]");

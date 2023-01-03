@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Features;
+using NorthwoodLib.Pools;
 using System;
 using System.Collections.Generic;
 
@@ -68,7 +69,7 @@ namespace RoundReports
 
         [Translation(nameof(Translation.SurvivingPlayers))]
         [BindStat(StatType.SurvivingPlayers)]
-        public List<string> SurvivingPlayers { get; set; } = new();
+        public List<string> SurvivingPlayers { get; set; }
 
         [Header(nameof(Translation.WarheadStatsTitle))]
         [Translation(nameof(Translation.ButtonUnlocked))]
@@ -106,10 +107,22 @@ namespace RoundReports
 
         [Translation(nameof(Translation.PlayerDoorsOpened))]
         [BindStat(StatType.PlayerDoorsOpened)]
-        public Dictionary<Player, int> PlayerDoorsOpened { get; set; } = new(0);
+        public Dictionary<Player, int> PlayerDoorsOpened { get; set; }
 
         [Translation(nameof(Translation.PlayerDoorsClosed))]
         [BindStat(StatType.PlayerDoorsClosed)]
-        public Dictionary<Player, int> PlayerDoorsClosed { get; set; } = new(0);
+        public Dictionary<Player, int> PlayerDoorsClosed { get; set; }
+
+        public void Setup()
+        {
+            SurvivingPlayers = ListPool<string>.Shared.Rent();
+            PlayerDoorsOpened = new();
+            PlayerDoorsClosed = new();
+        }
+
+        public void Cleanup()
+        {
+            ListPool<string>.Shared.Return(SurvivingPlayers);
+        }
     }
 }

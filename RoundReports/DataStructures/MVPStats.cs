@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Features;
+using NorthwoodLib.Pools;
 using System.Collections.Generic;
 
 namespace RoundReports
@@ -24,6 +25,16 @@ namespace RoundReports
         public Dictionary<Player, int> SCPPoints { get; set; }
 
         [BindStat(StatType.PointLogs)]
-        public List<string> PointLogs { get; set; } = new();
+        public List<string> PointLogs { get; set; }
+
+        public void Setup()
+        {
+            PointLogs = ListPool<string>.Shared.Rent();
+        }
+
+        public void Cleanup()
+        {
+            ListPool<string>.Shared.Return(PointLogs);
+        }
     }
 }

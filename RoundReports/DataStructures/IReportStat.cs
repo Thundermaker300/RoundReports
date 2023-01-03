@@ -4,5 +4,7 @@
     {
         public string Title { get; }
         public int Order { get; }
+        public void Setup();
+        public void Cleanup();
     }
 }

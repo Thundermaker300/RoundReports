@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NorthwoodLib.Pools;
+using System.Collections.Generic;
 
 namespace RoundReports
 {
@@ -11,7 +12,7 @@ namespace RoundReports
         [Rule(Rule.CommaSeparatedList)]
         [Translation(nameof(Translation.SpawnWaves))]
         [BindStat(StatType.SpawnWaves)]
-        public List<string> SpawnWaves { get; set; } = new();
+        public List<string> SpawnWaves { get; set; }
 
         [Translation(nameof(Translation.TotalRespawnedPlayers))]
         [BindStat(StatType.TotalRespawned)]
@@ -19,6 +20,18 @@ namespace RoundReports
 
         [Translation(nameof(Translation.Respawns))]
         [BindStat(StatType.Respawns)]
-        public List<string> Respawns { get; set; } = new();
+        public List<string> Respawns { get; set; }
+
+        public void Setup()
+        {
+            SpawnWaves = ListPool<string>.Shared.Rent();
+            Respawns = ListPool<string>.Shared.Rent();
+        }
+
+        public void Cleanup()
+        {
+            ListPool<string>.Shared.Return(SpawnWaves);
+            ListPool<string>.Shared.Return(Respawns);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using PlayerRoles;
+﻿using NorthwoodLib.Pools;
+using PlayerRoles;
 using System;
 using System.Collections.Generic;
 
@@ -38,5 +39,14 @@ namespace RoundReports
         [Translation(nameof(Translation.Players))]
         [BindStat(StatType.StartPlayers)]
         public List<string> Players { get; set; }
+
+        public void Setup()
+        {
+        }
+
+        public void Cleanup()
+        {
+            ListPool<string>.Shared.Return(Players);
+        }
     }
 }
