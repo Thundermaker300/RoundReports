@@ -45,7 +45,10 @@ namespace RoundReports
             where T: class, IReportStat, new()
         {
             if (Stats.FirstOrDefault(r => r is T) is not T stat)
-                return new T();
+            {
+                stat = new T();
+                stat.Setup();
+            }
             return stat;
         }
 
@@ -110,7 +113,9 @@ namespace RoundReports
                 {
                     try
                     {
-                        Stats.Add((IReportStat)Activator.CreateInstance(type));
+                        var newStat = (IReportStat)Activator.CreateInstance(type);
+                        newStat.Setup();
+                        Stats.Add(newStat);
                     }
                     catch (Exception ex)
                     {
@@ -351,16 +356,13 @@ namespace RoundReports
                     // Broadcast
                     Log.Debug("Sending broadcasts.");
                     List<EBroadcast> brList = MainPlugin.Singleton.Config.EndingBroadcasts;
-                    if (brList is not null && brList.Count > 0 && Server.Broadcast is not null)
+                    if (brList is not null && brList.Count > 0)
                     {
                         if (brList.Any(br => br.Show))
                             Map.ClearBroadcasts();
 
                         foreach (EBroadcast br in brList)
                         {
-                            if (br.Show is false || Server.Broadcast is null)
-                                continue;
-
                             br.Content = ProcessReportArgs(br.Content);
                             Log.Debug($"Queueing broadcast: {br.Content}");
                             Map.Broadcast(br);

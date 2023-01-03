@@ -118,6 +118,9 @@ namespace RoundReports
             SurvivingPlayers = ListPool<string>.Shared.Rent();
             PlayerDoorsOpened = new();
             PlayerDoorsClosed = new();
+            WinningTeam = MainPlugin.Translations.NoData;
+            RoundTime = TimeSpan.Zero;
+            EndTime = DateTime.MinValue;
         }
 
         public void Cleanup()

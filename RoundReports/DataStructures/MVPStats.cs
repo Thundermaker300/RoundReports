@@ -30,6 +30,8 @@ namespace RoundReports
         public void Setup()
         {
             PointLogs = ListPool<string>.Shared.Rent();
+            HumanMVP = MainPlugin.Translations.NoData;
+            SCPMVP = MainPlugin.Translations.NoData;
         }
 
         public void Cleanup()
