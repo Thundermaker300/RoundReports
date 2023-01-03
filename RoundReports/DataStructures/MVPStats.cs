@@ -24,6 +24,6 @@ namespace RoundReports
         public Dictionary<Player, int> SCPPoints { get; set; }
 
         [BindStat(StatType.PointLogs)]
-        public List<string> PointLogs { get; set; }
+        public List<string> PointLogs { get; set; } = new();
     }
 }
