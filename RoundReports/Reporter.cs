@@ -398,7 +398,7 @@ namespace RoundReports
                 if (dict.Count == 0)
                     return MainPlugin.Translations.NoData;
 
-                List<DictionaryEntry> internalList = new();
+                List<DictionaryEntry> internalList = ListPool<DictionaryEntry>.Shared.Rent();
 
                 StringBuilder bldr2 = StringBuilderPool.Shared.Rent();
                 bldr2.AppendLine();
@@ -417,8 +417,11 @@ namespace RoundReports
                     if (item.Key is null || item.Value is null) continue;
                     bldr2.AppendLine("- " + GetDisplay(item.Key) + ": " + GetDisplay(item.Value));
                 }
+
                 var display = bldr2.ToString().TrimEnd(' ', '\r', '\n');
                 StringBuilderPool.Shared.Return(bldr2);
+                ListPool<DictionaryEntry>.Shared.Return(internalList);
+
                 return display;
             }
             else if (val is IEnumerable list && val.GetType().IsGenericType)
@@ -431,7 +434,7 @@ namespace RoundReports
                     return MainPlugin.Translations.NoData;
 
                 // Hacky solution: Convert IEnumerable to a List<object> to sort it
-                List<object> internalList = new();
+                List<object> internalList = ListPool<object>.Shared.Rent();
                 StringBuilder bldr2 = StringBuilderPool.Shared.Rent();
 
                 if (!rules.HasFlag(Rule.CommaSeparatedList))
@@ -452,8 +455,11 @@ namespace RoundReports
                     else
                         bldr2.AppendLine("- " + GetDisplay(item));
                 }
+
                 var display = bldr2.ToString().TrimEnd(' ', '\r', '\n', ',');
                 StringBuilderPool.Shared.Return(bldr2);
+                ListPool<object>.Shared.Return(internalList);
+
                 return display;
             }
             else
