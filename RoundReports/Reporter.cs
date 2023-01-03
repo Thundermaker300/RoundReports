@@ -20,9 +20,10 @@ namespace RoundReports
     {
         private List<IReportStat> Stats { get; set; }
         public static Dictionary<Player, string> NameStore { get; set; }
-        public bool HasSent { get; private set; } = false;
+        public bool HasSent { get; private set; }
         public LeadingTeam WinTeam { get; set; } = LeadingTeam.Draw;
         private List<string> Remarks { get; set; }
+        private PasteEntry ReportData;
         public static string DoNotTrackText => MainPlugin.Translations.DoNotTrack;
         public bool AtLeastOneHidden { get; set; } = false;
 
@@ -31,6 +32,8 @@ namespace RoundReports
             Stats = ListPool<IReportStat>.Shared.Rent();
             Remarks = ListPool<string>.Shared.Rent();
             NameStore = new(0);
+            HasSent = false;
+            Log.Debug("New reporter has been instantiated.");
         }
 
         public static object GetDefault(Type t)
@@ -221,21 +224,26 @@ namespace RoundReports
             if (HasSent)
                 return;
 
+            Log.Debug("Report upload request received, step: 2.");
+
             HasSent = true;
-            SendReportInternal();
+            Timing.RunCoroutine(SendReportInternal());
         }
 
-        private void SendReportInternal()
+        private IEnumerator<float> SendReportInternal()
         {
-            Timing.CallDelayed(0.1f, () =>
-            {
-                PasteEntry data = BuildReport();
-                Timing.RunCoroutine(TryUpload(data, 0));
-            });
+            Log.Debug("Report upload request received, step: 3.");
+            yield return Timing.WaitForSeconds(0.5f);
+            ReportData = BuildReport();
+
+            Log.Debug("Report upload request received, step: 4.");
+            Timing.RunCoroutine(TryUpload());
         }
 
-        private IEnumerator<float> TryUpload(PasteEntry data, int iter)
+        private IEnumerator<float> TryUpload(int iter = 0)
         {
+            PasteEntry data = ReportData;
+            Log.Debug("Beginning report upload process.");
             if (iter == 10)
             {
                 Log.Warn("Failed to post round report to Pastee ten times. Request discarded.");
@@ -258,13 +266,13 @@ namespace RoundReports
                 catch (Exception e)
                 {
                     Log.Warn($"Report response could not be read. Retrying upload. Error: {e}");
-                    Timing.RunCoroutine(TryUpload(data, iter + 1));
+                    Timing.RunCoroutine(TryUpload(iter + 1));
                     yield break;
                 }
                 if (response is null || !response.Success)
                 {
                     Log.Warn("Unknown error when uploading the report. Retrying upload.");
-                    Timing.RunCoroutine(TryUpload(data, iter + 1));
+                    Timing.RunCoroutine(TryUpload(iter + 1));
                     yield break;
                 }
                 else
@@ -365,7 +373,7 @@ namespace RoundReports
             else
             {
                 Log.Warn($"Report failed to post to Pastee, retrying. Error: {pasteWWW.error}");
-                Timing.RunCoroutine(TryUpload(data, iter + 1));
+                Timing.RunCoroutine(TryUpload(iter + 1));
             }
         }
 

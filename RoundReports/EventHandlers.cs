@@ -139,7 +139,10 @@ namespace RoundReports
 
             // Send
             if (!MainPlugin.Reporter.HasSent)
+            {
+                Log.Debug("Report upload request received, step: 1.");
                 MainPlugin.Reporter.SendReport();
+            }
 
             ListPool<IReportStat>.Shared.Return(Holding);
         }
