@@ -6,7 +6,9 @@
   
 This plugin uses [paste.ee](https://paste.ee/) for hosting reports. This service is not affiliated with RoundReports, and they have their own Terms of Service you must abide by when using this plugin. By default, reports automatically expire after 30 days; however, this can be configured, and reports can be saved with a simple tool like the [Wayback Machine](https://web.archive.org/).  
   
-Note: Statistics from users with Do Not Track (DNT) enabled are treated differently, please see "Note on DNT Players" section below.
+Important Notes:
+* This plugin requires **Newtonsoft.json** in your plugin's dependencies folder in order to work. Click [here](https://github.com/Thundermaker300/RoundReports/releases/download/v0.5.5/Newtonsoft.Json.dll) to download it.
+* Statistics from users with Do Not Track (DNT) enabled are treated differently, please see "Note on DNT Players" section below.
 
  ## Commands
  ### pausereport
