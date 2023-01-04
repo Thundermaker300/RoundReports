@@ -69,6 +69,8 @@ namespace RoundReports
         /// <returns>Player's role.</returns>
         public static string GetRole(Player player)
         {
+            if (player is null)
+                return RoleTypeId.None.ToString();
             if (player.SessionVariables.ContainsKey("IsSH"))
                 return "SerpentsHand";
             else if (player.SessionVariables.ContainsKey("IsUIU"))
@@ -83,6 +85,8 @@ namespace RoundReports
         /// <returns>Player's team.</returns>
         public string GetTeam(Player player)
         {
+            if (player is null)
+                return Team.Dead.ToString();
             if (player.SessionVariables.ContainsKey("IsSH"))
                 return "SH";
             else if (player.SessionVariables.ContainsKey("IsUIU"))
@@ -205,19 +209,20 @@ namespace RoundReports
         /// <returns>Boolean.</returns>
         public static bool ECheck(Player ply)
         {
+            if (ply is null)
+                return false;
+
             bool flag = true;
             if (ply is not null)
-            {
+            if (GetRole(ply) == "Tutorial" && MainPlugin.Configs.ExcludeTutorials)
+                return false; // Exit func early (we don't want to show hidden message for tutorial exclusion)
 
-                if (GetRole(ply) == "Tutorial" && MainPlugin.Configs.ExcludeTutorials)
-                    return false; // Exit func early (we don't want to show hidden message for tutorial exclusion)
+            if (ply.DoNotTrack && MainPlugin.Configs.ExcludeDNTUsers)
+                flag = false;
 
-                if (ply.DoNotTrack && MainPlugin.Configs.ExcludeDNTUsers)
-                    flag = false;
+            if (MainPlugin.Configs.IgnoredUsers.Contains(ply.UserId))
+                flag = false;
 
-                if (MainPlugin.Configs.IgnoredUsers.Contains(ply.UserId))
-                    flag = false;
-            }
             if (!flag && MainPlugin.Reporter is not null)
                 MainPlugin.Reporter.AtLeastOneHidden = true;
             return flag;
@@ -380,7 +385,7 @@ namespace RoundReports
 
         public void OnSpawned(SpawnedEventArgs ev)
         {
-            if (!Round.InProgress || Round.ElapsedTime.TotalMinutes <= 0.5 || !ECheck(ev.Player) || GetTeam(ev.Player) is not ("SH" or "UIU" or "FacilityForces" or "ChaosInsurgency")) return;
+            if (!Round.InProgress || Round.ElapsedTime.TotalMinutes <= 0.5 || !ECheck(ev.Player) || GetTeam(ev.Player) is not ("" or "SH" or "UIU" or "FacilityForces" or "ChaosInsurgency")) return;
             RespawnStats stats = GetStat<RespawnStats>();
             stats.TotalRespawned++;
             stats.Respawns.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player)).Replace("{ROLE}", GetRole(ev.Player)));
@@ -408,7 +413,7 @@ namespace RoundReports
             }
 
             // Check Attacker
-            if (ev.Attacker is not null && ECheck(ev.Attacker))
+            if (ECheck(ev.Attacker))
             {
                 stats.PlayerDamage += amount;
                 if (!stats.DamageByPlayer.ContainsKey(ev.Attacker))
@@ -416,6 +421,7 @@ namespace RoundReports
                 else
                     stats.DamageByPlayer[ev.Attacker] += amount;
             }
+
             Hold(stats);
         }
 
@@ -542,13 +548,13 @@ namespace RoundReports
 
         public void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed || ev.Scp106 is null) return;
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Scp106)) return;
             AddPoints(ev.Scp106, 1, MainPlugin.Translations.GrabbedPlayer);
         }
 
         public void OnShooting(ShootingEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             var stats = GetStat<ItemStats>();
             stats.TotalShotsFired++;
             Hold(stats);
@@ -556,7 +562,7 @@ namespace RoundReports
 
         public void OnReloadingWeapon(ReloadingWeaponEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             var stats = GetStat<ItemStats>();
             stats.TotalReloads++;
             Hold(stats);
@@ -564,13 +570,13 @@ namespace RoundReports
 
         public void OnScp079GainingLevel(GainingLevelEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             AddPoints(ev.Player, 5, MainPlugin.Translations.LeveledUp);
         }
 
         public void OnScp079InteractTesla(InteractingTeslaEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             foreach (Player player in Player.List)
             {
                 if (ev.Tesla.IsPlayerInHurtRange(player))
@@ -584,7 +590,7 @@ namespace RoundReports
 
         public void OnScp079TriggeringDoor(TriggeringDoorEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed || ev.Door.IsOpen) return;
+            if (!Round.InProgress || !ev.IsAllowed || ev.Door.IsOpen || !ECheck(ev.Player)) return;
             if (Player.List.Count(plr => plr != ev.Player && GetTeam(plr) is "SCPs" && Vector3.Distance(ev.Door.Transform.position, plr.GameObject.transform.position) <= 20) == 0)
                 return;
             
