@@ -33,6 +33,11 @@ namespace RoundReports
         public bool FirstDoor { get; set; } = false;
         public int Interactions { get; set; } = 0;
 
+        /// <summary>
+        /// Holds a stat, preserving its data until the end of the round. Wipes any previously stored data.
+        /// </summary>
+        /// <typeparam name="T">Stat to hold.</typeparam>
+        /// <param name="stat">The data of the stat.</param>
         public void Hold<T>(T stat)
             where T: class, IReportStat
         {
@@ -41,6 +46,11 @@ namespace RoundReports
             Holding.Add(stat);
         }
 
+        /// <summary>
+        /// Obtains a stat, setting it up if it doesn't already exist.
+        /// </summary>
+        /// <typeparam name="T">Stat to obtain.</typeparam>
+        /// <returns>Stat.</returns>
         public T GetStat<T>()
             where T: class, IReportStat, new()
         {
@@ -52,6 +62,11 @@ namespace RoundReports
             return value;
         }
 
+        /// <summary>
+        /// Returns string of role. Will return SerpentsHand or UIU for respective roles.
+        /// </summary>
+        /// <param name="player">Player</param>
+        /// <returns>Player's role.</returns>
         public static string GetRole(Player player)
         {
             if (player.SessionVariables.ContainsKey("IsSH"))
@@ -61,6 +76,11 @@ namespace RoundReports
             return player.Role.Type.ToString();
         }
 
+        /// <summary>
+        /// Returns string of team. Will return SH or UIU for respective teams.
+        /// </summary>
+        /// <param name="player">Player.</param>
+        /// <returns>Player's team.</returns>
         public string GetTeam(Player player)
         {
             if (player.SessionVariables.ContainsKey("IsSH"))
@@ -70,6 +90,12 @@ namespace RoundReports
             return player.Role.Team.ToString();
         }
 
+        /// <summary>
+        /// Adds MVP points. Ignored if user: Is null, Is DNT, Is role Tutorial, IsDead, or is an ignored user.
+        /// </summary>
+        /// <param name="plr">Player.</param>
+        /// <param name="amount">Amount of points.</param>
+        /// <param name="reason">Reason for adding.</param>
         public void AddPoints(Player plr, int amount, string reason = "Unknown")
         {
             if (plr is null || plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
@@ -93,9 +119,15 @@ namespace RoundReports
             Hold(logs);
         }
 
+        /// <summary>
+        /// Removes MVP points. Ignored if user: Is null, Is DNT, Is role Tutorial, IsDead, or is an ignored user.
+        /// </summary>
+        /// <param name="plr">Player.</param>
+        /// <param name="amount">Amount of points.</param>
+        /// <param name="reason">Reason for removing.</param>
         public void RemovePoints(Player plr, int amount, string reason = "Unknown")
         {
-            if (plr is null || plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead)
+            if (plr is null || plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
                 return;
 
             Log.Debug($"Removing {amount} points from {plr.Nickname}. {reason}");
@@ -130,6 +162,9 @@ namespace RoundReports
             MainPlugin.Reporter = new Reporter();
         }
 
+        /// <summary>
+        /// Begin send/upload process.
+        /// </summary>
         public void SendData()
         {
             if (MainPlugin.Reporter is null)
@@ -149,7 +184,10 @@ namespace RoundReports
             ListPool<IReportStat>.Shared.Return(Holding);
         }
 
-        // This is to account for plugins such as SCPSwap, as well as SCP deaths early on, etc.
+        /// <summary>
+        /// This is to account for plugins such as SCPSwap, as well as SCP deaths early on, etc.
+        /// </summary>
+        /// <returns>Coroutine.</returns>
         private IEnumerator<float> RecordSCPsStats()
         {
             yield return Timing.WaitForSeconds(60f);
@@ -160,6 +198,11 @@ namespace RoundReports
             Hold(stats);
         }
 
+        /// <summary>
+        /// Returns if stats related to a player should be recorded.
+        /// </summary>
+        /// <param name="ply">The player to check.</param>
+        /// <returns>Boolean.</returns>
         public static bool ECheck(Player ply)
         {
             bool flag = true;
@@ -201,6 +244,10 @@ namespace RoundReports
             });
         }
 
+        /// <summary>
+        /// Fills out <see cref="FinalStats"/>.
+        /// </summary>
+        /// <param name="leadingTeam"></param>
         private void FillOutFinalStats(LeadingTeam leadingTeam = LeadingTeam.Draw)
         {
             // Fill out door destroyed stat
@@ -268,6 +315,10 @@ namespace RoundReports
             }
         }
 
+        /// <summary>
+        /// Returns if SerpentsHand is ready to spawn.
+        /// </summary>
+        /// <returns>SH spawnable.</returns>
         // Credit to RespawnTimer for this method
         private bool IsSerpentsHandTeamSpawnable()
         {
@@ -279,6 +330,10 @@ namespace RoundReports
             return (bool)type.GetField("IsSpawnable").GetValue(singleton);
         }
 
+        /// <summary>
+        /// Returns if UIU is ready to spawn.
+        /// </summary>
+        /// <returns>UIU spawnable.</returns>
         // and this method
         private bool IsUIUTeamSpawnable()
         {

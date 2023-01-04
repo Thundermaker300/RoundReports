@@ -36,11 +36,21 @@ namespace RoundReports
             Log.Debug("New reporter has been instantiated.");
         }
 
+        /// <summary>
+        /// Gets the default value of a type.
+        /// </summary>
+        /// <param name="t">The type.</param>
+        /// <returns>Default value.</returns>
         public static object GetDefault(Type t)
         {
             return t.IsValueType ? Activator.CreateInstance(t) : null;
         }
 
+        /// <summary>
+        /// Obtains a stat, setting it up if it doesn't already exist.
+        /// </summary>
+        /// <typeparam name="T">Stat to obtain.</typeparam>
+        /// <returns>Stat.</returns>
         public T GetStat<T>()
             where T: class, IReportStat, new()
         {
@@ -52,6 +62,10 @@ namespace RoundReports
             return stat;
         }
 
+        /// <summary>
+        /// Sets a stat to be shown in the report.
+        /// </summary>
+        /// <param name="stat">The stat to store.</param>
         public void SetStat(IReportStat stat)
         {
             Log.Debug($"Setting stat: {stat.GetType().Name}");
@@ -59,6 +73,9 @@ namespace RoundReports
             Stats.Add(stat);
         }
 
+        /// <summary>
+        /// Clears and returns all used lists to the NW List pool.
+        /// </summary>
         public void ReturnLists()
         {
             Log.Debug("Returning lists to pool...");
@@ -67,6 +84,9 @@ namespace RoundReports
             NameStore.Clear();
         }
 
+        /// <summary>
+        /// Shuts down the reporter by cleaning up all of the round stats and destroying references to it.
+        /// </summary>
         public void Kill()
         {
             Log.Debug("Killing reporter...");
@@ -78,12 +98,21 @@ namespace RoundReports
             MainPlugin.Reporter = null;
         }
 
+        /// <summary>
+        /// Adds a round remark to be shown in the "remarks" section of the report.
+        /// </summary>
+        /// <param name="remark">The remark to add.</param>
         public void AddRemark(string remark)
         {
             Log.Debug($"Adding remark: {remark}");
             Remarks.Insert(0, $"[{GetDisplay(Round.ElapsedTime)}] {remark}");
         }
 
+        /// <summary>
+        /// Converts a string length (eg. "1D") to its respective time in seconds.
+        /// </summary>
+        /// <param name="length">The string length of time.</param>
+        /// <returns>The amount of seconds.</returns>
         public static long StringLengthToLong(string length) => length.ToLower() switch
         {
             "1h" => 3600,
@@ -102,6 +131,10 @@ namespace RoundReports
             _ => StringLengthToLong("1M"),
         };
 
+        /// <summary>
+        /// Creates the round report. Uses all statistics stored in <see cref="Stats"/>.
+        /// </summary>
+        /// <returns>The report to be sent, in the form of a <see cref="PasteEntry"/>.</returns>
         public PasteEntry BuildReport()
         {
             Log.Debug("Building report...");
@@ -224,6 +257,9 @@ namespace RoundReports
             return entry;
         }
 
+        /// <summary>
+        /// Begins the coroutine to build and send the report.
+        /// </summary>
         public void SendReport()
         {
             if (HasSent)
@@ -235,6 +271,10 @@ namespace RoundReports
             Timing.RunCoroutine(SendReportInternal());
         }
 
+        /// <summary>
+        /// Builds the report, and then sends it.
+        /// </summary>
+        /// <returns>Coroutine.</returns>
         private IEnumerator<float> SendReportInternal()
         {
             Log.Debug("Report upload request received, step: 3.");
@@ -245,11 +285,16 @@ namespace RoundReports
             Timing.RunCoroutine(TryUpload());
         }
 
+        /// <summary>
+        /// Huge method for handling the upload to Pastee and Discord, as well as the in-game broadcasts.
+        /// </summary>
+        /// <param name="iter">The current iteration of the method. Upload will be canceled if this reaches 10.</param>
+        /// <returns>Coroutine.</returns>
         private IEnumerator<float> TryUpload(int iter = 0)
         {
             PasteEntry data = ReportData;
             Log.Debug("Beginning report upload process.");
-            if (iter == 10)
+            if (iter >= 10)
             {
                 Log.Warn("Failed to post round report to Pastee ten times. Request discarded.");
                 Timing.CallDelayed(.25f, Kill);
