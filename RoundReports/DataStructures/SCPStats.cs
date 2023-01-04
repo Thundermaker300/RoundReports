@@ -62,6 +62,7 @@ namespace RoundReports
         [BindStat(StatType.TotalCandiesTaken)]
         public int TotalCandiesTaken { get; set; }
 
+        [HideIfDefault]
         [Translation(nameof(Translation.SeveredHands))]
         [BindStat(StatType.SeveredHands)]
         public int SeveredHands { get; set; }
