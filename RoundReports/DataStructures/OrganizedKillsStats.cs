@@ -19,6 +19,10 @@ namespace RoundReports
         [BindStat(StatType.KillsByType)]
         public Dictionary<DamageType, int> KillsByType { get; set; }
 
+        [Translation(nameof(Translation.KillsByZone))]
+        [BindStat(StatType.KillsByZone)]
+        public Dictionary<ZoneType, int> KillsByZone { get; set; }
+
         [Translation(nameof(Translation.PlayerKills))]
         [BindStat(StatType.PlayerKills)]
         public List<string> PlayerKills { get; set; }

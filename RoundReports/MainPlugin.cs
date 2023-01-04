@@ -92,6 +92,7 @@ namespace RoundReports
             Scp330Events.InteractingScp330 += Handlers.OnInteractingScp330;
 
             Scp914Events.Activating += Handlers.OnActivatingScp914;
+            Scp914Events.ChangingKnobSetting += Handlers.OnChangingKnobSetting;
             Scp914Events.UpgradingPickup += Handlers.On914UpgradingPickup;
             Scp914Events.UpgradingInventoryItem += Handlers.On914UpgradingInventoryItem;
 
@@ -158,6 +159,7 @@ namespace RoundReports
             Scp330Events.InteractingScp330 -= Handlers.OnInteractingScp330;
 
             Scp914Events.Activating -= Handlers.OnActivatingScp914;
+            Scp914Events.ChangingKnobSetting -= Handlers.OnChangingKnobSetting;
             Scp914Events.UpgradingPickup -= Handlers.On914UpgradingPickup;
             Scp914Events.UpgradingInventoryItem -= Handlers.On914UpgradingInventoryItem;
 

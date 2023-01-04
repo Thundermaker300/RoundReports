@@ -32,6 +32,7 @@
         UIUKills,
         TutorialKills,
         SurvivingPlayers,
+        TotalInteractions,
 
         //-- Warhead
         ButtonUnlocked,
@@ -97,6 +98,7 @@
         // Kill Stats
         KillsByPlayer,
         KillsByType,
+        KillsByZone,
         PlayerKills,
 
         // Damage Stats

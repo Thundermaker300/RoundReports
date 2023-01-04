@@ -113,6 +113,10 @@ namespace RoundReports
         [BindStat(StatType.PlayerDoorsClosed)]
         public Dictionary<Player, int> PlayerDoorsClosed { get; set; }
 
+        [Translation(nameof(Translation.TotalInteractions))]
+        [BindStat(StatType.TotalInteractions)]
+        public int TotalInteractions { get; set; }
+
         public void Setup()
         {
             SurvivingPlayers = ListPool<string>.Shared.Rent();

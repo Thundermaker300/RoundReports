@@ -60,6 +60,7 @@ namespace RoundReports
         [Description("This text will only be visible if at least one tutorial (not Serpents Hand or UIU) kills a player in the round.")]
         public string TutorialKills { get; set; } = "Tutorial Kills";
         public string SurvivingPlayers { get; set; } = "Surviving Players";
+        public string TotalInteractions { get; set; } = "Total Interactions";
 
         // Item Stats
         public string ItemStatsTitle { get; set; } = "Item Statistics";
@@ -90,6 +91,7 @@ namespace RoundReports
         public string OrganizedKillsTitle { get; set; } = "Kills";
         public string KillsByPlayer { get; set; } = "Kills By Player";
         public string KillsbyType { get; set; } = "Kills By Type";
+        public string KillsByZone { get; set; } = "Kills By Zone";
         public string PlayerKills { get; set; } = "Player Kills";
 
         // SCP-330 Stats

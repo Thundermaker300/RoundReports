@@ -31,6 +31,7 @@ namespace RoundReports
         public bool FirstUpgrade { get; set; } = false;
         public bool FirstKill { get; set; } = false;
         public bool FirstDoor { get; set; } = false;
+        public int Interactions { get; set; } = 0;
 
         public void Hold<T>(T stat)
             where T: class, IReportStat
@@ -121,6 +122,7 @@ namespace RoundReports
             FirstUpgrade = false;
             FirstKill = false;
             FirstDoor = false;
+            Interactions = 0;
             Holding = ListPool<IReportStat>.Shared.Rent();
             Points.Clear();
             Points[PointTeam.SCP] = new();
@@ -215,6 +217,7 @@ namespace RoundReports
                 LeadingTeam.Draw => MainPlugin.Translations.Stalemate,
                 _ => MainPlugin.Translations.Unknown
             };
+            stats.TotalInteractions = Interactions;
 
             // Set Leading Team
             if (MainPlugin.Reporter is not null)
@@ -379,6 +382,13 @@ namespace RoundReports
                 else
                     killStats.KillsByPlayer[ev.Attacker]++;
 
+                // Kill by zone
+                if (killStats.KillsByZone.ContainsKey(ev.Player.Zone))
+                    killStats.KillsByZone[ev.Player.Zone]++;
+                else
+                    killStats.KillsByZone.Add(ev.Player.Zone, 1);
+
+                // Role kills
                 stats.TotalKills++;
                 if (GetRole(ev.Attacker) == "UIU")
                     stats.UIUKills++;
@@ -511,9 +521,10 @@ namespace RoundReports
                 if (ev.Tesla.IsPlayerInHurtRange(player))
                 {
                     AddPoints(ev.Player, 5, MainPlugin.Translations.TeslaKill);
-                    return;
+                    break;
                 }
             }
+            Interactions++;
         }
 
         public void OnScp079TriggeringDoor(TriggeringDoorEventArgs ev)
@@ -529,6 +540,7 @@ namespace RoundReports
                 pts++;
             };
             AddPoints(ev.Player, pts, MainPlugin.Translations.OpenedDoor);
+            Interactions++;
         }
 
         public void OnScp096Charge(ChargingEventArgs ev)
@@ -646,6 +658,7 @@ namespace RoundReports
                 Hold(itemStats);
             }
             Hold(stats);
+            Interactions++;
         }
 
         public void OnInteractingScp330(InteractingScp330EventArgs ev)
@@ -677,6 +690,7 @@ namespace RoundReports
             else
                 stats.CandiesTaken[ev.Candy]++;
             Hold(stats);
+            Interactions++;
         }
 
         public void OnEscaping(EscapingEventArgs ev)
@@ -711,6 +725,12 @@ namespace RoundReports
                 stats.Activations[Scp914Object.KnobStatus]++;
 
             Hold(stats);
+            Interactions++;
+        }
+
+        public void OnChangingKnobSetting(ChangingKnobSettingEventArgs ev)
+        {
+            Interactions++;
         }
 
         private void UpgradeItemLog(ItemType type, Scp914KnobSetting mode)
@@ -761,6 +781,7 @@ namespace RoundReports
                 AddPoints(ev.Player, 2, MainPlugin.Translations.OpenedWarheadPanel);
             }
             Hold(stats);
+            Interactions++;
         }
 
         public void OnWarheadStarting(StartingEventArgs ev)
@@ -769,6 +790,7 @@ namespace RoundReports
             var stats = GetStat<FinalStats>();
             stats.FirstActivator ??= ev.Player;
             Hold(stats);
+            Interactions++;
         }
 
         public void OnWarheadDetonated()
