@@ -32,6 +32,7 @@ namespace RoundReports
             PlayerKills = ListPool<string>.Shared.Rent();
             KillsByPlayer = new();
             KillsByType = new();
+            KillsByZone = new();
         }
 
         public void Cleanup()
