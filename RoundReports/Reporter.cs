@@ -464,6 +464,9 @@ namespace RoundReports
                     internalList.Add(item);
                 }
 
+                if (internalList.Count == 0)
+                    return MainPlugin.Translations.NoData;
+
                 // Alphabetical rule
                 if (rules.HasFlag(Rule.Alphabetical))
                     internalList = internalList.OrderBy(p => p.Key).ToList();
@@ -498,6 +501,9 @@ namespace RoundReports
 
                 foreach (var item in list)
                     internalList.Add(item);
+
+                if (internalList.Count == 0)
+                    return MainPlugin.Translations.NoData;
 
                 // Alphabetical rule
                 if (rules.HasFlag(Rule.Alphabetical))
