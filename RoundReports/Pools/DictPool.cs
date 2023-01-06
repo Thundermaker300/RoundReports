@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Exiled.API.Features;
 using NorthwoodLib.Pools;
 
 namespace RoundReports
@@ -11,6 +12,7 @@ namespace RoundReports
         
         public Dictionary<TKey, TValue> Rent()
         {
+            Log.Debug($"Renting dict pool {typeof(TKey).Name},{typeof(TValue).Name}.");
             if (this._pool.TryDequeue(out Dictionary<TKey, TValue> dict))
             {
                 return dict;
@@ -21,6 +23,7 @@ namespace RoundReports
 
         public void Return(Dictionary<TKey, TValue> obj)
         {
+            Log.Debug($"Returning dict pool {typeof(TKey).Name},{typeof(TValue).Name}.");
             obj.Clear();
             _pool.Enqueue(obj);
         }

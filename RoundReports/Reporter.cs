@@ -400,18 +400,25 @@ namespace RoundReports
 
                     // Broadcast
                     Log.Debug("Sending broadcasts.");
-                    List<EBroadcast> brList = MainPlugin.Singleton.Config.EndingBroadcasts;
-                    if (brList is not null && brList.Count > 0)
+                    try
                     {
-                        if (brList.Any(br => br.Show))
-                            Map.ClearBroadcasts();
-
-                        foreach (EBroadcast br in brList)
+                        List<EBroadcast> brList = MainPlugin.Singleton.Config.EndingBroadcasts;
+                        if (brList is not null && brList.Count > 0)
                         {
-                            br.Content = ProcessReportArgs(br.Content);
-                            Log.Debug($"Queueing broadcast: {br.Content}");
-                            Map.Broadcast(br);
+                            if (brList.Any(br => br.Show))
+                                Map.ClearBroadcasts();
+
+                            foreach (EBroadcast br in brList)
+                            {
+                                br.Content = ProcessReportArgs(br.Content);
+                                Log.Debug($"Queueing broadcast: {br.Content}");
+                                Map.Broadcast(br);
+                            }
                         }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error($"Exception when showing round-end broadcasts: {e}");
                     }
 
                     Timing.CallDelayed(2f, Kill);
