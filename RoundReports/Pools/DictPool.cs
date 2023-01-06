@@ -11,11 +11,11 @@ namespace RoundReports
         
         public Dictionary<TKey, TValue> Rent()
         {
-            Dictionary<TKey, TValue> dict;
-            if (this._pool.TryDequeue(out dict))
+            if (this._pool.TryDequeue(out Dictionary<TKey, TValue> dict))
             {
                 return dict;
             }
+
             return new Dictionary<TKey, TValue>();
         }
 
