@@ -22,7 +22,7 @@ namespace RoundReports
         [Rule(Rule.Alphabetical | Rule.CommaSeparatedList)]
         [Translation(nameof(Translation.Scps))]
         [BindStat(StatType.StartSCP)]
-        public List<RoleTypeId> SCPs { get; set; }
+        public List<RoleTypeId> SCPs { get; set; } // Created in code
 
         [Translation(nameof(Translation.ClassDPersonnel))]
         [BindStat(StatType.StartClassD)]
@@ -38,7 +38,7 @@ namespace RoundReports
 
         [Translation(nameof(Translation.Players))]
         [BindStat(StatType.StartPlayers)]
-        public List<string> Players { get; set; }
+        public List<string> Players { get; set; } // Created in code
 
         public void Setup()
         {
@@ -46,6 +46,7 @@ namespace RoundReports
 
         public void Cleanup()
         {
+            ListPool<RoleTypeId>.Shared.Return(SCPs);
             ListPool<string>.Shared.Return(Players);
         }
     }

@@ -110,9 +110,9 @@ namespace RoundReports
 
         public void Setup()
         {
-            CandiesTaken = new();
-            CandiesByPlayer = new();
-            Activations = new()
+            CandiesTaken = DictPool<CandyKindID, int>.Shared.Rent();
+            CandiesByPlayer = DictPool<Player, int>.Shared.Rent();
+            Activations = new() // Todo: Convert this to DictPool
             {
                 [Scp914KnobSetting.Rough] = 0,
                 [Scp914KnobSetting.Coarse] = 0,
@@ -120,11 +120,14 @@ namespace RoundReports
                 [Scp914KnobSetting.Fine] = 0,
                 [Scp914KnobSetting.VeryFine] = 0,
             };
-            Upgrades = new();
+            Upgrades = DictPool<ItemType, int>.Shared.Rent();
         }
 
         public void Cleanup()
         {
+            DictPool<CandyKindID, int>.Shared.Return(CandiesTaken);
+            DictPool<Player, int>.Shared.Return(CandiesByPlayer);
+            DictPool<ItemType, int>.Shared.Return(Upgrades);
         }
     }
 }

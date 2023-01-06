@@ -54,12 +54,14 @@ namespace RoundReports
 
         public void Setup()
         {
-            Drops = new();
-            PlayerDrops = new();
+            Drops = DictPool<ItemType, int>.Shared.Rent();
+            PlayerDrops = DictPool<Player, int>.Shared.Rent();
         }
 
         public void Cleanup()
         {
+            DictPool<ItemType, int>.Shared.Return(Drops);
+            DictPool<Player, int>.Shared.Return(PlayerDrops);
         }
     }
 }

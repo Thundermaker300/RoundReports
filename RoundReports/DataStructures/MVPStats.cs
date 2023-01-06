@@ -18,11 +18,11 @@ namespace RoundReports
         public string SCPMVP { get; set; }
         [Translation(nameof(Translation.HumanPoints))]
         [BindStat(StatType.HumanPoints)]
-        public Dictionary<Player, int> HumanPoints { get; set; }
+        public Dictionary<Player, int> HumanPoints { get; set; } // Assigned in code
 
         [Translation(nameof(Translation.SCPPoints))]
         [BindStat(StatType.SCPPoints)]
-        public Dictionary<Player, int> SCPPoints { get; set; }
+        public Dictionary<Player, int> SCPPoints { get; set; } // Assigned in code
 
         [BindStat(StatType.PointLogs)]
         public List<string> PointLogs { get; set; }

@@ -30,14 +30,17 @@ namespace RoundReports
         public void Setup()
         {
             PlayerKills = ListPool<string>.Shared.Rent();
-            KillsByPlayer = new();
-            KillsByType = new();
-            KillsByZone = new();
+            KillsByPlayer = DictPool<Player, int>.Shared.Rent();
+            KillsByType = DictPool<DamageType, int>.Shared.Rent();
+            KillsByZone = DictPool<ZoneType, int>.Shared.Rent();
         }
 
         public void Cleanup()
         {
             ListPool<string>.Shared.Return(PlayerKills);
+            DictPool<Player, int>.Shared.Return(KillsByPlayer);
+            DictPool<DamageType, int>.Shared.Return(KillsByType);
+            DictPool<ZoneType, int>.Shared.Return(KillsByZone);
         }
     }
 }

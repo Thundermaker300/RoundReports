@@ -28,12 +28,14 @@ namespace RoundReports
 
         public void Setup()
         {
-            DamageByPlayer = new();
-            DamageByType = new();
+            DamageByPlayer = DictPool<Player, int>.Shared.Rent();
+            DamageByType = DictPool<DamageType, int>.Shared.Rent();
         }
 
         public void Cleanup()
         {
+            DictPool<Player, int>.Shared.Return(DamageByPlayer);
+            DictPool<DamageType, int>.Shared.Return(DamageByType);
         }
     }
 }

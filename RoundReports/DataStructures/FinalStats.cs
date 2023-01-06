@@ -120,8 +120,8 @@ namespace RoundReports
         public void Setup()
         {
             SurvivingPlayers = ListPool<string>.Shared.Rent();
-            PlayerDoorsOpened = new();
-            PlayerDoorsClosed = new();
+            PlayerDoorsOpened = DictPool<Player, int>.Shared.Rent();
+            PlayerDoorsClosed = DictPool<Player, int>.Shared.Rent();
             WinningTeam = MainPlugin.Translations.NoData;
             RoundTime = TimeSpan.Zero;
             EndTime = DateTime.MinValue;
@@ -130,6 +130,8 @@ namespace RoundReports
         public void Cleanup()
         {
             ListPool<string>.Shared.Return(SurvivingPlayers);
+            DictPool<Player, int>.Shared.Return(PlayerDoorsOpened);
+            DictPool<Player, int>.Shared.Return(PlayerDoorsClosed);
         }
     }
 }
