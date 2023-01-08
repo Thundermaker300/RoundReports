@@ -141,15 +141,15 @@ namespace RoundReports
         public PasteEntry BuildReport()
         {
             Log.Debug("Building report...");
-            var entry = new PasteEntry() { Description = $"{MainPlugin.Singleton.Config.ServerName} | {DateTime.Now.ToString("MMMM dd, yyyy hh:mm:ss tt")}", Sections = new(1) };
+            PasteEntry entry = new PasteEntry() { Description = $"{MainPlugin.Singleton.Config.ServerName} | {DateTime.Now.ToString("MMMM dd, yyyy hh:mm:ss tt")}", Sections = new(1) };
             entry.Expiration = StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime);
-            foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IReportStat))))
+            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IReportStat))))
             {
                 if (!Stats.Any(r => r.GetType() == type))
                 {
                     try
                     {
-                        var newStat = (IReportStat)Activator.CreateInstance(type);
+                        IReportStat newStat = (IReportStat)Activator.CreateInstance(type);
                         newStat.Setup();
                         Stats.Add(newStat);
                     }
@@ -163,7 +163,7 @@ namespace RoundReports
             if (Remarks.Count > 0)
             {
                 Log.Debug($"{Remarks.Count} remarks saved.");
-                var section = new PasteSection()
+                PasteSection section = new PasteSection()
                 {
                     Name = MainPlugin.Singleton.Translation.RoundRemarks,
                     Syntax = "text",
@@ -174,21 +174,22 @@ namespace RoundReports
                 StringBuilder bldr = StringBuilderPool.Shared.Rent();
                 if (AtLeastOneHidden)
                     bldr.AppendLine(MainPlugin.Translations.HiddenUsersNotice);
-                foreach (var remark in Remarks)
+
+                foreach (string remark in Remarks)
                     bldr.AppendLine(remark);
                 section.Contents = bldr.ToString();
                 entry.Sections.Add(section);
                 StringBuilderPool.Shared.Return(bldr);
             }
             // Stats
-            var stats = Stats.OrderBy(stat => stat.Order);
+            IOrderedEnumerable<IReportStat> stats = Stats.OrderBy(stat => stat.Order);
             foreach (IReportStat stat in stats)
             {
                 try
                 {
                     Type type = stat.GetType();
                     string sectionTitle = stat.Title;
-                    var titleAttr = type.GetProperty("Title").GetCustomAttribute<TranslationAttribute>();
+                    TranslationAttribute titleAttr = type.GetProperty("Title").GetCustomAttribute<TranslationAttribute>();
                     if (titleAttr is not null)
                     {
                         PropertyInfo propInfo = typeof(Translation).GetProperty(titleAttr.KeyName);
@@ -196,7 +197,7 @@ namespace RoundReports
                         sectionTitle = val;
                     }
                     Log.Debug($"Adding new section: {sectionTitle}");
-                    var section = new PasteSection()
+                    PasteSection section = new PasteSection()
                     {
                         Name = sectionTitle,
                         Syntax = "text",
@@ -208,7 +209,7 @@ namespace RoundReports
                         if (pinfo.Name is "Title" or "Order") continue;
 
                         // Show headers
-                        var headerAttribute = pinfo.GetCustomAttribute<HeaderAttribute>();
+                        HeaderAttribute headerAttribute = pinfo.GetCustomAttribute<HeaderAttribute>();
                         if (headerAttribute is not null)
                         {
                             Log.Debug($"Adding header: {headerAttribute.Header}");
@@ -216,32 +217,31 @@ namespace RoundReports
                         }
 
                         // Hide if default value
-                        var hideAttr = pinfo.GetCustomAttribute<HideIfDefaultAttribute>();
-                        var propertyValue = pinfo.GetValue(stat);
+                        HideIfDefaultAttribute hideAttr = pinfo.GetCustomAttribute<HideIfDefaultAttribute>();
+                        object propertyValue = pinfo.GetValue(stat);
                         if (hideAttr is not null && object.Equals(propertyValue, GetDefault(pinfo.PropertyType)))
                         {
                             continue;
                         }
 
                         // Hide if server disabled
-                        var bindAttribute = pinfo.GetCustomAttribute<BindStatAttribute>();
+                        BindStatAttribute bindAttribute = pinfo.GetCustomAttribute<BindStatAttribute>();
                         if (bindAttribute is not null && !MainPlugin.Check(bindAttribute.Type))
                         {
                             continue;
                         }
 
                         // Rules & Translation
-                        var ruleAttr = pinfo.GetCustomAttribute<RuleAttribute>();
-                        var attr = pinfo.GetCustomAttribute<TranslationAttribute>();
-                        object val = pinfo.GetValue(stat);
-                        Log.Debug($"Adding stat {pinfo.Name} with value of {val}");
+                        RuleAttribute ruleAttr = pinfo.GetCustomAttribute<RuleAttribute>();
+                        TranslationAttribute attr = pinfo.GetCustomAttribute<TranslationAttribute>();
+                        Log.Debug($"Adding stat {pinfo.Name} with value of {propertyValue}");
                         if (attr is null)
                         {
                             bldr.AppendLine($"{SplitString(pinfo.Name)}: {GetDisplay(pinfo.GetValue(stat), ruleAttr?.Rule ?? Rule.None)}");
                         }
                         else
                         {
-                            bldr.AppendLine($"{attr.Text}: {GetDisplay(val, ruleAttr?.Rule ?? Rule.None)}");
+                            bldr.AppendLine($"{attr.Text}: {GetDisplay(propertyValue, ruleAttr?.Rule ?? Rule.None)}");
                         }
                     }
                     section.Contents = StringBuilderPool.Shared.ToStringReturn(bldr).Trim();
@@ -302,12 +302,14 @@ namespace RoundReports
                 Timing.CallDelayed(.25f, Kill);
                 yield break;
             }
-            var pasteWWW = UnityWebRequest.Put("https://api.paste.ee/v1/pastes", JsonConvert.SerializeObject(data));
+
+            UnityWebRequest pasteWWW = UnityWebRequest.Put("https://api.paste.ee/v1/pastes", JsonConvert.SerializeObject(data));
             pasteWWW.method = "POST";
             pasteWWW.SetRequestHeader("Content-Type", "application/json");
             pasteWWW.SetRequestHeader("X-Auth-Token", MainPlugin.Singleton.Config.PasteKey);
             Log.Debug("Sending report to Pastee.");
             yield return Timing.WaitUntilDone(pasteWWW.SendWebRequest());
+
             if (!pasteWWW.isHttpError && !pasteWWW.isNetworkError)
             {
                 PasteResponse response;
@@ -387,10 +389,11 @@ namespace RoundReports
                             },
                         };
 
-                        var discordWWW = UnityWebRequest.Put(MainPlugin.Singleton.Config.DiscordWebhook, JsonConvert.SerializeObject(hookData));
+                        UnityWebRequest discordWWW = UnityWebRequest.Put(MainPlugin.Singleton.Config.DiscordWebhook, JsonConvert.SerializeObject(hookData));
                         discordWWW.method = "POST";
                         discordWWW.SetRequestHeader("Content-Type", "application/json");
                         yield return Timing.WaitUntilDone(discordWWW.SendWebRequest());
+
                         if (discordWWW.isHttpError || discordWWW.isNetworkError)
                             Log.Warn($"Error when attempting to send report to discord log: {discordWWW.error}");
                         else
@@ -435,7 +438,7 @@ namespace RoundReports
 
         private static string SplitString(string s)
         {
-            var r = new Regex(@"
+            Regex r = new(@"
                 (?<=[A-Z])(?=[A-Z][a-z]) |
                  (?<=[^A-Z])(?=[A-Z]) |
                  (?<=[A-Za-z])(?=[^A-Za-z])", RegexOptions.IgnorePatternWhitespace);
@@ -486,8 +489,7 @@ namespace RoundReports
                     bldr2.AppendLine("- " + GetDisplay(item.Key) + ": " + GetDisplay(item.Value));
                 }
 
-                var display = bldr2.ToString().TrimEnd(' ', '\r', '\n');
-                StringBuilderPool.Shared.Return(bldr2);
+                string display = StringBuilderPool.Shared.ToStringReturn(bldr2).TrimEnd(' ', '\r', '\n');
                 ListPool<DictionaryEntry>.Shared.Return(internalList);
 
                 return display;
@@ -496,7 +498,7 @@ namespace RoundReports
             {
                 // Check for zero results
                 int i = 0;
-                foreach (var item in list) i++;
+                foreach (object item in list) i++;
 
                 if (i == 0)
                     return MainPlugin.Translations.NoData;
@@ -508,7 +510,7 @@ namespace RoundReports
                 if (!rules.HasFlag(Rule.CommaSeparatedList))
                     bldr2.AppendLine();
 
-                foreach (var item in list)
+                foreach (object item in list)
                     internalList.Add(item);
 
                 if (internalList.Count == 0)
@@ -518,7 +520,7 @@ namespace RoundReports
                 if (rules.HasFlag(Rule.Alphabetical))
                     internalList.Sort();
 
-                foreach (var item in internalList)
+                foreach (object item in internalList)
                 {
                     if (item is null) continue;
                     if (rules.HasFlag(Rule.CommaSeparatedList))
@@ -527,8 +529,7 @@ namespace RoundReports
                         bldr2.AppendLine("- " + GetDisplay(item));
                 }
 
-                var display = bldr2.ToString().TrimEnd(' ', '\r', '\n', ',');
-                StringBuilderPool.Shared.Return(bldr2);
+                string display = StringBuilderPool.Shared.ToStringReturn(bldr2).TrimEnd(' ', '\r', '\n', ',');
                 ListPool<object>.Shared.Return(internalList);
 
                 return display;

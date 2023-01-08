@@ -107,13 +107,13 @@ namespace RoundReports
 
             Log.Debug($"Adding {amount} points to {plr.Nickname}. {reason}");
 
-            var PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
+            PointTeam PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
             if (Points[PT].ContainsKey(plr))
                 Points[PT][plr] += amount;
             else
                 Points[PT][plr] = amount;
 
-            var logs = GetStat<MVPStats>();
+            MVPStats logs = GetStat<MVPStats>();
             string str = MainPlugin.Translations.AddPointsLog
                 .Replace("{PLAYER}", plr.Nickname)
                 .Replace("{ROLE}", GetRole(plr))
@@ -136,13 +136,13 @@ namespace RoundReports
 
             Log.Debug($"Removing {amount} points from {plr.Nickname}. {reason}");
 
-            var PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
+            PointTeam PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
             if (Points[PT].ContainsKey(plr))
                 Points[PT][plr] -= amount;
             else
                 Points[PT][plr] = 0 - amount;
 
-            var logs = GetStat<MVPStats>();
+            MVPStats logs = GetStat<MVPStats>();
             string str = MainPlugin.Translations.RemovePointsLog
                 .Replace("{PLAYER}", plr.Nickname)
                 .Replace("{ROLE}", GetRole(plr))
@@ -175,7 +175,7 @@ namespace RoundReports
                 return;
 
             // Set Stats
-            foreach (var stat in Holding)
+            foreach (IReportStat stat in Holding)
                 MainPlugin.Reporter.SetStat(stat);
 
             // Send
@@ -242,7 +242,7 @@ namespace RoundReports
                     PlayersAtStart = Player.List.Where(r => !r.IsDead).Count(player => ECheck(player)),
                     Players = ListPool<string>.Shared.Rent()
                 };
-                foreach (var player in Player.List.Where(player => ECheck(player) && !player.IsDead))
+                foreach (Player player in Player.List.Where(player => ECheck(player) && !player.IsDead))
                     stats.Players.Add($"{Reporter.GetDisplay(player)} [{GetRole(player)}]");
                 Hold(stats);
                 Timing.RunCoroutine(RecordSCPsStats().CancelWith(Server.Host.GameObject));
@@ -256,7 +256,7 @@ namespace RoundReports
         private void FillOutFinalStats(LeadingTeam leadingTeam = LeadingTeam.Draw)
         {
             // Fill out door destroyed stat
-            var stats = GetStat<FinalStats>();
+            FinalStats stats = GetStat<FinalStats>();
             stats.DoorsDestroyed = Door.List.Count(d => d.IsBroken);
 
             // Fill out final stats
@@ -277,7 +277,7 @@ namespace RoundReports
 
             // Finish with final stats
             stats.RoundTime = Round.ElapsedTime;
-            foreach (var player in Player.Get(plr => plr.IsAlive && ECheck(plr)))
+            foreach (Player player in Player.Get(plr => plr.IsAlive && ECheck(plr)))
                 stats.SurvivingPlayers.Add($"{Reporter.GetDisplay(player)} ({GetRole(player)})");
 
             Hold(stats);
@@ -289,12 +289,12 @@ namespace RoundReports
 
             if (sortedHumanData.Count() >= 1)
             {
-                var mvp = sortedHumanData.First();
+                KeyValuePair<Player, int> mvp = sortedHumanData.First();
                 MVPInfo.HumanMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
             }
             if (sortedSCPData.Count() >= 1)
             {
-                var mvp = sortedSCPData.First();
+                KeyValuePair<Player, int> mvp = sortedSCPData.First();
                 MVPInfo.SCPMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
             }
             MVPInfo.HumanPoints = sortedHumanData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
@@ -331,7 +331,7 @@ namespace RoundReports
                 return false;
 
             Type type = MainPlugin.SerpentsHandAssembly.GetType("SerpentsHand");
-            var singleton = type.GetField("Singleton").GetValue(null);
+            object singleton = type.GetField("Singleton").GetValue(null);
             return (bool)type.GetField("IsSpawnable").GetValue(singleton);
         }
 
@@ -398,7 +398,7 @@ namespace RoundReports
             int amount = (int)Math.Round(ev.Amount);
             if (ev.Amount == -1 || ev.Amount > 150) amount = 150;
 
-            var stats = GetStat<OrganizedDamageStats>();
+            OrganizedDamageStats stats = GetStat<OrganizedDamageStats>();
 
             if (ECheck(ev.Player))
             {
@@ -428,8 +428,8 @@ namespace RoundReports
         public void OnDying(DyingEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed) return;
-            var stats = GetStat<FinalStats>();
-            var killStats = GetStat<OrganizedKillsStats>();
+            FinalStats stats = GetStat<FinalStats>();
+            OrganizedKillsStats killStats = GetStat<OrganizedKillsStats>();
             stats.TotalDeaths++;
             if (ev.Attacker is not null)
             {
@@ -504,7 +504,7 @@ namespace RoundReports
                 // Grant points to SCP-079 if death in a locked down/blackout room
                 if (GetTeam(ev.Attacker) == "SCPs" && (ev.Player.CurrentRoom.AreLightsOff || ev.Player.CurrentRoom.Doors.All(door => door.IsLocked)))
                 {
-                    foreach (var player in Player.List)
+                    foreach (Player player in Player.List)
                     {
                         if (player.Role == RoleTypeId.Scp079)
                             AddPoints(player, 1, MainPlugin.Translations.AssistKill);
@@ -531,7 +531,7 @@ namespace RoundReports
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player))
                 return;
-            var stats = GetStat<ItemStats>();
+            ItemStats stats = GetStat<ItemStats>();
             stats.TotalDrops++;
 
             if (stats.Drops.ContainsKey(ev.Item.Type))
@@ -555,7 +555,7 @@ namespace RoundReports
         public void OnShooting(ShootingEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
-            var stats = GetStat<ItemStats>();
+            ItemStats stats = GetStat<ItemStats>();
             stats.TotalShotsFired++;
             Hold(stats);
         }
@@ -563,7 +563,7 @@ namespace RoundReports
         public void OnReloadingWeapon(ReloadingWeaponEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
-            var stats = GetStat<ItemStats>();
+            ItemStats stats = GetStat<ItemStats>();
             stats.TotalReloads++;
             Hold(stats);
         }
@@ -607,7 +607,7 @@ namespace RoundReports
         public void OnScp096Charge(ChargingEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
-            var stats = GetStat<SCPStats>();
+            SCPStats stats = GetStat<SCPStats>();
             stats.Scp096Charges++;
             Hold(stats);
         }
@@ -615,7 +615,7 @@ namespace RoundReports
         public void OnScp096Enrage(EnragingEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
-            var stats = GetStat<SCPStats>();
+            SCPStats stats = GetStat<SCPStats>();
             stats.Scp096Enrages++;
             Hold(stats);
         }
@@ -623,7 +623,7 @@ namespace RoundReports
         public void OnScp106Teleport(TeleportingEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
-            var stats = GetStat<SCPStats>();
+            SCPStats stats = GetStat<SCPStats>();
             stats.Scp106Teleports++;
             Hold(stats);
         }
@@ -631,7 +631,7 @@ namespace RoundReports
         public void OnScp173Blink(BlinkingEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
-            var stats = GetStat<SCPStats>();
+            SCPStats stats = GetStat<SCPStats>();
             stats.Scp173Blinks++;
             Hold(stats);
         }
@@ -641,7 +641,7 @@ namespace RoundReports
             if (!Round.InProgress || !ECheck(ev.Player)) return;
             if (ev.Item.Type.IsScp())
             {
-                var stats = GetStat<SCPStats>();
+                SCPStats stats = GetStat<SCPStats>();
                 switch (ev.Item.Type)
                 {
                     case ItemType.SCP018:
@@ -661,7 +661,7 @@ namespace RoundReports
             }
             else
             {
-                var stats = GetStat<ItemStats>();
+                ItemStats stats = GetStat<ItemStats>();
                 switch (ev.Item.Type)
                 {
                     case ItemType.Painkillers:
@@ -685,7 +685,7 @@ namespace RoundReports
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             if (ev.Player is null) return;
-            var stats = GetStat<FinalStats>();
+            FinalStats stats = GetStat<FinalStats>();
             if (ev.Door.IsOpen)
             {
                 stats.DoorsClosed++;
@@ -714,7 +714,7 @@ namespace RoundReports
             }
             if (ev.Door.IsKeycardDoor)
             {
-                var itemStats = GetStat<ItemStats>();
+                ItemStats itemStats = GetStat<ItemStats>();
                 itemStats.KeycardScans++;
                 Hold(itemStats);
             }
@@ -725,7 +725,7 @@ namespace RoundReports
         public void OnInteractingScp330(InteractingScp330EventArgs ev)
         {
             if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
-            var stats = GetStat<SCPStats>();
+            SCPStats stats = GetStat<SCPStats>();
             if (stats.FirstUse == DateTime.MinValue)
             {
                 stats.FirstUse = DateTime.Now;
@@ -773,7 +773,7 @@ namespace RoundReports
         public void OnActivatingScp914(ActivatingEventArgs ev)
         {
             if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
-            var stats = GetStat<SCPStats>();
+            SCPStats stats = GetStat<SCPStats>();
             if (stats.FirstActivation == DateTime.MinValue && ev.Player is not null)
             {
                 stats.FirstActivation = DateTime.Now;
@@ -796,7 +796,7 @@ namespace RoundReports
 
         private void UpgradeItemLog(ItemType type, Scp914KnobSetting mode)
         {
-            var stats = GetStat<SCPStats>();
+            SCPStats stats = GetStat<SCPStats>();
             stats.TotalItemUpgrades++;
             if (!FirstUpgrade && MainPlugin.Reporter is not null)
             {
@@ -834,7 +834,7 @@ namespace RoundReports
         public void OnActivatingWarheadPanel(ActivatingWarheadPanelEventArgs ev)
         {
             if (!ev.IsAllowed || !Round.InProgress) return;
-            var stats = GetStat<FinalStats>();
+            FinalStats stats = GetStat<FinalStats>();
             stats.ButtonUnlocked = true;
             if (stats.ButtonUnlocker == null)
             {
@@ -848,7 +848,7 @@ namespace RoundReports
         public void OnWarheadStarting(StartingEventArgs ev)
         {
             if (!ev.IsAllowed || !Round.InProgress) return;
-            var stats = GetStat<FinalStats>();
+            FinalStats stats = GetStat<FinalStats>();
             stats.FirstActivator ??= ev.Player;
             Hold(stats);
             Interactions++;
@@ -857,7 +857,7 @@ namespace RoundReports
         public void OnWarheadDetonated()
         {
             if (!Round.InProgress) return;
-            var stats = GetStat<FinalStats>();
+            FinalStats stats = GetStat<FinalStats>();
             if (!stats.Detonated)
             {
                 stats.Detonated = true;
