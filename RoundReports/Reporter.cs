@@ -230,15 +230,14 @@ namespace RoundReports
                         // Rules & Translation
                         var ruleAttr = pinfo.GetCustomAttribute<RuleAttribute>();
                         var attr = pinfo.GetCustomAttribute<TranslationAttribute>();
+                        object val = pinfo.GetValue(stat);
+                        Log.Debug($"Adding stat {pinfo.Name} with value of {val}");
                         if (attr is null)
                         {
-                            Log.Debug($"Adding stat: {SplitString(pinfo.Name)}");
                             bldr.AppendLine($"{SplitString(pinfo.Name)}: {GetDisplay(pinfo.GetValue(stat), ruleAttr?.Rule ?? Rule.None)}");
                         }
                         else
                         {
-                            Log.Debug($"Adding stat: {attr.Text}");
-                            object val = pinfo.GetValue(stat);
                             bldr.AppendLine($"{attr.Text}: {GetDisplay(val, ruleAttr?.Rule ?? Rule.None)}");
                         }
                     }
