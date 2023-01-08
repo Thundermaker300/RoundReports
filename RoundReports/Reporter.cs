@@ -85,7 +85,7 @@ namespace RoundReports
         }
 
         /// <summary>
-        /// Shuts down the reporter by cleaning up all of the round stats and destroying references to it.
+        /// Shuts down the reporter by cleaning up all of the round stats.
         /// </summary>
         public void Kill()
         {
@@ -95,7 +95,6 @@ namespace RoundReports
                 stat.Cleanup();
 
             ReturnLists();
-            MainPlugin.Reporter = null;
         }
 
         /// <summary>
