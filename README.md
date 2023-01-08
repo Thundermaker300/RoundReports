@@ -58,7 +58,7 @@ MVP is calculated by granting players points for specific actions. These points 
 \*\*+1 if the door is a keycard door and there is an SCP nearby. +2 for keycarded gate with SCP nearby.
 
  ## Stats
- Every stat below can be disabled in the config by adding its respective `key` to the `IgnoredStats` config. Some of the following stats can be used in end-of-round broadcasts, and the Discord embed footer config. Note that arguments must be surrounded by curly braces and capitalized (eg. `{HUMANMVP}`).
+ Every stat below can be disabled in the config by adding its respective `key` to the `IgnoredStats` config (with the exception of stats denoted with a `*`). Some of the following stats can be used in end-of-round broadcasts, and the Discord embed footer config. Note that arguments must be surrounded by curly braces and capitalized (eg. `{HUMANMVP}`).
 | **Key**               | **Available in Broadcasts** | **Description**                                                                         |
 |-----------------------|-----------------------------|-----------------------------------------------------------------------------------------|
 | AdrenalinesConsumed   |                             | The total amount of adrenalines consumed.                                               |
@@ -86,8 +86,9 @@ MVP is calculated by granting players points for specific actions. These points 
 | First914Activator     |                             | The name of the player who activated SCP-914 first.                                     |
 | FirstWarheadActivator |                             | The name of the player who activated the warhead first.                                 |
 | HumanMVP              | Yes                         | The human MVP of the round.                                                             |
-| HumanKills            | Yes                         | The total amount of human kills in the round. Broadcast argument only.                  |
+| HumanKills*           | Yes                         | The total amount of human kills in the round.                                           |
 | HumanPoints           |                             | Each player who has played a human role and the amount of points they've received.      |
+| Id*                   | Yes                         | Unique ID of the round-specific report.                                                 |
 | KeycardScans          | Yes                         | The total amount of keycard scans.                                                      |
 | KeycardUpgrades       |                             | The total amount of times a keycard was upgraded.                                       |
 | KillsByPlayer         |                             | Each player and their amount of kills.                                                  |
@@ -95,7 +96,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | MedkitsConsumed       |                             | The total amount of medkits consumed.                                                   |
 | MTFKills              | Yes                         | The total amount of MTF kills in the round.                                             |
 | PainkillersConsumed   |                             | The total amount of painkillers consumed.                                               |
-| PlayerCount           | Yes                         | The total amount of players currently connected to the server. Broadcast argument only. |
+| PlayerCount*          | Yes                         | The total amount of players currently connected to the server.                          |
 | PlayerDamage          |                             | The total amount of damage dealt by players.                                            |
 | PlayerDoorsClosed     |                             | Each player and the amount of doors they've closed.                                     |
 | PlayerDoorsOpened     |                             | Each player and the amount of doors they've opened.                                     |
@@ -124,7 +125,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | StartFacilityGuard    |                             | The amount of Facility Guards at the start of the round.                                |
 | StartPlayers          |                             | The total amount of players at the start of the round.                                  |
 | StartScientist        |                             | The amount of Scientists at the start of the round.                                     |
-| StartSCP              |                             | A list of every SCP at the start of the round.*                                         |
+| StartSCP              |                             | A list of every SCP at the start of the round.                                          |
 | StartTime             | Yes                         | The time that the round started.                                                        |
 | SurvivingPlayers      |                             | Each player that is alive at the end of the round.                                      |
 | Total914Activations   | Yes                         | The total amount of times SCP-914 was activated.                                        |
@@ -139,8 +140,9 @@ MVP is calculated by granting players points for specific actions. These points 
 | TotalShotsFired       | Yes                         | The total amount of shots fired.                                                        |
 | TutorialKills         |                             | The total amount of tutorial kills. Only shown if value is greater than 0.              |
 | UIUKills              |                             | The total amount of UIU kills (only if the plugin is installed).                        |
-| WinningTeam           | Yes                         | The winning team of the round.                                                          |                                                   
+| UptimeRound*          | Yes                         | The number of rounds since the server has last restarted.                               |
+| WinningTeam           | Yes                         | The winning team of the round.                                                          |    
 
-\* This stat is updated 60 seconds into the round to account for early SCP deaths, SCPSwap, etc.
+\* Stat is only available as broadcast/embed arguments. This stat cannot be used in IgnoredStats and will not show up on the round report.
 
-Note: `HumanKills` and `PlayerCount` are only available as broadcast/embed arguments. These two stats cannot be used in IgnoredStats and will not show up on the round report.
+Note: The `StartSCP` stat is updated 60 seconds into the round to account for early SCP deaths, SCPSwap, etc.

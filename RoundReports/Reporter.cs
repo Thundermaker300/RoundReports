@@ -18,6 +18,8 @@ namespace RoundReports
 {
     public class Reporter
     {
+        public Guid UniqueId { get; }
+        public int UptimeRound { get; }
         private List<IReportStat> Stats { get; set; }
         public static Dictionary<Player, string> NameStore { get; set; }
         public bool HasSent { get; private set; }
@@ -29,6 +31,8 @@ namespace RoundReports
 
         public Reporter()
         {
+            UniqueId = Guid.NewGuid();
+            UptimeRound = Round.UptimeRounds;
             Stats = ListPool<IReportStat>.Shared.Rent();
             Remarks = ListPool<string>.Shared.Rent();
             NameStore = new(0);
@@ -536,6 +540,8 @@ namespace RoundReports
         // Todo: Slow AF
         private string ProcessReportArgs(string input)
         => input
+            .Replace("{ID}", UniqueId.ToString())
+            .Replace("{UPTIMEROUND}", UptimeRound.ToString())
             .Replace("{HUMANMVP}", GetStat<MVPStats>().HumanMVP)
             .Replace("{SCPMVP}", GetStat<MVPStats>().SCPMVP)
             .Replace("{TOTALKILLS}", GetStat<FinalStats>().TotalKills.ToString())
