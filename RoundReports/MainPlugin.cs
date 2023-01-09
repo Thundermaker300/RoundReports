@@ -29,6 +29,7 @@ namespace RoundReports
         public static Reporter Reporter { get; set; }
         public static MainPlugin Singleton { get; private set; }
         public static EventHandlers Handlers { get; private set; }
+        public static bool IsRestarting { get; set; } = false;
 
         public static Assembly SerpentsHandAssembly;
         public static Assembly UIURescueSquadAssembly;

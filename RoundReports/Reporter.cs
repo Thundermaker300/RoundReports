@@ -408,7 +408,7 @@ namespace RoundReports
                     try
                     {
                         List<EBroadcast> brList = MainPlugin.Singleton.Config.EndingBroadcasts;
-                        if (brList is not null && brList.Count > 0)
+                        if (brList is not null && brList.Count > 0 && !MainPlugin.IsRestarting)
                         {
                             if (brList.Any(br => br.Show))
                                 Map.ClearBroadcasts();

@@ -75,6 +75,7 @@ namespace RoundReports
                 return "SerpentsHand";
             else if (player.SessionVariables.ContainsKey("IsUIU"))
                 return "UIU";
+
             return player.Role.Type.ToString();
         }
 
@@ -91,6 +92,7 @@ namespace RoundReports
                 return "SH";
             else if (player.SessionVariables.ContainsKey("IsUIU"))
                 return "UIU";
+
             return player.Role.Team.ToString();
         }
 
@@ -164,6 +166,7 @@ namespace RoundReports
             Points[PointTeam.SCP] = new();
             Points[PointTeam.Human] = new();
             MainPlugin.Reporter = new Reporter();
+            MainPlugin.IsRestarting = false;
         }
 
         /// <summary>
@@ -304,6 +307,7 @@ namespace RoundReports
 
         public void OnRestarting()
         {
+            MainPlugin.IsRestarting = true;
             if (MainPlugin.Reporter is not null && !MainPlugin.Reporter.HasSent)
             {
                 FillOutFinalStats();
@@ -385,7 +389,7 @@ namespace RoundReports
 
         public void OnSpawned(SpawnedEventArgs ev)
         {
-            if (!Round.InProgress || Round.ElapsedTime.TotalMinutes <= 0.5 || !ECheck(ev.Player) || GetTeam(ev.Player) is not ("" or "SH" or "UIU" or "FacilityForces" or "ChaosInsurgency")) return;
+            if (!Round.InProgress || Round.ElapsedTime.TotalMinutes <= 0.5 || !ECheck(ev.Player) || GetTeam(ev.Player) is not ("" or "Dead" or "SH" or "UIU" or "FacilityForces" or "ChaosInsurgency")) return;
             RespawnStats stats = GetStat<RespawnStats>();
             stats.TotalRespawned++;
             stats.Respawns.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player)).Replace("{ROLE}", GetRole(ev.Player)));
