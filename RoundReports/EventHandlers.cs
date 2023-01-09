@@ -355,7 +355,7 @@ namespace RoundReports
         public void OnRespawningTeam(RespawningTeamEventArgs ev)
         {
             if (!Round.InProgress) return;
-            if (!ev.IsAllowed) return;
+            if (!ev.IsAllowed || ev.Players.Count < 1) return;
             RespawnStats stats = GetStat<RespawnStats>();
 
             if (ev.NextKnownTeam is Respawning.SpawnableTeamType.NineTailedFox)
