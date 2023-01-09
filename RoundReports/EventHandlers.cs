@@ -354,7 +354,7 @@ namespace RoundReports
 
         public void OnRespawningTeam(RespawningTeamEventArgs ev)
         {
-            if (!Round.InProgress) return;
+            if (!Round.InProgress || MainPlugin.IsRestarting) return;
             if (!ev.IsAllowed || ev.Players.Count < 1) return;
             RespawnStats stats = GetStat<RespawnStats>();
 
@@ -389,7 +389,7 @@ namespace RoundReports
 
         public void OnSpawned(SpawnedEventArgs ev)
         {
-            if (!Round.InProgress || Round.ElapsedTime.TotalMinutes <= 0.5 || !ECheck(ev.Player) || GetTeam(ev.Player) is not ("" or "Dead" or "SH" or "UIU" or "FacilityForces" or "ChaosInsurgency")) return;
+            if (!Round.InProgress || MainPlugin.IsRestarting || Round.ElapsedTime.TotalMinutes <= 0.5 || !ECheck(ev.Player) || GetTeam(ev.Player) is not ("SH" or "UIU" or "FacilityForces" or "ChaosInsurgency")) return;
             RespawnStats stats = GetStat<RespawnStats>();
             stats.TotalRespawned++;
             stats.Respawns.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player)).Replace("{ROLE}", GetRole(ev.Player)));
@@ -398,7 +398,7 @@ namespace RoundReports
 
         public void OnHurting(HurtingEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed || MainPlugin.IsRestarting) return;
             int amount = (int)Math.Round(ev.Amount);
             if (ev.Amount == -1 || ev.Amount > 150) amount = 150;
 
@@ -431,7 +431,7 @@ namespace RoundReports
 
         public void OnDying(DyingEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed) return;
+            if (!Round.InProgress || !ev.IsAllowed || MainPlugin.IsRestarting) return;
             FinalStats stats = GetStat<FinalStats>();
             OrganizedKillsStats killStats = GetStat<OrganizedKillsStats>();
             stats.TotalDeaths++;
