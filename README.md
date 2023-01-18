@@ -65,7 +65,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | AllActivations        |                             | Each SCP-914 mode and the total amount of activations.                                  |
 | AllUpgrades           |                             | Each item type and the amount of times it's been upgraded in SCP-914.                   |
 | ButtonUnlocked        |                             | Yes/No if the warhead button was opened.                                                |
-| ButtonUnlocker        |                             | The name of the player who unlocked the warhead.                                        |
+| ButtonUnlocker        | Yes                         | The name of the player who unlocked the warhead.                                        |
 | CandiesByPlayer       |                             | Each player and the amount of candies they've taken from SCP-330.                       |
 | CandiesTaken          | Yes                         | The total amount of candies taken from SCP-330.                                         |
 | ChaosKills            | Yes                         | The total amount of Chaos Insurgency kills in the round.                                |
@@ -136,7 +136,8 @@ MVP is calculated by granting players points for specific actions. These points 
 | TotalDamage           | Yes                         | The total amount of damage dealt.                                                       |
 | TotalDeaths           | Yes                         | The total amount of deaths.                                                             |
 | TotalDrops            | Yes                         | The total amount of items dropped.                                                      |
-| TotalItemUpgrades     |                             | The total amount of item upgrades.                                                      |
+| TotalInteractions     | Yes                         | The total amount of interactions that took place (doors, elevators, Scp330, etc)        |
+| TotalItemUpgrades     | Yes                         | The total amount of item upgrades.                                                      |
 | TotalKills            | Yes                         | The total amount of kills in the round.                                                 |
 | TotalReloads          | Yes                         | The total amount of firearm reloads.                                                    |
 | TotalRespawned        | Yes                         | The total amount of respawned players.                                                  |

@@ -568,6 +568,9 @@ namespace RoundReports
             .Replace("{DOORSCLOSED}", GetStat<FinalStats>().DoorsClosed.ToString())
             .Replace("{DOORSDESTROYED}", GetStat<FinalStats>().DoorsDestroyed.ToString())
             .Replace("{CANDIESTAKEN}", GetStat<SCPStats>().TotalCandiesTaken.ToString())
-            .Replace("{TOTAL914ACTIVATIONS}", GetStat<SCPStats>().TotalActivations.ToString());
+            .Replace("{BUTTONUNLOCKER}", GetStat<FinalStats>().ButtonUnlocker?.Nickname?.ToString() ?? MainPlugin.Translations.nobody)
+            .Replace("{TOTAL914ACTIVATIONS}", GetStat<SCPStats>().TotalActivations.ToString())
+            .Replace("{TOTALITEMUPGRADES}", GetStat<SCPStats>().TotalItemUpgrades.ToString())
+            .Replace("{TOTALINTERACTIONS}", GetStat<FinalStats>().TotalInteractions.ToString());
     }
 }

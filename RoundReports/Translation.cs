@@ -10,6 +10,8 @@ namespace RoundReports
         public string RoundRemarks { get; set; } = "Round Remarks";
         [Description("Indicates a stat that was not collected - eg. if no candy was taken, no kills, etc")]
         public string NoData { get; set; } = "No Data";
+        [Description("Used in place of no data stats if the statistic is a player.")]
+        public string Nobody { get; set; } = "Nobody";
 
         [Description("User's name is replaced with this if they have Do Not Track enabled.")]
         public string DoNotTrack { get; set; } = "[DO NOT TRACK USER]";
