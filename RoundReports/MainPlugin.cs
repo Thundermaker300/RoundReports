@@ -75,6 +75,7 @@ namespace RoundReports
             PlayerEvents.Dying += Handlers.OnDying;
             PlayerEvents.UsedItem += Handlers.OnUsedItem;
             PlayerEvents.InteractingDoor += Handlers.OnInteractingDoor;
+            PlayerEvents.InteractingElevator += Handlers.OnInteractingElevator;
             PlayerEvents.InteractingLocker += Handlers.OnInteractingLocker;
             PlayerEvents.Escaping += Handlers.OnEscaping;
             PlayerEvents.DroppingItem += Handlers.OnDroppingItem;
@@ -150,6 +151,7 @@ namespace RoundReports
             PlayerEvents.Dying -= Handlers.OnDying;
             PlayerEvents.UsedItem -= Handlers.OnUsedItem;
             PlayerEvents.InteractingDoor -= Handlers.OnInteractingDoor;
+            PlayerEvents.InteractingElevator -= Handlers.OnInteractingElevator;
             PlayerEvents.InteractingLocker -= Handlers.OnInteractingLocker;
             PlayerEvents.Escaping -= Handlers.OnEscaping;
             PlayerEvents.DroppingItem -= Handlers.OnDroppingItem;
