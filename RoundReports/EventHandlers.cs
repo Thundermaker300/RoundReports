@@ -123,6 +123,15 @@ namespace RoundReports
                 .Replace("{AMOUNT}", amount.ToString())
                 .Replace("{REASON}", reason);
             logs.PointLogs.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] {str}");
+
+            // Show hint
+            Hint h = new();
+            h.CopyProperties(MainPlugin.Configs.MvpAddHint);
+            h.Content = h.Content
+                .Replace("{POINTS}", amount.ToString())
+                .Replace("{REASON}", reason);
+            plr.ShowHint(h);
+
             Hold(logs);
         }
 
@@ -152,6 +161,15 @@ namespace RoundReports
                 .Replace("{AMOUNT}", amount.ToString())
                 .Replace("{REASON}", reason);
             logs.PointLogs.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] {str}");
+
+            // Show hint
+            Hint h = new();
+            h.CopyProperties(MainPlugin.Configs.MvpRemoveHint);
+            h.Content = h.Content
+                .Replace("{POINTS}", amount.ToString())
+                .Replace("{REASON}", reason);
+            plr.ShowHint(h);
+
             Hold(logs);
         }
 
