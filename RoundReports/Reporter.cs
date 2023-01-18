@@ -24,6 +24,7 @@ namespace RoundReports
         public static Dictionary<Player, string> NameStore { get; set; }
         public bool HasSent { get; private set; }
         public LeadingTeam WinTeam { get; set; } = LeadingTeam.Draw;
+        public string Link { get; set; } = string.Empty;
         private List<string> Remarks { get; set; }
         private PasteEntry ReportData;
         public static string DoNotTrackText => MainPlugin.Translations.DoNotTrack;
@@ -331,6 +332,8 @@ namespace RoundReports
                 }
                 else
                 {
+                    Link = response.Link;
+
                     if (MainPlugin.Singleton.Config.SendInConsole)
                         Log.Info($"Report uploaded successfully! Access it here: {response.Link}");
 
@@ -365,7 +368,7 @@ namespace RoundReports
                                         LeadingTeam.Draw => 10197915,
                                         _ => 10197915,
                                     },
-                                    Description = winText + "\n" + $"[{MainPlugin.Translations.ViewReport}]({response.Link})",
+                                    Description = ProcessReportArgs(MainPlugin.Configs.EmbedContent),
                                     Fields = new()
                                     {
                                         new()
@@ -383,7 +386,7 @@ namespace RoundReports
                                     },
                                     Footer = new()
                                     {
-                                        Text = ProcessReportArgs(MainPlugin.Singleton.Config.FooterText),
+                                        Text = ProcessReportArgs(MainPlugin.Singleton.Config.EmbedFooter),
                                     }
                                 }
                             },
@@ -577,6 +580,7 @@ namespace RoundReports
             .Replace("{FIRST914ACTIVATOR}", GetDisplay(GetStat<SCPStats>().FirstActivator, typeof(Player)))
             .Replace("{TOTAL914ACTIVATIONS}", GetStat<SCPStats>().TotalActivations.ToString())
             .Replace("{TOTALITEMUPGRADES}", GetStat<SCPStats>().TotalItemUpgrades.ToString())
-            .Replace("{TOTALINTERACTIONS}", GetStat<FinalStats>().TotalInteractions.ToString());
+            .Replace("{TOTALINTERACTIONS}", GetStat<FinalStats>().TotalInteractions.ToString())
+            .Replace("{REPORTLINK}", Link);
     }
 }

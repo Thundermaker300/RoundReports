@@ -34,8 +34,11 @@ namespace RoundReports
         [Description("Name of the server, without any formatting tags, as it will be shown in the report.")]
         public string ServerName { get; set; } = string.Empty;
 
-        [Description("Determines the footer text, as shown on the Discord embed. A full list of arguments are available on the plugin's GitHub page.")]
-        public string FooterText { get; set; } = "{PLAYERCOUNT} players connected";
+        [Description("Determines the Discord embed content text. A full list of arguments are available on the plugin's GitHub page.")]
+        public string EmbedContent { get; set; } = "{WINNINGTEAM} Win\n[View Round Report]({REPORTLINK})";
+
+        [Description("Determines the Discord embed footer text. A full list of arguments are available on the plugin's GitHub page.")]
+        public string EmbedFooter { get; set; } = "{PLAYERCOUNT} players connected";
 
         [Description("Determines the format of timestamps.")]
         public string FullTimeFormat { get; set; } = "MMMM dd, yyyy hh:mm:ss tt";

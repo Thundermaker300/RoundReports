@@ -25,7 +25,6 @@ namespace RoundReports
         public string Never { get; set; } = "Never";
         [Description("Generally should never show, but JUST in case.")]
         public string Unknown { get; set; } = "Unknown";
-        public string ViewReport { get; set; } = "View Round Report";
 
         // Webhook Text
         public string PostDate { get; set; } = "Post Date";
