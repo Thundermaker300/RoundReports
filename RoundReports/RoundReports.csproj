@@ -91,6 +91,7 @@
     <Compile Include="DataStructures\OrganizedKillsStats.cs" />
     <Compile Include="DataStructures\RespawnStats.cs" />
     <Compile Include="DataStructures\StartingStats.cs" />
+    <Compile Include="Enums\EmbedColorType.cs" />
     <Compile Include="Enums\PointTeam.cs" />
     <Compile Include="Enums\Rule.cs" />
     <Compile Include="Enums\StatType.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="MainPlugin.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Pools\DictPool.cs" />
+    <Compile Include="Structures\DiscordConfig.cs" />
     <Compile Include="Structures\DiscordStructures.cs" />
     <Compile Include="Structures\WebRequestStructures.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,23 +1,24 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using Exiled.API.Enums;
 using Exiled.API.Features;
-using NorthwoodLib.Pools;
 using MEC;
-using UnityEngine.Networking;
-using System.Text;
 using Newtonsoft.Json;
-using System.Text.RegularExpressions;
+using NorthwoodLib.Pools;
+using System;
 using System.Collections;
-using Exiled.API.Enums;
-
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
+using UnityEngine.Networking;
 using EBroadcast = Exiled.API.Features.Broadcast;
 
 namespace RoundReports
 {
     public class Reporter
     {
+        public const string RepoUrl = "https://github.com/Thundermaker300/RoundReports";
+
         public Guid UniqueId { get; }
         public int UptimeRound { get; }
         private List<IReportStat> Stats { get; set; }
@@ -57,7 +58,7 @@ namespace RoundReports
         /// <typeparam name="T">Stat to obtain.</typeparam>
         /// <returns>Stat.</returns>
         public T GetStat<T>()
-            where T: class, IReportStat, new()
+            where T : class, IReportStat, new()
         {
             if (Stats.FirstOrDefault(r => r is T) is not T stat)
             {
@@ -333,6 +334,7 @@ namespace RoundReports
                 else
                 {
                     Link = response.Link;
+                    DiscordConfig config = MainPlugin.Configs.DiscordSettings;
 
                     if (MainPlugin.Singleton.Config.SendInConsole)
                         Log.Info($"Report uploaded successfully! Access it here: {response.Link}");
@@ -340,35 +342,28 @@ namespace RoundReports
                     if (!string.IsNullOrEmpty(MainPlugin.Singleton.Config.DiscordWebhook))
                     {
                         Log.Debug("Sending report to Discord.");
-                        string winText = MainPlugin.Translations.WinText;
-                        winText = WinTeam switch
-                        {
-                            LeadingTeam.Anomalies => winText.Replace("{TEAM}", MainPlugin.Translations.ScpTeam),
-                            LeadingTeam.ChaosInsurgency => winText.Replace("{TEAM}", MainPlugin.Translations.InsurgencyTeam),
-                            LeadingTeam.FacilityForces => winText.Replace("{TEAM}", MainPlugin.Translations.MtfTeam),
-                            LeadingTeam.Draw => MainPlugin.Translations.Stalemate,
-                            _ => winText.Replace("{TEAM}", MainPlugin.Translations.Unknown),
-                        };
                         Log.Debug("Building webhook information.");
                         DiscordHook hookData = new()
                         {
-                            Username = MainPlugin.Singleton.Translation.RoundReport,
-                            Embeds = new()
+                            Username = ProcessReportArgs(config.Username ?? "Round Reports"),
+                            AvatarUrl = string.IsNullOrEmpty(config.Content) ? null : config.AvatarUrl,
+                            Content = string.IsNullOrEmpty(config.Content) ? null : ProcessReportArgs(config.Content),
+                            Embeds = !config.Embed.Enabled ? null : new()
                             {
                                 new()
                                 {
-                                    Title = MainPlugin.Singleton.Translation.RoundReport,
-                                    Url = "https://github.com/Thundermaker300/RoundReports",
-                                    TimeStamp = DateTime.Now,
-                                    Color = WinTeam switch
+                                    Title = ProcessReportArgs(config.Embed.Title),
+                                    Url = RepoUrl,
+                                    TimeStamp = !config.Embed.IncludeTimestamp ? null : DateTime.Now,
+                                    Color = config.Embed.EmbedColorType is EmbedColorType.WinningTeam ? WinTeam switch
                                     {
                                         LeadingTeam.Anomalies => 16711680,
                                         LeadingTeam.FacilityForces => 38143,
                                         LeadingTeam.ChaosInsurgency => 26916,
                                         LeadingTeam.Draw => 10197915,
                                         _ => 10197915,
-                                    },
-                                    Description = ProcessReportArgs(MainPlugin.Configs.EmbedContent),
+                                    } : config.Embed.CustomColor,
+                                    Description = ProcessReportArgs(config.Embed.Description),
                                     Fields = new()
                                     {
                                         new()
@@ -386,7 +381,7 @@ namespace RoundReports
                                     },
                                     Footer = new()
                                     {
-                                        Text = ProcessReportArgs(MainPlugin.Singleton.Config.EmbedFooter),
+                                        Text = ProcessReportArgs(config.Embed.Footer),
                                     }
                                 }
                             },
