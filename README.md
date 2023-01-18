@@ -104,6 +104,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | PlayerKills           |                             | Each player and the amount of players they've killed.                                   |
 | PointLogs             |                             | A log for each time points are added or removed.                                        |
 | Respawns              |                             | Each respawn that occurs.                                                               |
+| ReportLink*           | Yes                         | Link to the report.
 | RoundTime             | Yes                         | The total time of the round.                                                            |
 | ScientistKills        | Yes                         | The total amount of scientist kills in the round.                                       |
 | Scp018sThrown         |                             | The total amount of SCP-018s thrown.                                                    |
