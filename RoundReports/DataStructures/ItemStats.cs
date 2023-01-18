@@ -1,5 +1,5 @@
 ﻿using Exiled.API.Features;
-using NorthwoodLib.Pools;
+using Exiled.API.Features.Pools;
 using System.Collections.Generic;
 
 namespace RoundReports
@@ -54,14 +54,14 @@ namespace RoundReports
 
         public void Setup()
         {
-            Drops = DictPool<ItemType, int>.Shared.Rent();
-            PlayerDrops = DictPool<Player, int>.Shared.Rent();
+            Drops = DictionaryPool<ItemType, int>.Pool.Get();
+            PlayerDrops = DictionaryPool<Player, int>.Pool.Get();
         }
 
         public void Cleanup()
         {
-            DictPool<ItemType, int>.Shared.Return(Drops);
-            DictPool<Player, int>.Shared.Return(PlayerDrops);
+            DictionaryPool<ItemType, int>.Pool.Return(Drops);
+            DictionaryPool<Player, int>.Pool.Return(PlayerDrops);
         }
     }
 }

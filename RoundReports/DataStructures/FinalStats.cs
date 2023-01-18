@@ -1,5 +1,5 @@
 ﻿using Exiled.API.Features;
-using NorthwoodLib.Pools;
+using Exiled.API.Features.Pools;
 using System;
 using System.Collections.Generic;
 
@@ -119,9 +119,9 @@ namespace RoundReports
 
         public void Setup()
         {
-            SurvivingPlayers = ListPool<string>.Shared.Rent();
-            PlayerDoorsOpened = DictPool<Player, int>.Shared.Rent();
-            PlayerDoorsClosed = DictPool<Player, int>.Shared.Rent();
+            SurvivingPlayers = ListPool<string>.Pool.Get();
+            PlayerDoorsOpened = DictionaryPool<Player, int>.Pool.Get();
+            PlayerDoorsClosed = DictionaryPool<Player, int>.Pool.Get();
             WinningTeam = MainPlugin.Translations.NoData;
             RoundTime = TimeSpan.Zero;
             EndTime = DateTime.MinValue;
@@ -129,9 +129,9 @@ namespace RoundReports
 
         public void Cleanup()
         {
-            ListPool<string>.Shared.Return(SurvivingPlayers);
-            DictPool<Player, int>.Shared.Return(PlayerDoorsOpened);
-            DictPool<Player, int>.Shared.Return(PlayerDoorsClosed);
+            ListPool<string>.Pool.Return(SurvivingPlayers);
+            DictionaryPool<Player, int>.Pool.Return(PlayerDoorsOpened);
+            DictionaryPool<Player, int>.Pool.Return(PlayerDoorsClosed);
         }
     }
 }

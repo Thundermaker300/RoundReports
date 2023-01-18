@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Features;
+using Exiled.API.Features.Pools;
 using InventorySystem.Items.Usables.Scp330;
 using Scp914;
 using System;
@@ -125,8 +126,8 @@ namespace RoundReports
 
         public void Setup()
         {
-            CandiesTaken = DictPool<CandyKindID, int>.Shared.Rent();
-            CandiesByPlayer = DictPool<Player, int>.Shared.Rent();
+            CandiesTaken = DictionaryPool<CandyKindID, int>.Pool.Get();
+            CandiesByPlayer = DictionaryPool<Player, int>.Pool.Get();
             Activations = new() // Todo: Convert this to DictPool
             {
                 [Scp914KnobSetting.Rough] = 0,
@@ -135,14 +136,14 @@ namespace RoundReports
                 [Scp914KnobSetting.Fine] = 0,
                 [Scp914KnobSetting.VeryFine] = 0,
             };
-            Upgrades = DictPool<ItemType, int>.Shared.Rent();
+            Upgrades = DictionaryPool<ItemType, int>.Pool.Get();
         }
 
         public void Cleanup()
         {
-            DictPool<CandyKindID, int>.Shared.Return(CandiesTaken);
-            DictPool<Player, int>.Shared.Return(CandiesByPlayer);
-            DictPool<ItemType, int>.Shared.Return(Upgrades);
+            DictionaryPool<CandyKindID, int>.Pool.Return(CandiesTaken);
+            DictionaryPool<Player, int>.Pool.Return(CandiesByPlayer);
+            DictionaryPool<ItemType, int>.Pool.Return(Upgrades);
         }
     }
 }

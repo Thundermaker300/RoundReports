@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Enums;
 using Exiled.API.Features;
+using Exiled.API.Features.Pools;
 using System.Collections.Generic;
 
 namespace RoundReports
@@ -28,14 +29,14 @@ namespace RoundReports
 
         public void Setup()
         {
-            DamageByPlayer = DictPool<Player, int>.Shared.Rent();
-            DamageByType = DictPool<DamageType, int>.Shared.Rent();
+            DamageByPlayer = DictionaryPool<Player, int>.Pool.Get();
+            DamageByType = DictionaryPool<DamageType, int>.Pool.Get();
         }
 
         public void Cleanup()
         {
-            DictPool<Player, int>.Shared.Return(DamageByPlayer);
-            DictPool<DamageType, int>.Shared.Return(DamageByType);
+            DictionaryPool<Player, int>.Pool.Return(DamageByPlayer);
+            DictionaryPool<DamageType, int>.Pool.Return(DamageByType);
         }
     }
 }

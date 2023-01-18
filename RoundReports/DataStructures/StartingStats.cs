@@ -1,4 +1,4 @@
-﻿using NorthwoodLib.Pools;
+﻿using Exiled.API.Features.Pools;
 using PlayerRoles;
 using System;
 using System.Collections.Generic;
@@ -46,8 +46,8 @@ namespace RoundReports
 
         public void Cleanup()
         {
-            ListPool<RoleTypeId>.Shared.Return(SCPs);
-            ListPool<string>.Shared.Return(Players);
+            ListPool<RoleTypeId>.Pool.Return(SCPs);
+            ListPool<string>.Pool.Return(Players);
         }
     }
 }

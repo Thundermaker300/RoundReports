@@ -1,4 +1,4 @@
-﻿using NorthwoodLib.Pools;
+﻿using Exiled.API.Features.Pools;
 using System.Collections.Generic;
 
 namespace RoundReports
@@ -24,14 +24,14 @@ namespace RoundReports
 
         public void Setup()
         {
-            SpawnWaves = ListPool<string>.Shared.Rent();
-            Respawns = ListPool<string>.Shared.Rent();
+            SpawnWaves = ListPool<string>.Pool.Get();
+            Respawns = ListPool<string>.Pool.Get();
         }
 
         public void Cleanup()
         {
-            ListPool<string>.Shared.Return(SpawnWaves);
-            ListPool<string>.Shared.Return(Respawns);
+            ListPool<string>.Pool.Return(SpawnWaves);
+            ListPool<string>.Pool.Return(Respawns);
         }
     }
 }

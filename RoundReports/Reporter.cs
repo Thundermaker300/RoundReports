@@ -1,8 +1,8 @@
 ﻿using Exiled.API.Enums;
 using Exiled.API.Features;
+using Exiled.API.Features.Pools;
 using MEC;
 using Newtonsoft.Json;
-using NorthwoodLib.Pools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,8 +35,8 @@ namespace RoundReports
         {
             UniqueId = Guid.NewGuid();
             UptimeRound = Round.UptimeRounds;
-            Stats = ListPool<IReportStat>.Shared.Rent();
-            Remarks = ListPool<string>.Shared.Rent();
+            Stats = ListPool<IReportStat>.Pool.Get();
+            Remarks = ListPool<string>.Pool.Get();
             NameStore = new(0);
             HasSent = false;
             Log.Debug("New reporter has been instantiated.");
@@ -85,8 +85,8 @@ namespace RoundReports
         public void ReturnLists()
         {
             Log.Debug("Returning lists to pool...");
-            ListPool<IReportStat>.Shared.Return(Stats);
-            ListPool<string>.Shared.Return(Remarks);
+            ListPool<IReportStat>.Pool.Return(Stats);
+            ListPool<string>.Pool.Return(Remarks);
             NameStore.Clear();
         }
 
@@ -173,7 +173,7 @@ namespace RoundReports
 
                 };
                 Log.Debug($"Adding new section: REMARKS");
-                StringBuilder bldr = StringBuilderPool.Shared.Rent();
+                StringBuilder bldr = StringBuilderPool.Pool.Get();
                 if (AtLeastOneHidden)
                     bldr.AppendLine(MainPlugin.Translations.HiddenUsersNotice);
 
@@ -181,7 +181,7 @@ namespace RoundReports
                     bldr.AppendLine(remark);
                 section.Contents = bldr.ToString();
                 entry.Sections.Add(section);
-                StringBuilderPool.Shared.Return(bldr);
+                StringBuilderPool.Pool.Return(bldr);
             }
             // Stats
             IOrderedEnumerable<IReportStat> stats = Stats.OrderBy(stat => stat.Order);
@@ -205,7 +205,7 @@ namespace RoundReports
                         Syntax = "text",
                         Contents = MainPlugin.Singleton.Translation.NoData,
                     };
-                    StringBuilder bldr = StringBuilderPool.Shared.Rent();
+                    StringBuilder bldr = StringBuilderPool.Pool.Get();
                     foreach (PropertyInfo pinfo in type.GetProperties())
                     {
                         if (pinfo.Name is "Title" or "Order") continue;
@@ -246,7 +246,7 @@ namespace RoundReports
                             bldr.AppendLine($"{attr.Text}: {GetDisplay(propertyValue, pinfo.PropertyType, ruleAttr?.Rule ?? Rule.None)}");
                         }
                     }
-                    section.Contents = StringBuilderPool.Shared.ToStringReturn(bldr).Trim();
+                    section.Contents = StringBuilderPool.Pool.ToStringReturn(bldr).Trim();
                     if (string.IsNullOrEmpty(section.Contents)) continue;
                     entry.Sections.Add(section);
                 }
@@ -467,9 +467,9 @@ namespace RoundReports
                 if (dict.Count == 0)
                     return MainPlugin.Translations.NoData;
 
-                List<DictionaryEntry> internalList = ListPool<DictionaryEntry>.Shared.Rent();
+                List<DictionaryEntry> internalList = ListPool<DictionaryEntry>.Pool.Get();
 
-                StringBuilder bldr2 = StringBuilderPool.Shared.Rent();
+                StringBuilder bldr2 = StringBuilderPool.Pool.Get();
                 bldr2.AppendLine();
 
                 foreach (DictionaryEntry item in dict)
@@ -490,8 +490,8 @@ namespace RoundReports
                     bldr2.AppendLine("- " + GetDisplay(item.Key) + ": " + GetDisplay(item.Value));
                 }
 
-                string display = StringBuilderPool.Shared.ToStringReturn(bldr2).TrimEnd(' ', '\r', '\n');
-                ListPool<DictionaryEntry>.Shared.Return(internalList);
+                string display = StringBuilderPool.Pool.ToStringReturn(bldr2).TrimEnd(' ', '\r', '\n');
+                ListPool<DictionaryEntry>.Pool.Return(internalList);
 
                 return display;
             }
@@ -505,8 +505,8 @@ namespace RoundReports
                     return MainPlugin.Translations.NoData;
 
                 // Hacky solution: Convert IEnumerable to a List<object> to sort it
-                List<object> internalList = ListPool<object>.Shared.Rent();
-                StringBuilder bldr2 = StringBuilderPool.Shared.Rent();
+                List<object> internalList = ListPool<object>.Pool.Get();
+                StringBuilder bldr2 = StringBuilderPool.Pool.Get();
 
                 if (!rules.HasFlag(Rule.CommaSeparatedList))
                     bldr2.AppendLine();
@@ -530,8 +530,8 @@ namespace RoundReports
                         bldr2.AppendLine("- " + GetDisplay(item));
                 }
 
-                string display = StringBuilderPool.Shared.ToStringReturn(bldr2).TrimEnd(' ', '\r', '\n', ',');
-                ListPool<object>.Shared.Return(internalList);
+                string display = StringBuilderPool.Pool.ToStringReturn(bldr2).TrimEnd(' ', '\r', '\n', ',');
+                ListPool<object>.Pool.Return(internalList);
 
                 return display;
             }

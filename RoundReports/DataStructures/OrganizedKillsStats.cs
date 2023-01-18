@@ -1,6 +1,6 @@
 ﻿using Exiled.API.Enums;
 using Exiled.API.Features;
-using NorthwoodLib.Pools;
+using Exiled.API.Features.Pools;
 using System.Collections.Generic;
 
 namespace RoundReports
@@ -29,18 +29,18 @@ namespace RoundReports
 
         public void Setup()
         {
-            PlayerKills = ListPool<string>.Shared.Rent();
-            KillsByPlayer = DictPool<Player, int>.Shared.Rent();
-            KillsByType = DictPool<DamageType, int>.Shared.Rent();
-            KillsByZone = DictPool<ZoneType, int>.Shared.Rent();
+            PlayerKills = ListPool<string>.Pool.Get();
+            KillsByPlayer = DictionaryPool<Player, int>.Pool.Get();
+            KillsByType = DictionaryPool<DamageType, int>.Pool.Get();
+            KillsByZone = DictionaryPool<ZoneType, int>.Pool.Get();
         }
 
         public void Cleanup()
         {
-            ListPool<string>.Shared.Return(PlayerKills);
-            DictPool<Player, int>.Shared.Return(KillsByPlayer);
-            DictPool<DamageType, int>.Shared.Return(KillsByType);
-            DictPool<ZoneType, int>.Shared.Return(KillsByZone);
+            ListPool<string>.Pool.Return(PlayerKills);
+            DictionaryPool<Player, int>.Pool.Return(KillsByPlayer);
+            DictionaryPool<DamageType, int>.Pool.Return(KillsByType);
+            DictionaryPool<ZoneType, int>.Pool.Return(KillsByZone);
         }
     }
 }

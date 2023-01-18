@@ -3,7 +3,6 @@ using MEC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NorthwoodLib.Pools;
 using Exiled.API.Enums;
 using Exiled.API.Extensions;
 using Scp914;
@@ -23,6 +22,7 @@ using Exiled.Events.EventArgs.Warhead;
 using Exiled.Events.EventArgs.Scp939;
 using Exiled.API.Features.Roles;
 using PlayerRoles.PlayableScps.Scp079.Rewards;
+using Exiled.API.Features.Pools;
 
 namespace RoundReports
 {
@@ -182,7 +182,7 @@ namespace RoundReports
             FirstKill = false;
             FirstDoor = false;
             Interactions = 0;
-            Holding = ListPool<IReportStat>.Shared.Rent();
+            Holding = ListPool<IReportStat>.Pool.Get();
             Points.Clear();
             Points[PointTeam.SCP] = new();
             Points[PointTeam.Human] = new();
@@ -209,7 +209,7 @@ namespace RoundReports
                 MainPlugin.Reporter.SendReport();
             }
 
-            ListPool<IReportStat>.Shared.Return(Holding);
+            ListPool<IReportStat>.Pool.Return(Holding);
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace RoundReports
                     Scientists = Player.Get(RoleTypeId.Scientist).Count(player => ECheck(player)),
                     StartTime = DateTime.Now,
                     PlayersAtStart = Player.List.Where(r => !r.IsDead).Count(player => ECheck(player)),
-                    Players = ListPool<string>.Shared.Rent()
+                    Players = ListPool<string>.Pool.Get()
                 };
                 foreach (Player player in Player.List.Where(player => ECheck(player) && !player.IsDead))
                     stats.Players.Add($"{Reporter.GetDisplay(player, typeof(Player))} [{GetRole(player)}]");

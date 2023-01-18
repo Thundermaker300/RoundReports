@@ -99,7 +99,6 @@
     <Compile Include="EventHandlers.cs" />
     <Compile Include="MainPlugin.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Pools\DictPool.cs" />
     <Compile Include="Structures\DiscordConfig.cs" />
     <Compile Include="Structures\DiscordStructures.cs" />
     <Compile Include="Structures\WebRequestStructures.cs" />

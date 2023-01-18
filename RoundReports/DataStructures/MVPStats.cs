@@ -1,5 +1,5 @@
 ﻿using Exiled.API.Features;
-using NorthwoodLib.Pools;
+using Exiled.API.Features.Pools;
 using System.Collections.Generic;
 
 namespace RoundReports
@@ -29,14 +29,14 @@ namespace RoundReports
 
         public void Setup()
         {
-            PointLogs = ListPool<string>.Shared.Rent();
+            PointLogs = ListPool<string>.Pool.Get();
             HumanMVP = MainPlugin.Translations.NoData;
             SCPMVP = MainPlugin.Translations.NoData;
         }
 
         public void Cleanup()
         {
-            ListPool<string>.Shared.Return(PointLogs);
+            ListPool<string>.Pool.Return(PointLogs);
         }
     }
 }
