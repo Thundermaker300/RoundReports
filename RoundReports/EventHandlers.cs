@@ -544,7 +544,7 @@ namespace RoundReports
             Hold(stats);
 
             // Target Points
-            if (ev.DamageHandler.Type is DamageType.Warhead or DamageType.Decontamination or DamageType.Tesla or DamageType.Crushed)
+            if (ev.DamageHandler.Type is DamageType.Warhead or DamageType.Decontamination or DamageType.Tesla or DamageType.Crushed or DamageType.Falldown)
                 RemovePoints(ev.Player, ev.Player.IsScp ? 10 : 2, MainPlugin.Translations.Death); // Dumb causes
             else
                 RemovePoints(ev.Player, ev.Player.IsScp ? 5 : 1, MainPlugin.Translations.Death); // Other causes
