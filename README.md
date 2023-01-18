@@ -81,10 +81,10 @@ MVP is calculated by granting players points for specific actions. These points 
 | EndTime               |                             | The end time of the round.                                                              |
 | FirearmUpgrades       |                             | The total amount of times a firearm was upgraded.                                       |
 | First330Use           |                             | The time in the round the first SCP-330 candy was obtained.                             |
-| First330User          |                             | The name of the player who used SCP-330 first.                                          |
+| First330User          | Yes                         | The name of the player who used SCP-330 first.                                          |
 | First914Activation    |                             | The time in the round the first SCP-914 cycle was activated.                            |
-| First914Activator     |                             | The name of the player who activated SCP-914 first.                                     |
-| FirstWarheadActivator |                             | The name of the player who activated the warhead first.                                 |
+| First914Activator     | Yes                         | The name of the player who activated SCP-914 first.                                     |
+| FirstWarheadActivator | Yes                         | The name of the player who activated the warhead first.                                 |
 | HumanMVP              | Yes                         | The human MVP of the round.                                                             |
 | HumanKills*           | Yes                         | The total amount of human kills in the round.                                           |
 | HumanPoints           |                             | Each player who has played a human role and the amount of points they've received.      |
@@ -132,7 +132,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | StartTime             | Yes                         | The time that the round started.                                                        |
 | SurvivingPlayers      |                             | Each player that is alive at the end of the round.                                      |
 | Total914Activations   | Yes                         | The total amount of times SCP-914 was activated.                                        |
-| TotalCandiesTaken     |                             | The total amount of candies taken.                                                      |
+| TotalCandiesTaken     | Yes                         | The total amount of candies taken.                                                      |
 | TotalDamage           | Yes                         | The total amount of damage dealt.                                                       |
 | TotalDeaths           | Yes                         | The total amount of deaths.                                                             |
 | TotalDrops            | Yes                         | The total amount of items dropped.                                                      |

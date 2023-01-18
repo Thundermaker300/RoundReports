@@ -570,8 +570,11 @@ namespace RoundReports
             .Replace("{DOORSOPENED}", GetStat<FinalStats>().DoorsOpened.ToString())
             .Replace("{DOORSCLOSED}", GetStat<FinalStats>().DoorsClosed.ToString())
             .Replace("{DOORSDESTROYED}", GetStat<FinalStats>().DoorsDestroyed.ToString())
-            .Replace("{CANDIESTAKEN}", GetStat<SCPStats>().TotalCandiesTaken.ToString())
+            .Replace("{FIRST330USER}", GetDisplay(GetStat<SCPStats>().FirstUser, typeof(Player)))
+            .Replace("{TOTALCANDIESTAKEN}", GetStat<SCPStats>().TotalCandiesTaken.ToString())
             .Replace("{BUTTONUNLOCKER}", GetDisplay(GetStat<FinalStats>().ButtonUnlocker, typeof(Player)))
+            .Replace("{FIRSTWARHEADACTIVATOR}", GetDisplay(GetStat<FinalStats>().FirstActivator, typeof(Player)))
+            .Replace("{FIRST914ACTIVATOR}", GetDisplay(GetStat<SCPStats>().FirstActivator, typeof(Player)))
             .Replace("{TOTAL914ACTIVATIONS}", GetStat<SCPStats>().TotalActivations.ToString())
             .Replace("{TOTALITEMUPGRADES}", GetStat<SCPStats>().TotalItemUpgrades.ToString())
             .Replace("{TOTALINTERACTIONS}", GetStat<FinalStats>().TotalInteractions.ToString());
