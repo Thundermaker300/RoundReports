@@ -123,7 +123,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | SCPMVP                | Yes                         | The SCP MVP of the round.                                                               |
 | SCPPoints             |                             | Each player who has played an SCP and the amount of points they received.               |
 | SerpentsHandKills     |                             | The total amount of Serpent's Hand kills (only if the plugin is installed).             |
-| SeveredHands          |                             | The total amount of hands severed from taking too many SCP-330 candies.                 |
+| SeveredHands          |                             | The total amount of hands severed from SCP-330. Only shown if value is greater than 0.  |
 | SpawnWaves            | Yes                         | List of each spawn wave. Converts to the total amount of respawn waves in broadcasts.   |
 | StartClassD           |                             | The amount of Class-D personnel at the start of the round.                              |
 | StartFacilityGuard    |                             | The amount of Facility Guards at the start of the round.                                |
