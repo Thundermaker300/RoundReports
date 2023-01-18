@@ -72,6 +72,10 @@
         Scp096Enrages,
         Scp106Teleports,
         Scp173Blinks,
+        Scp173Tantrums,
+        Scp939Lunges,
+        Scp939Clouds,
+
         Scp018sThrown,
         Scp207sDrank,
         Scp268Uses,

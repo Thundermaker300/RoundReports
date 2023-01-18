@@ -128,6 +128,9 @@ namespace RoundReports
         public string Scp096Enrages { get; set; } = "SCP-096 Enrages";
         public string Scp106Teleports { get; set; } = "SCP-106 Teleports";
         public string Scp173Blinks { get; set; } = "SCP-173 Blinks";
+        public string Scp173Tantrums { get; set; } = "SCP-173 Tantrums";
+        public string Scp939Lunges { get; set; } = "SCP-939 Lunges";
+        public string Scp939Clouds { get; set; } = "SCP-939 Amnestic Clouds";
 
         // Starting Stats
         public string StartingTitle { get; set; } = "Starting Statistics";

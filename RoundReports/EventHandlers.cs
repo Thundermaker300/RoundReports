@@ -20,6 +20,7 @@ using Exiled.Events.EventArgs.Scp173;
 using Exiled.Events.EventArgs.Scp330;
 using Exiled.Events.EventArgs.Scp914;
 using Exiled.Events.EventArgs.Warhead;
+using Exiled.Events.EventArgs.Scp939;
 
 namespace RoundReports
 {
@@ -637,6 +638,30 @@ namespace RoundReports
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             SCPStats stats = GetStat<SCPStats>();
             stats.Scp173Blinks++;
+            Hold(stats);
+        }
+
+        public void OnScp173Tantrum(PlacingTantrumEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
+            SCPStats stats = GetStat<SCPStats>();
+            stats.Scp173Tantrums++;
+            Hold(stats);
+        }
+
+        public void OnScp939Lunge(LungingEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
+            SCPStats stats = GetStat<SCPStats>();
+            stats.Scp939Lunges++;
+            Hold(stats);
+        }
+
+        public void OnScp939Cloud(PlacingAmnesticCloudEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
+            SCPStats stats = GetStat<SCPStats>();
+            stats.Scp939Clouds++;
             Hold(stats);
         }
 

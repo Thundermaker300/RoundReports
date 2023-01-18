@@ -32,6 +32,21 @@ namespace RoundReports
         [BindStat(StatType.Scp173Blinks)]
         public int Scp173Blinks { get; set; }
 
+        [HideIfDefault]
+        [Translation(nameof(Translation.Scp173Tantrums))]
+        [BindStat(StatType.Scp173Tantrums)]
+        public int Scp173Tantrums { get; set; }
+
+        [HideIfDefault]
+        [Translation(nameof(Translation.Scp939Lunges))]
+        [BindStat(StatType.Scp939Lunges)]
+        public int Scp939Lunges { get; set; }
+
+        [HideIfDefault]
+        [Translation(nameof(Translation.Scp939Clouds))]
+        [BindStat(StatType.Scp939Clouds)]
+        public int Scp939Clouds { get; set; }
+
         [Header(nameof(Translation.ScpItemTitle))]
         [Translation(nameof(Translation.Scp018Thrown))]
         [BindStat(StatType.Scp018sThrown)]

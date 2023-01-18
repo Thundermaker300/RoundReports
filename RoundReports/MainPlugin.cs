@@ -9,6 +9,7 @@ using Scp106Events = Exiled.Events.Handlers.Scp106;
 using Scp173Events = Exiled.Events.Handlers.Scp173;
 using Scp330Events = Exiled.Events.Handlers.Scp330;
 using Scp914Events = Exiled.Events.Handlers.Scp914;
+using Scp939Events = Exiled.Events.Handlers.Scp939;
 using WarheadEvents = Exiled.Events.Handlers.Warhead;
 using System;
 using Exiled.Loader;
@@ -85,10 +86,14 @@ namespace RoundReports
             //Scp079Events.LockingDown += Handlers.OnScp079Lockdown;
             Scp079Events.TriggeringDoor += Handlers.OnScp079TriggeringDoor;
             Scp079Events.InteractingTesla += Handlers.OnScp079InteractTesla;
+
             Scp096Events.Charging += Handlers.OnScp096Charge;
             Scp096Events.Enraging += Handlers.OnScp096Enrage;
+
             Scp106Events.Teleporting += Handlers.OnScp106Teleport;
+
             Scp173Events.Blinking += Handlers.OnScp173Blink;
+            Scp173Events.PlacingTantrum += Handlers.OnScp173Tantrum;
 
             Scp330Events.InteractingScp330 += Handlers.OnInteractingScp330;
 
@@ -96,6 +101,9 @@ namespace RoundReports
             Scp914Events.ChangingKnobSetting += Handlers.OnChangingKnobSetting;
             Scp914Events.UpgradingPickup += Handlers.On914UpgradingPickup;
             Scp914Events.UpgradingInventoryItem += Handlers.On914UpgradingInventoryItem;
+
+            Scp939Events.Lunging += Handlers.OnScp939Lunge;
+            Scp939Events.PlacingAmnesticCloud += Handlers.OnScp939Cloud;
 
             // Warhead
             PlayerEvents.ActivatingWarheadPanel += Handlers.OnActivatingWarheadPanel;
@@ -152,10 +160,14 @@ namespace RoundReports
             //Scp079Events.LockingDown -= Handlers.OnScp079Lockdown;
             Scp079Events.TriggeringDoor -= Handlers.OnScp079TriggeringDoor;
             Scp079Events.InteractingTesla -= Handlers.OnScp079InteractTesla;
+
             Scp096Events.Charging -= Handlers.OnScp096Charge;
             Scp096Events.Enraging -= Handlers.OnScp096Enrage;
+
             Scp106Events.Teleporting -= Handlers.OnScp106Teleport;
+
             Scp173Events.Blinking -= Handlers.OnScp173Blink;
+            Scp173Events.PlacingTantrum -= Handlers.OnScp173Tantrum;
 
             Scp330Events.InteractingScp330 -= Handlers.OnInteractingScp330;
 
@@ -163,6 +175,9 @@ namespace RoundReports
             Scp914Events.ChangingKnobSetting -= Handlers.OnChangingKnobSetting;
             Scp914Events.UpgradingPickup -= Handlers.On914UpgradingPickup;
             Scp914Events.UpgradingInventoryItem -= Handlers.On914UpgradingInventoryItem;
+
+            Scp939Events.Lunging -= Handlers.OnScp939Lunge;
+            Scp939Events.PlacingAmnesticCloud -= Handlers.OnScp939Cloud;
 
             // Warhead
             PlayerEvents.ActivatingWarheadPanel -= Handlers.OnActivatingWarheadPanel;

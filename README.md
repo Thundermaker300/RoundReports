@@ -111,10 +111,13 @@ MVP is calculated by granting players points for specific actions. These points 
 | Scp096Enrages         |                             | The total amount of SCP-096 enrages. Only shown if value is greater than 0.             |
 | Scp106Teleports       |                             | The total amount of SCP-106 teleports. Only shown if value is greater than 0.           |
 | Scp173Blinks          |                             | The total amount of SCP-173 blinks. Only shown if value is greater than 0.              |
+| Scp173Tantrums        |                             | The total amount of SCP-173 tantrums. Only shown if value is greater than 0.            |
 | Scp1853Uses           |                             | The total amount of SCP-1853 uses.                                                      |
 | Scp207sDrank          |                             | The total amount of SCP-207s drank.                                                     |
 | Scp268Uses            |                             | The total amount of SCP-268 uses.                                                       |
 | SCP500sConsumed       |                             | The total amount of SCP-500s consumed.                                                  |
+| Scp939Lunges          |                             | The total amount of SCP-939 lunges. Only shown if value is greater than 0.              |
+| Scp939Clouds          |                             | The total amount of SCP-939 amnestic clouds. Only shown if value is greater than 0.     |
 | SCPKills              | Yes                         | The total amount of SCP kills in the round.                                             |
 | SCPMVP                | Yes                         | The SCP MVP of the round.                                                               |
 | SCPPoints             |                             | Each player who has played an SCP and the amount of points they received.               |
