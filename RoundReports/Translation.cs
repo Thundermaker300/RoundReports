@@ -124,7 +124,7 @@ namespace RoundReports
         public string Scp1853Uses { get; set; } = "SCP-1853 Uses";
 
         // SCP Stats
-        [Description("The following four SCP-related stats only show on the report if each is activated at least once.")]
+        [Description("The following seven SCP-related stats only show on the report if each is activated at least once.")]
         public string Scp096Charges { get; set; } = "SCP-096 Charges";
         public string Scp096Enrages { get; set; } = "SCP-096 Enrages";
         public string Scp106Teleports { get; set; } = "SCP-106 Teleports";
@@ -175,6 +175,7 @@ namespace RoundReports
         public string AddPointsLog { get; set; } = "{PLAYER} [{ROLE}] gained {AMOUNT} points. Reason: {REASON}";
         public string RemovePointsLog { get; set; } = "{PLAYER} [{ROLE}] lost {AMOUNT} points. Reason: {REASON}";
 
+        [Description("The following translations are for reasons regarding to add & removing MVP points.")]
         //-- Positive
         public string KilledSCP { get; set; } = "Killed SCP";
         public string KilledScientist { get; set; } = "Killed Scientist";
