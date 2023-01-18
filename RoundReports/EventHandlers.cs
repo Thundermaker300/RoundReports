@@ -751,6 +751,18 @@ namespace RoundReports
             Interactions++;
         }
 
+        public void OnInteractingElevator(InteractingElevatorEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
+            Interactions++;
+        }
+
+        public void OnInteractingLocker(InteractingLockerEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
+            Interactions++;
+        }
+
         public void OnInteractingScp330(InteractingScp330EventArgs ev)
         {
             if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
