@@ -21,6 +21,8 @@ using Exiled.Events.EventArgs.Scp330;
 using Exiled.Events.EventArgs.Scp914;
 using Exiled.Events.EventArgs.Warhead;
 using Exiled.Events.EventArgs.Scp939;
+using Exiled.API.Features.Roles;
+using PlayerRoles.PlayableScps.Scp079.Rewards;
 
 namespace RoundReports
 {
@@ -525,11 +527,11 @@ namespace RoundReports
                     AddPoints(ev.Attacker, 2, MainPlugin.Translations.KilledEnemy); // Other kills
 
                 // Grant points to SCP-079 if death in a locked down/blackout room
-                if (GetTeam(ev.Attacker) == "SCPs" && (ev.Player.CurrentRoom.AreLightsOff || ev.Player.CurrentRoom.Doors.All(door => door.IsLocked)))
+                if (GetTeam(ev.Attacker) == "SCPs")
                 {
                     foreach (Player player in Player.List)
                     {
-                        if (player.Role == RoleTypeId.Scp079)
+                        if (player.Role is Scp079Role role && role.SubroutineModule.TryGetSubroutine(out Scp079RewardManager manager) && manager._markedRooms.ContainsKey(ev.Player.CurrentRoom.Identifier))
                             AddPoints(player, 1, MainPlugin.Translations.AssistKill);
                     }
                 }
