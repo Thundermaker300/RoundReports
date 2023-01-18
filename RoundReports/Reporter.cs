@@ -237,11 +237,11 @@ namespace RoundReports
                         Log.Debug($"Adding stat {pinfo.Name} with value of {propertyValue}");
                         if (attr is null)
                         {
-                            bldr.AppendLine($"{SplitString(pinfo.Name)}: {GetDisplay(pinfo.GetValue(stat), ruleAttr?.Rule ?? Rule.None)}");
+                            bldr.AppendLine($"{SplitString(pinfo.Name)}: {GetDisplay(propertyValue, pinfo.PropertyType, ruleAttr?.Rule ?? Rule.None)}");
                         }
                         else
                         {
-                            bldr.AppendLine($"{attr.Text}: {GetDisplay(propertyValue, ruleAttr?.Rule ?? Rule.None)}");
+                            bldr.AppendLine($"{attr.Text}: {GetDisplay(propertyValue, pinfo.PropertyType, ruleAttr?.Rule ?? Rule.None)}");
                         }
                     }
                     section.Contents = StringBuilderPool.Shared.ToStringReturn(bldr).Trim();
@@ -445,10 +445,13 @@ namespace RoundReports
             return r.Replace(s, " ");
         }
 
-        public static string GetDisplay(object val, Rule rules = Rule.None)
+        public static string GetDisplay(object val, Type expectedType = null, Rule rules = Rule.None)
         {
             if (val is null)
-                return MainPlugin.Translations.NoData;
+                if (expectedType is not null && expectedType.FullName is "Exiled.API.Features.Player")
+                    return MainPlugin.Translations.Nobody;
+                else
+                    return MainPlugin.Translations.NoData;
             if (val is bool b)
                 return b ? MainPlugin.Translations.Yes : MainPlugin.Translations.No;
             if (val is Player plr)
@@ -568,7 +571,7 @@ namespace RoundReports
             .Replace("{DOORSCLOSED}", GetStat<FinalStats>().DoorsClosed.ToString())
             .Replace("{DOORSDESTROYED}", GetStat<FinalStats>().DoorsDestroyed.ToString())
             .Replace("{CANDIESTAKEN}", GetStat<SCPStats>().TotalCandiesTaken.ToString())
-            .Replace("{BUTTONUNLOCKER}", GetStat<FinalStats>().ButtonUnlocker?.Nickname?.ToString() ?? MainPlugin.Translations.nobody)
+            .Replace("{BUTTONUNLOCKER}", GetDisplay(GetStat<FinalStats>().ButtonUnlocker, typeof(Player)))
             .Replace("{TOTAL914ACTIVATIONS}", GetStat<SCPStats>().TotalActivations.ToString())
             .Replace("{TOTALITEMUPGRADES}", GetStat<SCPStats>().TotalItemUpgrades.ToString())
             .Replace("{TOTALINTERACTIONS}", GetStat<FinalStats>().TotalInteractions.ToString());

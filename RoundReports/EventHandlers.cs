@@ -247,7 +247,7 @@ namespace RoundReports
                     Players = ListPool<string>.Shared.Rent()
                 };
                 foreach (Player player in Player.List.Where(player => ECheck(player) && !player.IsDead))
-                    stats.Players.Add($"{Reporter.GetDisplay(player)} [{GetRole(player)}]");
+                    stats.Players.Add($"{Reporter.GetDisplay(player, typeof(Player))} [{GetRole(player)}]");
                 Hold(stats);
                 Timing.RunCoroutine(RecordSCPsStats().CancelWith(Server.Host.GameObject));
             });
@@ -282,7 +282,7 @@ namespace RoundReports
             // Finish with final stats
             stats.RoundTime = Round.ElapsedTime;
             foreach (Player player in Player.Get(plr => plr.IsAlive && ECheck(plr)))
-                stats.SurvivingPlayers.Add($"{Reporter.GetDisplay(player)} ({GetRole(player)})");
+                stats.SurvivingPlayers.Add($"{Reporter.GetDisplay(player, typeof(Player))} ({GetRole(player)})");
 
             Hold(stats);
 
@@ -393,7 +393,7 @@ namespace RoundReports
             if (!Round.InProgress || MainPlugin.IsRestarting || Round.ElapsedTime.TotalMinutes <= 0.5 || !ECheck(ev.Player) || GetTeam(ev.Player) is not ("SH" or "UIU" or "FacilityForces" or "ChaosInsurgency")) return;
             RespawnStats stats = GetStat<RespawnStats>();
             stats.TotalRespawned++;
-            stats.Respawns.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player)).Replace("{ROLE}", GetRole(ev.Player)));
+            stats.Respawns.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player, typeof(Player))).Replace("{ROLE}", GetRole(ev.Player)));
             Hold(stats);
         }
 
@@ -441,7 +441,7 @@ namespace RoundReports
                 // Kill logs
                 string killerRole = GetRole(ev.Attacker);
                 string dyingRole = GetRole(ev.Player);
-                killStats.PlayerKills.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] {Reporter.GetDisplay(ev.Attacker)} [{killerRole}] killed {Reporter.GetDisplay(ev.Player)} [{dyingRole}]");
+                killStats.PlayerKills.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] {Reporter.GetDisplay(ev.Attacker, typeof(Player))} [{killerRole}] killed {Reporter.GetDisplay(ev.Player, typeof(Player))} [{dyingRole}]");
                 // Kill by player
                 if (!killStats.KillsByPlayer.ContainsKey(ev.Attacker))
                     killStats.KillsByPlayer.Add(ev.Attacker, 1);
@@ -488,9 +488,9 @@ namespace RoundReports
                 if (!FirstKill && MainPlugin.Reporter is not null && ECheck(ev.Attacker))
                 {
                     string killText = MainPlugin.Translations.KillRemark
-                        .Replace("{PLAYER}", Reporter.GetDisplay(ev.Attacker))
+                        .Replace("{PLAYER}", Reporter.GetDisplay(ev.Attacker, typeof(Player)))
                         .Replace("{ROLE}", GetRole(ev.Attacker))
-                        .Replace("{TARGET}", Reporter.GetDisplay(ev.Player))
+                        .Replace("{TARGET}", Reporter.GetDisplay(ev.Player, typeof(Player)))
                         .Replace("{TARGETROLE}", dyingRole);
                     MainPlugin.Reporter.AddRemark(killText);
                     FirstKill = true;
@@ -735,7 +735,7 @@ namespace RoundReports
                 {
                     FirstDoor = true;
                     string remarkText = MainPlugin.Translations.DoorRemark
-                        .Replace("{PLAYER}", Reporter.GetDisplay(ev.Player))
+                        .Replace("{PLAYER}", Reporter.GetDisplay(ev.Player, typeof(Player)))
                         .Replace("{ROLE}", GetRole(ev.Player))
                         .Replace("{MILLISECOND}", Round.ElapsedTime.Milliseconds.ToString());
                     MainPlugin.Reporter.AddRemark(remarkText);
@@ -802,7 +802,7 @@ namespace RoundReports
             {
                 FirstEscape = true;
                 string escapeText = MainPlugin.Translations.EscapeRemark
-                    .Replace("{PLAYER}", Reporter.GetDisplay(ev.Player))
+                    .Replace("{PLAYER}", Reporter.GetDisplay(ev.Player, typeof(Player)))
                     .Replace("{ROLE}", GetRole(ev.Player))
                     .Replace("{MINUTE}", Round.ElapsedTime.Minutes.ToString())
                     .Replace("{SECOND}", Round.ElapsedTime.Seconds.ToString());
