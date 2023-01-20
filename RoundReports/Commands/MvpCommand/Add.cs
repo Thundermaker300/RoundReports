@@ -15,7 +15,7 @@ namespace RoundReports.Commands.MvpCommand
 
         public string Description => "Adds points to the provided player.";
 
-        public string[] Usage => new[] { "players", "amount", "reason" };
+        public string[] Usage => new[] { "players", "SCP/Human", "amount", "reason" };
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
@@ -37,13 +37,22 @@ namespace RoundReports.Commands.MvpCommand
                 return false;
             }
 
-            if (arguments.Count < 2)
+            if (arguments.Count < 3)
             {
-                response = "Invalid command usage. Required parameters: players, amount";
+                response = "Invalid command usage. Required parameters: players, scp/human, amount";
                 return false;
             }
 
-            if (!int.TryParse(arguments.At(1), out int amount))
+            string team = arguments.At(1).ToLower();
+            if (team is not "scp" or "human")
+            {
+                response = "Invalid team provided. Team must be 'scp' or 'human'.";
+                return false;
+            }
+
+            PointTeam pt = team is "scp" ? PointTeam.SCP : PointTeam.Human;
+
+            if (!int.TryParse(arguments.At(2), out int amount))
             {
                 response = "Invalid command usage. Amount of points must be an integer.";
                 return false;
@@ -58,7 +67,7 @@ namespace RoundReports.Commands.MvpCommand
             }
 
             string reason = string.Join(" ", arguments.Skip(2));
-            MainPlugin.Handlers.AddPoints(player, amount, reason);
+            MainPlugin.Handlers.AddPoints(player, amount, reason, pt);
 
             response = $"Added {amount} MVP points to {player.Nickname}!";
             return true;

@@ -106,7 +106,7 @@ namespace RoundReports
         /// <param name="plr">Player.</param>
         /// <param name="amount">Amount of points.</param>
         /// <param name="reason">Reason for adding.</param>
-        public void AddPoints(Player plr, int amount, string reason = "Unknown")
+        public void AddPoints(Player plr, int amount, string reason = "Unknown", PointTeam? teamOverride = null)
         {
             if (plr is null || plr.DoNotTrack || !MvpSettings.MvpEnabled || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
                 return;
@@ -116,7 +116,7 @@ namespace RoundReports
 
             Log.Debug($"Adding {amount} points to {plr.Nickname}. {reason}");
 
-            PointTeam PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
+            PointTeam PT = teamOverride ?? (plr.IsScp ? PointTeam.SCP : PointTeam.Human);
             if (Points[PT].ContainsKey(plr))
                 Points[PT][plr] += amount;
             else
@@ -150,7 +150,7 @@ namespace RoundReports
         /// <param name="plr">Player.</param>
         /// <param name="amount">Amount of points.</param>
         /// <param name="reason">Reason for removing.</param>
-        public void RemovePoints(Player plr, int amount, string reason = "Unknown")
+        public void RemovePoints(Player plr, int amount, string reason = "Unknown", PointTeam? teamOverride = null)
         {
             if (plr is null || plr.DoNotTrack || !MvpSettings.MvpEnabled || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
                 return;
@@ -160,7 +160,7 @@ namespace RoundReports
 
             Log.Debug($"Removing {amount} points from {plr.Nickname}. {reason}");
 
-            PointTeam PT = plr.IsScp ? PointTeam.SCP : PointTeam.Human;
+            PointTeam PT = teamOverride ?? (plr.IsScp ? PointTeam.SCP : PointTeam.Human);
             if (Points[PT].ContainsKey(plr))
                 Points[PT][plr] -= amount;
             else
