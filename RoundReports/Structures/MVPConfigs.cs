@@ -35,5 +35,8 @@ namespace RoundReports
             Duration = 3f,
             Show = true,
         };
+
+        [Description("Determines the amount of points that are gained/lost for a certain interaction.")]
+        public MVPPointsConfigs Points { get; set; } = new();
     }
 }
