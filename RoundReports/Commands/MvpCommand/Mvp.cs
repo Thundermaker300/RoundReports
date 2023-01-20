@@ -26,7 +26,7 @@ namespace RoundReports.Commands.MvpCommand
 
             sb.AppendLine("Available commands:");
             sb.AppendLine("- MVP ADD <PLAYERS> <AMOUNT> <REASON> - Adds specified points to the player(s).");
-            sb.AppendLine("- MVP RM <PLAYERS> <AMOUNT> <REASON> - Removes points to the player(s).");
+            sb.AppendLine("- MVP RM <PLAYERS> <AMOUNT> <REASON> - Removes points from the player(s).");
 
             response = StringBuilderPool.Pool.ToStringReturn(sb);
             return false;
