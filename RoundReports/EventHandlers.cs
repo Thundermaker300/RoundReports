@@ -517,7 +517,7 @@ namespace RoundReports
                 }
 
                 // Killer points
-                if (ev.Player.Role.Side == ev.Attacker.Role.Side)
+                if (ev.Player.Role.Side == ev.Attacker.Role.Side && ev.DamageHandler.Type != DamageType.Scp018)
                     RemovePoints(ev.Attacker, 10, MainPlugin.Translations.KilledTeammate); // Kill teammate
                 else if (GetTeam(ev.Player) == "SCPs")
                     AddPoints(ev.Attacker, 10, MainPlugin.Translations.KilledSCP); // Kill SCP
