@@ -307,8 +307,8 @@ namespace RoundReports
             Hold(stats);
 
             // Compile MVP info
-            var sortedHumanData = Points[PointTeam.Human].OrderByDescending(data => data.Value);
-            var sortedSCPData = Points[PointTeam.SCP].OrderByDescending(data => data.Value);
+            var sortedHumanData = Points[PointTeam.Human].Where(data => data.Value > 0).OrderByDescending(data => data.Value);
+            var sortedSCPData = Points[PointTeam.SCP].Where(data => data.Value > 0).OrderByDescending(data => data.Value);
             MVPStats MVPInfo = GetStat<MVPStats>();
 
             if (sortedHumanData.Count() >= 1)
