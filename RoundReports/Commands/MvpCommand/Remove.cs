@@ -58,7 +58,7 @@ namespace RoundReports.Commands.MvpCommand
             }
 
             string reason = string.Join(" ", arguments.Skip(2));
-            MainPlugin.Handlers.AddPoints(player, amount, reason);
+            MainPlugin.Handlers.RemovePoints(player, amount, reason);
 
             response = $"Removed {amount} MVP points from {player.Nickname}!";
             return true;
