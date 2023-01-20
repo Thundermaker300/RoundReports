@@ -27,33 +27,14 @@ namespace RoundReports
         public bool SendInConsole { get; set; } = true;
         [Description("If set to true, users with Do Not Track enabled will be excluded from all stats entirely. If set to false, they will be included with a removed name (including in round remarks). See the plugin's GitHub page for more information.")]
         public bool ExcludeDNTUsers { get; set; } = false;
-        [Description("If set to true, stats from tutorial users will be entirely ignored. Does not affect Serpent's Hand (if installed).")]
+        [Description("If set to true, stats from tutorial users will be entirely ignored. Does not affect plugin-based roles such as Serpent's Hand.")]
         public bool ExcludeTutorials { get; set; } = true;
-
-        [Description("Hint to show to a player when they gain points (MVP system).")]
-        public Hint MvpAddHint { get; set; } = new Hint
-        {
-            Content = "+{POINTS} points\nReason: {REASON}",
-            Duration = 2f,
-            Show = true,
-        };
-
-        [Description("Hint to show to a player when they lose points (MVP system).")]
-        public Hint MvpRemoveHint { get; set; } = new Hint
-        {
-            Content = "-{POINTS} points\nReason: {REASON}",
-            Duration = 2f,
-            Show = true,
-        };
 
         [Description("Broadcast(s) to show at the end of the round. A full list of arguments are available on the plugin's GitHub page. Set to [] (or set broadcast's show value to false) to disable. Additional broadcasts can be added and removed.")]
         public List<EBroadcast> EndingBroadcasts { get; set; } = new List<EBroadcast> { new("<b>{HUMANMVP}</b> was the human MVP of this round!", duration: 3), new("<b>{SCPMVP}</b> was the SCP MVP of this round!", duration: 3), new("View the end-of-round report on our Discord server!", duration: 3) };
 
         [Description("Name of the server, without any formatting tags, as it will be shown in the report.")]
         public string ServerName { get; set; } = string.Empty;
-
-        [Description("Settings for the Discord message.")]
-        public DiscordConfig DiscordSettings { get; set; } = new();
 
         [Description("Determines the format of timestamps.")]
         public string FullTimeFormat { get; set; } = "MMMM dd, yyyy hh:mm:ss tt";
@@ -62,5 +43,11 @@ namespace RoundReports
         public List<StatType> IgnoredStats { get; set; } = new();
         [Description("A list of players (by user id) who will be ignored from stats, regardless of their do not track setting. For single-player stats (eg. warhead button opener) and kill logs, they will be shown as a do not track player.")]
         public List<string> IgnoredUsers { get; set; } = new() { "12345@steam" };
+
+        [Description("Settings for the Discord message.")]
+        public DiscordConfig DiscordSettings { get; set; } = new();
+
+        [Description("Settings for the MVP system.")]
+        public MVPConfigs MvpSettings { get; set; } = new();
     }
 }

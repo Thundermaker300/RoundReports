@@ -28,6 +28,7 @@ namespace RoundReports
 {
     public class EventHandlers
     {
+        public MVPConfigs MvpSettings => MainPlugin.Singleton.Config.MvpSettings;
         public List<IReportStat> Holding { get; set; }
         public Dictionary<PointTeam, Dictionary<Player, int>> Points { get; set; } = new();
         public bool FirstEscape { get; set; } = false;
@@ -107,7 +108,7 @@ namespace RoundReports
         /// <param name="reason">Reason for adding.</param>
         public void AddPoints(Player plr, int amount, string reason = "Unknown")
         {
-            if (plr is null || plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
+            if (plr is null || plr.DoNotTrack || !MvpSettings.MvpEnabled || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
                 return;
 
             Log.Debug($"Adding {amount} points to {plr.Nickname}. {reason}");
@@ -117,6 +118,9 @@ namespace RoundReports
                 Points[PT][plr] += amount;
             else
                 Points[PT][plr] = amount;
+
+            if (Points[PT][plr] > MvpSettings.MaxPoints)
+                Points[PT][plr] = MvpSettings.MaxPoints;
 
             MVPStats logs = GetStat<MVPStats>();
             string str = MainPlugin.Translations.AddPointsLog
@@ -128,7 +132,7 @@ namespace RoundReports
 
             // Show hint
             Hint h = new();
-            h.CopyProperties(MainPlugin.Configs.MvpAddHint);
+            h.CopyProperties(MvpSettings.AddHint);
             h.Content = h.Content
                 .Replace("{POINTS}", amount.ToString())
                 .Replace("{REASON}", reason);
@@ -145,7 +149,7 @@ namespace RoundReports
         /// <param name="reason">Reason for removing.</param>
         public void RemovePoints(Player plr, int amount, string reason = "Unknown")
         {
-            if (plr is null || plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
+            if (plr is null || plr.DoNotTrack || !MvpSettings.MvpEnabled || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
                 return;
 
             Log.Debug($"Removing {amount} points from {plr.Nickname}. {reason}");
@@ -155,6 +159,9 @@ namespace RoundReports
                 Points[PT][plr] -= amount;
             else
                 Points[PT][plr] = 0 - amount;
+
+            if (Points[PT][plr] < MvpSettings.MinPoints)
+                Points[PT][plr] = MvpSettings.MinPoints;
 
             MVPStats logs = GetStat<MVPStats>();
             string str = MainPlugin.Translations.RemovePointsLog
@@ -166,7 +173,7 @@ namespace RoundReports
 
             // Show hint
             Hint h = new();
-            h.CopyProperties(MainPlugin.Configs.MvpRemoveHint);
+            h.CopyProperties(MvpSettings.RemoveHint);
             h.Content = h.Content
                 .Replace("{POINTS}", amount.ToString())
                 .Replace("{REASON}", reason);
@@ -307,23 +314,26 @@ namespace RoundReports
             Hold(stats);
 
             // Compile MVP info
-            var sortedHumanData = Points[PointTeam.Human].Where(data => data.Value > 0).OrderByDescending(data => data.Value);
-            var sortedSCPData = Points[PointTeam.SCP].Where(data => data.Value > 0).OrderByDescending(data => data.Value);
-            MVPStats MVPInfo = GetStat<MVPStats>();
+            if (MvpSettings.MvpEnabled)
+            {
+                var sortedHumanData = Points[PointTeam.Human].Where(data => data.Value > 0).OrderByDescending(data => data.Value);
+                var sortedSCPData = Points[PointTeam.SCP].Where(data => data.Value > 0).OrderByDescending(data => data.Value);
+                MVPStats MVPInfo = GetStat<MVPStats>();
 
-            if (sortedHumanData.Count() >= 1)
-            {
-                KeyValuePair<Player, int> mvp = sortedHumanData.First();
-                MVPInfo.HumanMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
+                if (sortedHumanData.Count() >= 1)
+                {
+                    KeyValuePair<Player, int> mvp = sortedHumanData.First();
+                    MVPInfo.HumanMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
+                }
+                if (sortedSCPData.Count() >= 1)
+                {
+                    KeyValuePair<Player, int> mvp = sortedSCPData.First();
+                    MVPInfo.SCPMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
+                }
+                MVPInfo.HumanPoints = sortedHumanData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
+                MVPInfo.SCPPoints = sortedSCPData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
+                Hold(MVPInfo);
             }
-            if (sortedSCPData.Count() >= 1)
-            {
-                KeyValuePair<Player, int> mvp = sortedSCPData.First();
-                MVPInfo.SCPMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
-            }
-            MVPInfo.HumanPoints = sortedHumanData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
-            MVPInfo.SCPPoints = sortedSCPData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
-            Hold(MVPInfo);
         }
 
         public void OnRestarting()

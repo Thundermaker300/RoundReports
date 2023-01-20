@@ -187,6 +187,12 @@ namespace RoundReports
             IOrderedEnumerable<IReportStat> stats = Stats.OrderBy(stat => stat.Order);
             foreach (IReportStat stat in stats)
             {
+                if (stat is MVPStats && !MainPlugin.Configs.MvpSettings.MvpEnabled)
+                {
+                    Log.Debug("Skipping MVPStats as it is disabled in the config.");
+                    continue;
+                }
+
                 try
                 {
                     Type type = stat.GetType();
