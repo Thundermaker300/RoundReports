@@ -83,6 +83,9 @@
     <Compile Include="Attributes\RuleAttribute.cs" />
     <Compile Include="Attributes\TranslationAttribute.cs" />
     <Compile Include="Commands\AddRemark.cs" />
+    <Compile Include="Commands\MvpCommand\Remove.cs" />
+    <Compile Include="Commands\MvpCommand\Add.cs" />
+    <Compile Include="Commands\MvpCommand\Mvp.cs" />
     <Compile Include="Commands\PauseReportCommand.cs" />
     <Compile Include="Attributes\HideIfDefaultAttribute.cs" />
     <Compile Include="DataStructures\FinalStats.cs" />
