@@ -7,13 +7,15 @@ using System;
 namespace RoundReports.Commands
 {
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    public class AddRemark : ICommand
+    public class AddRemark : ICommand, IUsageProvider
     {
         public string Command => "addremark";
 
         public string[] Aliases => new[] { "remark" };
 
         public string Description => "Adds a staff remark to the round remarks.";
+
+        public string[] Usage => new[] { "remark" };
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
