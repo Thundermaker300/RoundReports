@@ -31,7 +31,7 @@ namespace RoundReports
         [Description("Hint to show to a player when they lose points.")]
         public Hint RemoveHint { get; set; } = new Hint
         {
-            Content = "-{POINTS} points\nReason: {REASON}",
+            Content = "{POINTS} points\nReason: {REASON}",
             Duration = 3f,
             Show = true,
         };
