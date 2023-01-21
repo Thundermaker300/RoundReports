@@ -535,7 +535,7 @@ namespace RoundReports
                 // Killer points
                 if (ev.Player.Role.Side == ev.Attacker.Role.Side && ev.DamageHandler.Type != DamageType.Scp018)
                     RemovePoints(ev.Attacker, MvpSettings.Points.KillTeammate, MainPlugin.Translations.KilledTeammate); // Kill teammate
-                else if (GetTeam(ev.Player) == "SCPs")
+                else if (GetTeam(ev.Player) == "SCPs" && GetRole(ev.Player) != "Scp0492")
                     AddPoints(ev.Attacker, MvpSettings.Points.KillScp, MainPlugin.Translations.KilledSCP); // Kill SCP
                 else if (GetTeam(ev.Player) == "Scientists")
                     AddPoints(ev.Attacker, MvpSettings.Points.KillScientist, MainPlugin.Translations.KilledScientist); // Kill scientist
@@ -563,9 +563,9 @@ namespace RoundReports
 
             // Target Points
             if (ev.DamageHandler.Type is DamageType.Warhead or DamageType.Decontamination or DamageType.Tesla or DamageType.Crushed or DamageType.Falldown)
-                RemovePoints(ev.Player, ev.Player.IsScp ? MvpSettings.Points.ScpDiedDumb : MvpSettings.Points.DiedDumb, MainPlugin.Translations.Death); // Dumb causes
+                RemovePoints(ev.Player, ev.Player.IsScp && ev.Player.Role != RoleTypeId.Scp0492 ? MvpSettings.Points.ScpDiedDumb : MvpSettings.Points.DiedDumb, MainPlugin.Translations.Death); // Dumb causes
             else
-                RemovePoints(ev.Player, ev.Player.IsScp ? MvpSettings.Points.ScpDied : MvpSettings.Points.Died, MainPlugin.Translations.Death); // Other causes
+                RemovePoints(ev.Player, ev.Player.IsScp && ev.Player.Role != RoleTypeId.Scp0492 ? MvpSettings.Points.ScpDied : MvpSettings.Points.Died, MainPlugin.Translations.Death); // Other causes
         }
 
         public void OnDroppingItem(DroppingItemEventArgs ev)
