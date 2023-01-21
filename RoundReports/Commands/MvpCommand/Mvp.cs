@@ -8,6 +8,8 @@ namespace RoundReports.Commands.MvpCommand
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class Mvp : ParentCommand
     {
+        public Mvp() => LoadGeneratedCommands();
+
         public override string Command => "mvp";
 
         public override string[] Aliases => Array.Empty<string>();

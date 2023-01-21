@@ -44,7 +44,7 @@ namespace RoundReports.Commands.MvpCommand
             }
 
             string team = arguments.At(1).ToLower();
-            if (team is not "scp" or "human")
+            if (team is not "scp" && team is not "human")
             {
                 response = "Invalid team provided. Team must be 'scp' or 'human'.";
                 return false;
@@ -66,7 +66,7 @@ namespace RoundReports.Commands.MvpCommand
                 return false;
             }
 
-            string reason = string.Join(" ", arguments.Skip(2));
+            string reason = string.Join(" ", arguments.Skip(3));
             MainPlugin.Handlers.RemovePoints(player, amount, reason, pt);
 
             response = $"Removed {amount} MVP points from {player.Nickname}!";
