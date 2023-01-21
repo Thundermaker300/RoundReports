@@ -108,7 +108,7 @@ namespace RoundReports
         /// <param name="reason">Reason for removing.</param>
         public void IncrementPoints(Player plr, int amount, string reason = "Unknown", PointTeam? teamOverride = null, bool overrideRoleChecks = false)
         {
-            if (!MvpSettings.MvpEnabled || plr is null || plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
+            if (!MvpSettings.MvpEnabled || plr is null || plr.DoNotTrack || (overrideRoleChecks == false && (GetRole(plr) == "Tutorial" || plr.IsDead)) || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
                 return;
 
             if (amount == 0) return;

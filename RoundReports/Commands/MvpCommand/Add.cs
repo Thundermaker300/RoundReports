@@ -79,7 +79,7 @@ namespace RoundReports.Commands.MvpCommand
             };
 
             string reason = string.Join(" ", arguments.Skip(3));
-            MainPlugin.Handlers.IncrementPoints(player, amount, reason, pt);
+            MainPlugin.Handlers.IncrementPoints(player, amount, reason, pt, true);
 
             response = $"Added {amount} MVP points to {player.Nickname}!";
             return true;
