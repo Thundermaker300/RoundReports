@@ -72,8 +72,14 @@ namespace RoundReports.Commands.MvpCommand
                 return false;
             }
 
+            if (amount <= 0)
+            {
+                response = "Zero or less than zero points have been provided. Player's point values have not changed.";
+                return false;
+            };
+
             string reason = string.Join(" ", arguments.Skip(3));
-            MainPlugin.Handlers.AddPoints(player, amount, reason, pt);
+            MainPlugin.Handlers.IncrementPoints(player, amount, reason, pt);
 
             response = $"Added {amount} MVP points to {player.Nickname}!";
             return true;

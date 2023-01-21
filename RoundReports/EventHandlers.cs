@@ -101,76 +101,33 @@ namespace RoundReports
         }
 
         /// <summary>
-        /// Adds MVP points. Ignored if user: Is null, Is DNT, Is role Tutorial, IsDead, or is an ignored user.
+        /// Increments MVP points. Ignored if user: Is null, Is DNT, Is role Tutorial, IsDead, or is an ignored user.
         /// </summary>
         /// <param name="plr">Player.</param>
         /// <param name="amount">Amount of points.</param>
-        /// <param name="reason">Reason for adding.</param>
-        public void AddPoints(Player plr, int amount, string reason = "Unknown", PointTeam? teamOverride = null)
+        /// <param name="reason">Reason for removing.</param>
+        public void IncrementPoints(Player plr, int amount, string reason = "Unknown", PointTeam? teamOverride = null, bool overrideRoleChecks = false)
         {
-            if (plr is null || plr.DoNotTrack || !MvpSettings.MvpEnabled || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
+            if (!MvpSettings.MvpEnabled || plr is null || plr.DoNotTrack || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
                 return;
 
-            if (amount < 0) amount = -amount;
             if (amount == 0) return;
 
-            Log.Debug($"Adding {amount} points to {plr.Nickname}. {reason}");
+            Log.Debug($"Incrementing {amount} points to {plr.Nickname}. {reason}");
 
             PointTeam PT = teamOverride ?? (plr.IsScp ? PointTeam.SCP : PointTeam.Human);
             if (Points[PT].ContainsKey(plr))
                 Points[PT][plr] += amount;
             else
-                Points[PT][plr] = amount;
-
-            if (Points[PT][plr] > MvpSettings.MaxPoints)
-                Points[PT][plr] = MvpSettings.MaxPoints;
-
-            MVPStats logs = GetStat<MVPStats>();
-            string str = MainPlugin.Translations.AddPointsLog
-                .Replace("{PLAYER}", plr.Nickname)
-                .Replace("{ROLE}", GetRole(plr))
-                .Replace("{AMOUNT}", amount.ToString())
-                .Replace("{REASON}", reason);
-            logs.PointLogs.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] {str}");
-
-            // Show hint
-            Hint h = new();
-            h.CopyProperties(MvpSettings.AddHint);
-            h.Content = h.Content
-                .Replace("{POINTS}", amount.ToString())
-                .Replace("{REASON}", reason);
-            plr.ShowHint(h);
-
-            Hold(logs);
-        }
-
-        /// <summary>
-        /// Removes MVP points. Ignored if user: Is null, Is DNT, Is role Tutorial, IsDead, or is an ignored user.
-        /// </summary>
-        /// <param name="plr">Player.</param>
-        /// <param name="amount">Amount of points.</param>
-        /// <param name="reason">Reason for removing.</param>
-        public void RemovePoints(Player plr, int amount, string reason = "Unknown", PointTeam? teamOverride = null)
-        {
-            if (plr is null || plr.DoNotTrack || !MvpSettings.MvpEnabled || GetRole(plr) == "Tutorial" || plr.IsDead || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
-                return;
-
-            if (amount < 0) amount = -amount;
-            if (amount == 0) return;
-
-            Log.Debug($"Removing {amount} points from {plr.Nickname}. {reason}");
-
-            PointTeam PT = teamOverride ?? (plr.IsScp ? PointTeam.SCP : PointTeam.Human);
-            if (Points[PT].ContainsKey(plr))
-                Points[PT][plr] -= amount;
-            else
-                Points[PT][plr] = 0 - amount;
+                Points[PT][plr] = 0 + amount;
 
             if (Points[PT][plr] < MvpSettings.MinPoints)
                 Points[PT][plr] = MvpSettings.MinPoints;
+            else if (Points[PT][plr] > MvpSettings.MaxPoints)
+                Points[PT][plr] = MvpSettings.MaxPoints;
 
             MVPStats logs = GetStat<MVPStats>();
-            string str = MainPlugin.Translations.RemovePointsLog
+            string str = (amount > 0 ? MainPlugin.Translations.AddPointsLog : MainPlugin.Translations.RemovePointsLog)
                 .Replace("{PLAYER}", plr.Nickname)
                 .Replace("{ROLE}", GetRole(plr))
                 .Replace("{AMOUNT}", amount.ToString())
@@ -179,7 +136,7 @@ namespace RoundReports
 
             // Show hint
             Hint h = new();
-            h.CopyProperties(MvpSettings.RemoveHint);
+            h.CopyProperties(amount > 0 ? MvpSettings.AddHint : MvpSettings.RemoveHint);
             h.Content = h.Content
                 .Replace("{POINTS}", amount.ToString())
                 .Replace("{REASON}", reason);
@@ -534,13 +491,13 @@ namespace RoundReports
 
                 // Killer points
                 if (ev.Player.Role.Side == ev.Attacker.Role.Side && ev.DamageHandler.Type != DamageType.Scp018)
-                    RemovePoints(ev.Attacker, MvpSettings.Points.KillTeammate, MainPlugin.Translations.KilledTeammate); // Kill teammate
+                    IncrementPoints(ev.Attacker, MvpSettings.Points.KillTeammate, MainPlugin.Translations.KilledTeammate); // Kill teammate
                 else if (GetTeam(ev.Player) == "SCPs" && GetRole(ev.Player) != "Scp0492")
-                    AddPoints(ev.Attacker, MvpSettings.Points.KillScp, MainPlugin.Translations.KilledSCP); // Kill SCP
+                    IncrementPoints(ev.Attacker, MvpSettings.Points.KillScp, MainPlugin.Translations.KilledSCP); // Kill SCP
                 else if (GetTeam(ev.Player) == "Scientists")
-                    AddPoints(ev.Attacker, MvpSettings.Points.KillScientist, MainPlugin.Translations.KilledScientist); // Kill scientist
+                    IncrementPoints(ev.Attacker, MvpSettings.Points.KillScientist, MainPlugin.Translations.KilledScientist); // Kill scientist
                 else
-                    AddPoints(ev.Attacker, MvpSettings.Points.KillEnemy, MainPlugin.Translations.KilledEnemy); // Other kills
+                    IncrementPoints(ev.Attacker, MvpSettings.Points.KillEnemy, MainPlugin.Translations.KilledEnemy); // Other kills
 
                 // Grant points to SCP-079 if death in a locked down/blackout room
                 if (GetTeam(ev.Attacker) == "SCPs")
@@ -548,7 +505,7 @@ namespace RoundReports
                     foreach (Player player in Player.List)
                     {
                         if (player.Role is Scp079Role role && role.SubroutineModule.TryGetSubroutine(out Scp079RewardManager manager) && manager._markedRooms.ContainsKey(ev.Player.CurrentRoom.Identifier))
-                            AddPoints(player, MvpSettings.Points.Scp079AssistKill, MainPlugin.Translations.AssistKill);
+                            IncrementPoints(player, MvpSettings.Points.Scp079AssistKill, MainPlugin.Translations.AssistKill);
                     }
                 }
             }
@@ -563,9 +520,9 @@ namespace RoundReports
 
             // Target Points
             if (ev.DamageHandler.Type is DamageType.Warhead or DamageType.Decontamination or DamageType.Tesla or DamageType.Crushed or DamageType.Falldown)
-                RemovePoints(ev.Player, ev.Player.IsScp && ev.Player.Role != RoleTypeId.Scp0492 ? MvpSettings.Points.ScpDiedDumb : MvpSettings.Points.DiedDumb, MainPlugin.Translations.Death); // Dumb causes
+                IncrementPoints(ev.Player, ev.Player.IsScp && ev.Player.Role != RoleTypeId.Scp0492 ? MvpSettings.Points.ScpDiedDumb : MvpSettings.Points.DiedDumb, MainPlugin.Translations.Death); // Dumb causes
             else
-                RemovePoints(ev.Player, ev.Player.IsScp && ev.Player.Role != RoleTypeId.Scp0492 ? MvpSettings.Points.ScpDied : MvpSettings.Points.Died, MainPlugin.Translations.Death); // Other causes
+                IncrementPoints(ev.Player, ev.Player.IsScp && ev.Player.Role != RoleTypeId.Scp0492 ? MvpSettings.Points.ScpDied : MvpSettings.Points.Died, MainPlugin.Translations.Death); // Other causes
         }
 
         public void OnDroppingItem(DroppingItemEventArgs ev)
@@ -590,7 +547,7 @@ namespace RoundReports
         public void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Scp106)) return;
-            AddPoints(ev.Scp106, MvpSettings.Points.Scp106GrabPlayer, MainPlugin.Translations.GrabbedPlayer);
+            IncrementPoints(ev.Scp106, MvpSettings.Points.Scp106GrabPlayer, MainPlugin.Translations.GrabbedPlayer);
         }
 
         public void OnShooting(ShootingEventArgs ev)
@@ -612,7 +569,7 @@ namespace RoundReports
         public void OnScp079GainingLevel(GainingLevelEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
-            AddPoints(ev.Player, MvpSettings.Points.Scp079LeveledUp, MainPlugin.Translations.LeveledUp);
+            IncrementPoints(ev.Player, MvpSettings.Points.Scp079LeveledUp, MainPlugin.Translations.LeveledUp);
         }
 
         public void OnScp079InteractTesla(InteractingTeslaEventArgs ev)
@@ -622,7 +579,7 @@ namespace RoundReports
             {
                 if (ev.Tesla.IsPlayerInHurtRange(player))
                 {
-                    AddPoints(ev.Player, MvpSettings.Points.Scp079TeslaKill, MainPlugin.Translations.TeslaKill);
+                    IncrementPoints(ev.Player, MvpSettings.Points.Scp079TeslaKill, MainPlugin.Translations.TeslaKill);
                     break;
                 }
             }
@@ -641,7 +598,7 @@ namespace RoundReports
                 if (ev.Door.IsGate) pts = MvpSettings.Points.Scp079OpenGate;
                 else pts = MvpSettings.Points.Scp079OpenKeycardDoor;
             };
-            AddPoints(ev.Player, pts, MainPlugin.Translations.OpenedDoor);
+            IncrementPoints(ev.Player, pts, MainPlugin.Translations.OpenedDoor);
             Interactions++;
         }
 
@@ -819,7 +776,7 @@ namespace RoundReports
             if (ev.ShouldSever)
             {
                 stats.SeveredHands++;
-                RemovePoints(ev.Player, MvpSettings.Points.Took3Candies, MainPlugin.Translations.Took3Candies);
+                IncrementPoints(ev.Player, MvpSettings.Points.Took3Candies, MainPlugin.Translations.Took3Candies);
             }
 
             // Candies Taken
@@ -844,7 +801,7 @@ namespace RoundReports
                     .Replace("{SECOND}", Round.ElapsedTime.Seconds.ToString());
                 MainPlugin.Reporter.AddRemark(escapeText);
             }
-            AddPoints(ev.Player, MvpSettings.Points.Escaped, MainPlugin.Translations.Escaped);
+            IncrementPoints(ev.Player, MvpSettings.Points.Escaped, MainPlugin.Translations.Escaped);
         }
 
         public void OnActivatingScp914(ActivatingEventArgs ev)
@@ -916,7 +873,7 @@ namespace RoundReports
             if (stats.ButtonUnlocker == null)
             {
                 stats.ButtonUnlocker = ev.Player;
-                AddPoints(ev.Player, MvpSettings.Points.OpenWarheadPanel, MainPlugin.Translations.OpenedWarheadPanel);
+                IncrementPoints(ev.Player, MvpSettings.Points.OpenWarheadPanel, MainPlugin.Translations.OpenedWarheadPanel);
             }
             Hold(stats);
             Interactions++;

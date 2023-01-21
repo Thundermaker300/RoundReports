@@ -72,8 +72,10 @@ namespace RoundReports.Commands.MvpCommand
                 return false;
             }
 
+            if (amount > 0) amount = -amount;
+
             string reason = string.Join(" ", arguments.Skip(3));
-            MainPlugin.Handlers.RemovePoints(player, amount, reason, pt);
+            MainPlugin.Handlers.IncrementPoints(player, amount, reason, pt);
 
             response = $"Removed {amount} MVP points from {player.Nickname}!";
             return true;
