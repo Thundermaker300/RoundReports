@@ -66,6 +66,12 @@ namespace RoundReports.Commands.MvpCommand
                 return false;
             }
 
+            if (player.DoNotTrack)
+            {
+                response = "This player has do not track enabled; they cannot be MVPs.";
+                return false;
+            }
+
             string reason = string.Join(" ", arguments.Skip(3));
             MainPlugin.Handlers.AddPoints(player, amount, reason, pt);
 
