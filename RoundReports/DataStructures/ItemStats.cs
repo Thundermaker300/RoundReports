@@ -1,14 +1,17 @@
-﻿using Exiled.API.Features;
-using Exiled.API.Features.Pools;
-using System.Collections.Generic;
-
-namespace RoundReports
+﻿namespace RoundReports
 {
+#pragma warning disable SA1600
+    using System.Collections.Generic;
+    using Exiled.API.Features;
+    using Exiled.API.Features.Pools;
+
     public class ItemStats : IReportStat
     {
         [Translation(nameof(Translation.ItemStatsTitle))]
         public string Title => "Item Statistics";
+
         public int Order => 5;
+
         [Header(nameof(Translation.ItemTransfersTitle))]
         [Translation(nameof(Translation.TotalDrops))]
         [BindStat(StatType.TotalDrops)]
@@ -64,4 +67,5 @@ namespace RoundReports
             DictionaryPool<Player, int>.Pool.Return(PlayerDrops);
         }
     }
+#pragma warning restore SA1600
 }

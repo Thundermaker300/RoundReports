@@ -1,12 +1,14 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RoundReports
+﻿namespace RoundReports
 {
+#pragma warning disable SA1402
+#pragma warning disable SA1649
+#pragma warning disable SA1600
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
+
+    /// <summary>
+    /// Internal Pastee web request structure.
+    /// </summary>
     public class PasteEntry
     {
         [JsonProperty("description")]
@@ -19,6 +21,9 @@ namespace RoundReports
         public List<PasteSection> Sections { get; set; }
     }
 
+    /// <summary>
+    /// Internal Pastee section structure.
+    /// </summary>
     public class PasteSection
     {
         [JsonProperty("name")]
@@ -31,6 +36,9 @@ namespace RoundReports
         public string Contents { get; set; }
     }
 
+    /// <summary>
+    /// Internal response from Pastee.
+    /// </summary>
     public class PasteResponse
     {
         [JsonProperty("id")]
@@ -42,4 +50,7 @@ namespace RoundReports
         [JsonProperty("success")]
         public bool Success { get; set; }
     }
+#pragma warning restore SA1402
+#pragma warning restore SA1649
+#pragma warning restore SA1600
 }

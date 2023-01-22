@@ -1,10 +1,16 @@
-﻿using System;
-
-namespace RoundReports
+﻿namespace RoundReports
 {
+    using System;
+
+    /// <summary>
+    /// Determines rules that can be placed on stats.
+    /// </summary>
     [Flags]
     public enum Rule
     {
+        /// <summary>
+        /// No rules.
+        /// </summary>
         None = 0,
 
         /// <summary>

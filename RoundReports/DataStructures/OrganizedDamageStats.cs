@@ -1,14 +1,16 @@
-﻿using Exiled.API.Enums;
-using Exiled.API.Features;
-using Exiled.API.Features.Pools;
-using System.Collections.Generic;
-
-namespace RoundReports
+﻿namespace RoundReports
 {
+#pragma warning disable SA1600
+    using System.Collections.Generic;
+    using Exiled.API.Enums;
+    using Exiled.API.Features;
+    using Exiled.API.Features.Pools;
+
     public class OrganizedDamageStats : IReportStat
     {
         [Translation(nameof(Translation.OrganizedDamageTitle))]
         public string Title => "Damage Dealt";
+
         public int Order => 51;
 
         [Translation(nameof(Translation.TotalDamage))]
@@ -39,4 +41,5 @@ namespace RoundReports
             DictionaryPool<DamageType, int>.Pool.Return(DamageByType);
         }
     }
+#pragma warning restore SA1600
 }

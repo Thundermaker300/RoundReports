@@ -1,14 +1,17 @@
-﻿using Exiled.API.Features;
-using Exiled.API.Features.Pools;
-using System.Collections.Generic;
-
-namespace RoundReports
+﻿namespace RoundReports
 {
+#pragma warning disable SA1600
+    using System.Collections.Generic;
+    using Exiled.API.Features;
+    using Exiled.API.Features.Pools;
+
     public class MVPStats : IReportStat
     {
         [Translation(nameof(Translation.MVPTitle))]
         public string Title => "MVPs";
+
         public int Order => 1;
+
         [Translation(nameof(Translation.HumanMVP))]
         [BindStat(StatType.HumanMVP)]
         public string HumanMVP { get; set; }
@@ -16,6 +19,7 @@ namespace RoundReports
         [Translation(nameof(Translation.SCPMVP))]
         [BindStat(StatType.SCPMVP)]
         public string SCPMVP { get; set; }
+
         [Translation(nameof(Translation.HumanPoints))]
         [BindStat(StatType.HumanPoints)]
         public Dictionary<Player, int> HumanPoints { get; set; } // Assigned in code
@@ -39,4 +43,5 @@ namespace RoundReports
             ListPool<string>.Pool.Return(PointLogs);
         }
     }
+#pragma warning restore SA1600
 }

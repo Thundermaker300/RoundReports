@@ -1,22 +1,30 @@
-﻿using CommandSystem;
-using System;
-using Exiled.Permissions.Extensions;
-using Exiled.API.Features;
-using System.Linq;
-
-namespace RoundReports.Commands.MvpCommand
+﻿namespace RoundReports.Commands.MvpCommand
 {
+    using System;
+    using System.Linq;
+    using CommandSystem;
+    using Exiled.API.Features;
+    using Exiled.Permissions.Extensions;
+
+    /// <summary>
+    /// Command to remove MVP points.
+    /// </summary>
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class Remove : ICommand, IUsageProvider
     {
+        /// <inheritdoc/>
         public string Command => "remove";
 
+        /// <inheritdoc/>
         public string[] Aliases => new[] { "rm" };
 
+        /// <inheritdoc/>
         public string Description => "Removes points from the provided player.";
 
+        /// <inheritdoc/>
         public string[] Usage => new[] { "players", "SCP/Human", "amount", "reason" };
 
+        /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             if (!sender.CheckPermission("rr.mvp.remove"))

@@ -1,10 +1,14 @@
-﻿using Exiled.API.Features;
-using PlayerRoles;
-using System.Collections.Generic;
-using System.ComponentModel;
-
-namespace RoundReports
+﻿namespace RoundReports
 {
+#pragma warning disable SA1600
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using Exiled.API.Features;
+    using PlayerRoles;
+
+    /// <summary>
+    /// Configuration class for MVP settings.
+    /// </summary>
     public class MVPConfigs
     {
         [Description("Whether or not the MVP system is enabled.")]
@@ -39,4 +43,5 @@ namespace RoundReports
         [Description("Determines the amount of points that are gained/lost for a certain interaction.")]
         public MVPPointsConfigs Points { get; set; } = new();
     }
+#pragma warning restore SA1600
 }

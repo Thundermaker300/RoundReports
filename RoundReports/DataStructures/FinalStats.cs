@@ -1,14 +1,16 @@
-﻿using Exiled.API.Features;
-using Exiled.API.Features.Pools;
-using System;
-using System.Collections.Generic;
-
-namespace RoundReports
+﻿namespace RoundReports
 {
+#pragma warning disable SA1600
+    using System;
+    using System.Collections.Generic;
+    using Exiled.API.Features;
+    using Exiled.API.Features.Pools;
+
     public class FinalStats : IReportStat
     {
         [Translation(nameof(Translation.FinalStatsTitle))]
         public string Title => "Final Statistics";
+
         public int Order => 2;
 
         [Header(nameof(Translation.EndofRoundSummary))]
@@ -134,4 +136,5 @@ namespace RoundReports
             DictionaryPool<Player, int>.Pool.Return(PlayerDoorsClosed);
         }
     }
+#pragma warning restore SA1600
 }

@@ -1,45 +1,90 @@
-﻿using Exiled.API.Interfaces;
-using Exiled.API.Features;
-
-using ServerEvents = Exiled.Events.Handlers.Server;
-using PlayerEvents = Exiled.Events.Handlers.Player;
-using Scp079Events = Exiled.Events.Handlers.Scp079;
-using Scp096Events = Exiled.Events.Handlers.Scp096;
-using Scp106Events = Exiled.Events.Handlers.Scp106;
-using Scp173Events = Exiled.Events.Handlers.Scp173;
-using Scp330Events = Exiled.Events.Handlers.Scp330;
-using Scp914Events = Exiled.Events.Handlers.Scp914;
-using Scp939Events = Exiled.Events.Handlers.Scp939;
-using WarheadEvents = Exiled.Events.Handlers.Warhead;
-using System;
-using Exiled.Loader;
-using System.Reflection;
-using Exiled.API.Enums;
-
-namespace RoundReports
+﻿namespace RoundReports
 {
+    using System;
+    using System.Reflection;
+
+    using Exiled.API.Enums;
+    using Exiled.API.Features;
+    using Exiled.API.Interfaces;
+    using Exiled.Loader;
+
+    using PlayerEvents = Exiled.Events.Handlers.Player;
+    using Scp079Events = Exiled.Events.Handlers.Scp079;
+    using Scp096Events = Exiled.Events.Handlers.Scp096;
+    using Scp106Events = Exiled.Events.Handlers.Scp106;
+    using Scp173Events = Exiled.Events.Handlers.Scp173;
+    using Scp330Events = Exiled.Events.Handlers.Scp330;
+    using Scp914Events = Exiled.Events.Handlers.Scp914;
+    using Scp939Events = Exiled.Events.Handlers.Scp939;
+    using ServerEvents = Exiled.Events.Handlers.Server;
+    using WarheadEvents = Exiled.Events.Handlers.Warhead;
+
+    /// <inheritdoc/>
     public class MainPlugin : Plugin<Config, Translation>
     {
-        public override string Name => "RoundReports";
-        public override string Author => "Thunder";
-        public override Version Version => new(0, 6, 0);
-        public override Version RequiredExiledVersion => new(6, 0, 0);
-        public override PluginPriority Priority => PluginPriority.Last;
+        /// <summary>
+        /// Gets the Serpent's Hand <see cref="Assembly"/>, if it is installed.
+        /// </summary>
+        public static Assembly SerpentsHandAssembly { get; private set; }
 
+        /// <summary>
+        /// Gets the UIU <see cref="Assembly"/>, if it is installed.
+        /// </summary>
+        public static Assembly UIURescueSquadAssembly { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the currently active reporter.
+        /// </summary>
         public static Reporter Reporter { get; set; }
+
+        /// <summary>
+        /// Gets the <see cref="MainPlugin"/> singleton.
+        /// </summary>
         public static MainPlugin Singleton { get; private set; }
+
+        /// <summary>
+        /// Gets the <see cref="EventHandlers"/> singleton.
+        /// </summary>
         public static EventHandlers Handlers { get; private set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not the round is currently restarting.
+        /// </summary>
         public static bool IsRestarting { get; set; } = false;
 
-        public static Assembly SerpentsHandAssembly;
-        public static Assembly UIURescueSquadAssembly;
-
+        /// <summary>
+        /// Gets the <see cref="Translation"/> singleton.
+        /// </summary>
         public static Translation Translations => Singleton.Translation;
+
+        /// <summary>
+        /// Gets the <see cref="Config"/> singleton.
+        /// </summary>
         public static Config Configs => Singleton.Config;
 
+        /// <inheritdoc/>
+        public override string Name => "RoundReports";
+
+        /// <inheritdoc/>
+        public override string Author => "Thunder";
+
+        /// <inheritdoc/>
+        public override Version Version => new(0, 6, 0);
+
+        /// <inheritdoc/>
+        public override Version RequiredExiledVersion => new(6, 0, 0);
+
+        /// <inheritdoc/>
+        public override PluginPriority Priority => PluginPriority.Last;
+
+        /// <summary>
+        /// Checks if a stat is enabled.
+        /// </summary>
+        /// <param name="type">The stat to check.</param>
+        /// <returns>If it is enabled.</returns>
         public static bool Check(StatType type) => !Configs.IgnoredStats.Contains(type);
 
+        /// <inheritdoc/>
         public override void OnEnabled()
         {
             if (string.IsNullOrEmpty(Config.PasteKey))
@@ -47,6 +92,7 @@ namespace RoundReports
                 Log.Warn("Missing paste.ee key! RoundReports cannot function without a valid paste.ee key.");
                 return;
             }
+
             if (string.IsNullOrEmpty(Config.DiscordWebhook))
             {
                 if (!Config.SendInConsole)
@@ -54,8 +100,10 @@ namespace RoundReports
                     Log.Warn("Missing Discord webhook, and console sending is disabled. RoundReports cannot function without a Discord webhook and with console sending disabled.");
                     return;
                 }
+
                 Log.Warn($"Missing Discord webhook! RoundReports will still function, but only users with access to the server console/server logs will receive the report link.");
             }
+
             Singleton = this;
             Handlers = new EventHandlers();
 
@@ -86,7 +134,6 @@ namespace RoundReports
             PlayerEvents.UnlockingGenerator += Handlers.OnUnlockingGenerator;
 
             Scp079Events.GainingLevel += Handlers.OnScp079GainingLevel;
-            //Scp079Events.LockingDown += Handlers.OnScp079Lockdown;
             Scp079Events.TriggeringDoor += Handlers.OnScp079TriggeringDoor;
             Scp079Events.InteractingTesla += Handlers.OnScp079InteractTesla;
 
@@ -130,10 +177,10 @@ namespace RoundReports
                 }
             }
 
-
             base.OnEnabled();
         }
 
+        /// <inheritdoc/>
         public override void OnDisabled()
         {
             // Handle reporter
@@ -163,7 +210,6 @@ namespace RoundReports
             PlayerEvents.UnlockingGenerator -= Handlers.OnUnlockingGenerator;
 
             Scp079Events.GainingLevel -= Handlers.OnScp079GainingLevel;
-            //Scp079Events.LockingDown -= Handlers.OnScp079Lockdown;
             Scp079Events.TriggeringDoor -= Handlers.OnScp079TriggeringDoor;
             Scp079Events.InteractingTesla -= Handlers.OnScp079InteractTesla;
 
@@ -190,8 +236,7 @@ namespace RoundReports
             WarheadEvents.Starting -= Handlers.OnWarheadStarting;
             WarheadEvents.Detonated -= Handlers.OnWarheadDetonated;
 
-            if (Reporter is not null)
-                Reporter.Kill();
+            Reporter?.Kill();
 
             Singleton = null;
             Handlers = null;

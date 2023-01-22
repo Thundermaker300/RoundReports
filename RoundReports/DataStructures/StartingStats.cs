@@ -1,14 +1,16 @@
-﻿using Exiled.API.Features.Pools;
-using PlayerRoles;
-using System;
-using System.Collections.Generic;
-
-namespace RoundReports
+﻿namespace RoundReports
 {
+#pragma warning disable SA1600
+    using System;
+    using System.Collections.Generic;
+    using Exiled.API.Features.Pools;
+    using PlayerRoles;
+
     public class StartingStats : IReportStat
     {
         [Translation(nameof(Translation.StartingTitle))]
         public string Title => "Starting Statistics";
+
         public int Order => 3;
 
         [Translation(nameof(Translation.StartTime))]
@@ -50,4 +52,5 @@ namespace RoundReports
             ListPool<string>.Pool.Return(Players);
         }
     }
+#pragma warning restore SA1600
 }

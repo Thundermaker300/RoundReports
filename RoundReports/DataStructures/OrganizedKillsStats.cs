@@ -1,14 +1,16 @@
-﻿using Exiled.API.Enums;
-using Exiled.API.Features;
-using Exiled.API.Features.Pools;
-using System.Collections.Generic;
-
-namespace RoundReports
+﻿namespace RoundReports
 {
+#pragma warning disable SA1600
+    using System.Collections.Generic;
+    using Exiled.API.Enums;
+    using Exiled.API.Features;
+    using Exiled.API.Features.Pools;
+
     public class OrganizedKillsStats : IReportStat
     {
         [Translation(nameof(Translation.OrganizedKillsTitle))]
         public string Title => "Kills";
+
         public int Order => 50;
 
         [Translation(nameof(Translation.KillsByPlayer))]
@@ -43,4 +45,5 @@ namespace RoundReports
             DictionaryPool<ZoneType, int>.Pool.Return(KillsByZone);
         }
     }
+#pragma warning restore SA1600
 }

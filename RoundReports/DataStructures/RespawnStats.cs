@@ -1,12 +1,14 @@
-﻿using Exiled.API.Features.Pools;
-using System.Collections.Generic;
-
-namespace RoundReports
+﻿namespace RoundReports
 {
+#pragma warning disable SA1600
+    using System.Collections.Generic;
+    using Exiled.API.Features.Pools;
+
     public class RespawnStats : IReportStat
     {
         [Translation(nameof(Translation.RespawnTitle))]
         public string Title => "Respawn Statistics";
+
         public int Order => 6;
 
         [Rule(Rule.CommaSeparatedList)]
@@ -34,4 +36,5 @@ namespace RoundReports
             ListPool<string>.Pool.Return(Respawns);
         }
     }
+#pragma warning restore SA1600
 }

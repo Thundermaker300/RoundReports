@@ -1,7 +1,11 @@
 ﻿namespace RoundReports
 {
+    /// <summary>
+    /// Determines each stat type.
+    /// </summary>
     public enum StatType
     {
+#pragma warning disable SA1602
         // Start Stats
         StartTime,
         StartClassD,
@@ -110,5 +114,7 @@
         PlayerDamage,
         DamageByPlayer,
         DamageByType,
+
+#pragma warning restore SA1602
     }
 }

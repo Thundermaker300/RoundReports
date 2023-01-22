@@ -1,75 +1,79 @@
-﻿using Exiled.API.Features;
-using MEC;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Exiled.API.Enums;
-using Exiled.API.Extensions;
-using Scp914;
-
-using Scp914Object = Exiled.API.Features.Scp914;
-using UnityEngine;
-using Exiled.Events.EventArgs.Server;
-using Exiled.Events.EventArgs.Player;
-using PlayerRoles;
-using Exiled.Events.EventArgs.Scp079;
-using Exiled.Events.EventArgs.Scp096;
-using Exiled.Events.EventArgs.Scp106;
-using Exiled.Events.EventArgs.Scp173;
-using Exiled.Events.EventArgs.Scp330;
-using Exiled.Events.EventArgs.Scp914;
-using Exiled.Events.EventArgs.Warhead;
-using Exiled.Events.EventArgs.Scp939;
-using Exiled.API.Features.Roles;
-using PlayerRoles.PlayableScps.Scp079.Rewards;
-using Exiled.API.Features.Pools;
-
-namespace RoundReports
+﻿namespace RoundReports
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Exiled.API.Enums;
+    using Exiled.API.Extensions;
+    using Exiled.API.Features;
+    using Exiled.API.Features.Pools;
+    using Exiled.API.Features.Roles;
+    using Exiled.Events.EventArgs.Player;
+    using Exiled.Events.EventArgs.Scp079;
+    using Exiled.Events.EventArgs.Scp096;
+    using Exiled.Events.EventArgs.Scp106;
+    using Exiled.Events.EventArgs.Scp173;
+    using Exiled.Events.EventArgs.Scp330;
+    using Exiled.Events.EventArgs.Scp914;
+    using Exiled.Events.EventArgs.Scp939;
+    using Exiled.Events.EventArgs.Server;
+    using Exiled.Events.EventArgs.Warhead;
+    using MEC;
+    using PlayerRoles;
+    using PlayerRoles.PlayableScps.Scp079.Rewards;
+    using Scp914;
+    using UnityEngine;
+    using Scp914Object = Exiled.API.Features.Scp914;
+
+    /// <summary>
+    /// Class responsible for responding to all game events.
+    /// </summary>
     public class EventHandlers
     {
+        /// <summary>
+        /// Gets the MVP configs.
+        /// </summary>
         public MVPConfigs MvpSettings => MainPlugin.Singleton.Config.MvpSettings;
+
+        /// <summary>
+        /// Gets or sets stats currently being held.
+        /// </summary>
         public List<IReportStat> Holding { get; set; }
+
+        /// <summary>
+        /// Gets or sets a <see cref="Dictionary{TKey, TValue}"/> of <see cref="PointTeam"/> and players' points in each.
+        /// </summary>
         public Dictionary<PointTeam, Dictionary<Player, int>> Points { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not the first escape has occurred.
+        /// </summary>
         public bool FirstEscape { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not the first SCP-914 upgrade has occurred.
+        /// </summary>
         public bool FirstUpgrade { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not the first kill has occurred.
+        /// </summary>
         public bool FirstKill { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not the first door has opened.
+        /// </summary>
         public bool FirstDoor { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets the total amount of interactions that have occurred.
+        /// </summary>
         public int Interactions { get; set; } = 0;
-
-        /// <summary>
-        /// Holds a stat, preserving its data until the end of the round. Wipes any previously stored data.
-        /// </summary>
-        /// <typeparam name="T">Stat to hold.</typeparam>
-        /// <param name="stat">The data of the stat.</param>
-        public void Hold<T>(T stat)
-            where T: class, IReportStat
-        {
-            Log.Debug($"Updating stat: {typeof(T).Name}");
-            Holding.RemoveAll(r => r.GetType() == typeof(T));
-            Holding.Add(stat);
-        }
-
-        /// <summary>
-        /// Obtains a stat, setting it up if it doesn't already exist.
-        /// </summary>
-        /// <typeparam name="T">Stat to obtain.</typeparam>
-        /// <returns>Stat.</returns>
-        public T GetStat<T>()
-            where T: class, IReportStat, new()
-        {
-            if (Holding.FirstOrDefault(r => r.GetType() == typeof(T)) is not T value)
-            {
-                value = new T();
-                value.Setup();
-            }
-            return value;
-        }
 
         /// <summary>
         /// Returns string of role. Will return SerpentsHand or UIU for respective roles.
         /// </summary>
-        /// <param name="player">Player</param>
+        /// <param name="player">Player.</param>
         /// <returns>Player's role.</returns>
         public static string GetRole(Player player)
         {
@@ -88,7 +92,7 @@ namespace RoundReports
         /// </summary>
         /// <param name="player">Player.</param>
         /// <returns>Player's team.</returns>
-        public string GetTeam(Player player)
+        public static string GetTeam(Player player)
         {
             if (player is null)
                 return Team.Dead.ToString();
@@ -101,11 +105,71 @@ namespace RoundReports
         }
 
         /// <summary>
+        /// Returns if stats related to a player should be recorded.
+        /// </summary>
+        /// <param name="ply">The player to check.</param>
+        /// <returns>Boolean.</returns>
+        public static bool ECheck(Player ply)
+        {
+            if (ply is null)
+                return false;
+
+            bool flag = true;
+            if (ply is not null)
+            {
+                if (GetRole(ply) == "Tutorial" && MainPlugin.Configs.ExcludeTutorials)
+                    return false; // Exit func early (we don't want to show hidden message for tutorial exclusion)
+            }
+
+            if (ply.DoNotTrack && MainPlugin.Configs.ExcludeDNTUsers)
+                flag = false;
+
+            if (MainPlugin.Configs.IgnoredUsers.Contains(ply.UserId))
+                flag = false;
+
+            if (!flag && MainPlugin.Reporter is not null)
+                MainPlugin.Reporter.AtLeastOneHidden = true;
+            return flag;
+        }
+
+        /// <summary>
+        /// Holds a stat, preserving its data until the end of the round. Wipes any previously stored data.
+        /// </summary>
+        /// <typeparam name="T">Stat to hold.</typeparam>
+        /// <param name="stat">The data of the stat.</param>
+        public void Hold<T>(T stat)
+            where T : class, IReportStat
+        {
+            Log.Debug($"Updating stat: {typeof(T).Name}");
+            Holding.RemoveAll(r => r.GetType() == typeof(T));
+            Holding.Add(stat);
+        }
+
+        /// <summary>
+        /// Obtains a stat, setting it up if it doesn't already exist.
+        /// </summary>
+        /// <typeparam name="T">Stat to obtain.</typeparam>
+        /// <returns>Stat.</returns>
+        public T GetStat<T>()
+            where T : class, IReportStat, new()
+        {
+            if (Holding.FirstOrDefault(r => r.GetType() == typeof(T)) is not T value)
+            {
+                value = new T();
+                value.Setup();
+            }
+
+            return value;
+        }
+
+        /// <summary>
         /// Increments MVP points. Ignored if user: Is null, Is DNT, Is role Tutorial, IsDead, or is an ignored user.
         /// </summary>
         /// <param name="plr">Player.</param>
         /// <param name="amount">Amount of points.</param>
         /// <param name="reason">Reason for removing.</param>
+        /// <param name="teamOverride">Override the <see cref="PointTeam"/> being used.</param>
+        /// <param name="overrideRoleChecks">Override dead/tutorial checks when adding points.</param>
         public void IncrementPoints(Player plr, int amount, string reason = "Unknown", PointTeam? teamOverride = null, bool overrideRoleChecks = false)
         {
             if (!MvpSettings.MvpEnabled || plr is null || plr.DoNotTrack || (overrideRoleChecks == false && (GetRole(plr) == "Tutorial" || plr.IsDead)) || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
@@ -115,7 +179,11 @@ namespace RoundReports
 
             Log.Debug($"Incrementing {amount} points to {plr.Nickname}. {reason}");
 
+            // Sorry stylecop, you could not pay me $500 to name a variable "pT".
+#pragma warning disable SA1312 // Variable names should begin with lower-case letter
             PointTeam PT = teamOverride ?? (plr.IsScp ? PointTeam.SCP : PointTeam.Human);
+#pragma warning restore SA1312 // Variable names should begin with lower-case letter
+
             if (Points[PT].ContainsKey(plr))
                 Points[PT][plr] += amount;
             else
@@ -145,6 +213,9 @@ namespace RoundReports
             Hold(logs);
         }
 
+        /// <summary>
+        /// Called when the round is waiting for connections.
+        /// </summary>
         public void OnWaitingForPlayers()
         {
             FirstEscape = false;
@@ -183,45 +254,8 @@ namespace RoundReports
         }
 
         /// <summary>
-        /// This is to account for plugins such as SCPSwap, as well as SCP deaths early on, etc.
+        /// Called when the round starts.
         /// </summary>
-        /// <returns>Coroutine.</returns>
-        private IEnumerator<float> RecordSCPsStats()
-        {
-            yield return Timing.WaitForSeconds(60f);
-            StartingStats stats = GetStat<StartingStats>();
-            List<RoleTypeId> SCPs = Player.Get(Team.SCPs).Where(plr => ECheck(plr)).Select(player => player.Role.Type).ToList();
-            SCPs.Sort();
-            stats.SCPs = SCPs;
-            Hold(stats);
-        }
-
-        /// <summary>
-        /// Returns if stats related to a player should be recorded.
-        /// </summary>
-        /// <param name="ply">The player to check.</param>
-        /// <returns>Boolean.</returns>
-        public static bool ECheck(Player ply)
-        {
-            if (ply is null)
-                return false;
-
-            bool flag = true;
-            if (ply is not null)
-            if (GetRole(ply) == "Tutorial" && MainPlugin.Configs.ExcludeTutorials)
-                return false; // Exit func early (we don't want to show hidden message for tutorial exclusion)
-
-            if (ply.DoNotTrack && MainPlugin.Configs.ExcludeDNTUsers)
-                flag = false;
-
-            if (MainPlugin.Configs.IgnoredUsers.Contains(ply.UserId))
-                flag = false;
-
-            if (!flag && MainPlugin.Reporter is not null)
-                MainPlugin.Reporter.AtLeastOneHidden = true;
-            return flag;
-        }
-
         public void OnRoundStarted()
         {
             Timing.CallDelayed(.5f, () =>
@@ -234,7 +268,7 @@ namespace RoundReports
                     Scientists = Player.Get(RoleTypeId.Scientist).Count(player => ECheck(player)),
                     StartTime = DateTime.Now,
                     PlayersAtStart = Player.List.Where(r => !r.IsDead).Count(player => ECheck(player)),
-                    Players = ListPool<string>.Pool.Get()
+                    Players = ListPool<string>.Pool.Get(),
                 };
                 foreach (Player player in Player.List.Where(player => ECheck(player) && !player.IsDead))
                     stats.Players.Add($"{Reporter.GetDisplay(player, typeof(Player))} [{GetRole(player)}]");
@@ -244,61 +278,8 @@ namespace RoundReports
         }
 
         /// <summary>
-        /// Fills out <see cref="FinalStats"/>.
+        /// Called when the round restarts.
         /// </summary>
-        /// <param name="leadingTeam"></param>
-        private void FillOutFinalStats(LeadingTeam leadingTeam = LeadingTeam.Draw)
-        {
-            // Fill out door destroyed stat
-            FinalStats stats = GetStat<FinalStats>();
-            stats.DoorsDestroyed = Door.List.Count(d => d.IsBroken);
-
-            // Fill out final stats
-            stats.EndTime = DateTime.Now;
-            stats.WinningTeam = leadingTeam switch
-            {
-                LeadingTeam.Anomalies => MainPlugin.Translations.ScpTeam,
-                LeadingTeam.ChaosInsurgency => MainPlugin.Translations.InsurgencyTeam,
-                LeadingTeam.FacilityForces => MainPlugin.Translations.MtfTeam,
-                LeadingTeam.Draw => MainPlugin.Translations.Stalemate,
-                _ => MainPlugin.Translations.Unknown
-            };
-            stats.TotalInteractions = Interactions;
-
-            // Set Leading Team
-            if (MainPlugin.Reporter is not null)
-                MainPlugin.Reporter.WinTeam = leadingTeam;
-
-            // Finish with final stats
-            stats.RoundTime = Round.ElapsedTime;
-            foreach (Player player in Player.Get(plr => plr.IsAlive && ECheck(plr)))
-                stats.SurvivingPlayers.Add($"{Reporter.GetDisplay(player, typeof(Player))} ({GetRole(player)})");
-
-            Hold(stats);
-
-            // Compile MVP info
-            if (MvpSettings.MvpEnabled)
-            {
-                var sortedHumanData = Points[PointTeam.Human].Where(data => data.Value > 0).OrderByDescending(data => data.Value);
-                var sortedSCPData = Points[PointTeam.SCP].Where(data => data.Value > 0).OrderByDescending(data => data.Value);
-                MVPStats MVPInfo = GetStat<MVPStats>();
-
-                if (sortedHumanData.Count() >= 1)
-                {
-                    KeyValuePair<Player, int> mvp = sortedHumanData.First();
-                    MVPInfo.HumanMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
-                }
-                if (sortedSCPData.Count() >= 1)
-                {
-                    KeyValuePair<Player, int> mvp = sortedSCPData.First();
-                    MVPInfo.SCPMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
-                }
-                MVPInfo.HumanPoints = sortedHumanData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
-                MVPInfo.SCPPoints = sortedSCPData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
-                Hold(MVPInfo);
-            }
-        }
-
         public void OnRestarting()
         {
             MainPlugin.IsRestarting = true;
@@ -309,6 +290,10 @@ namespace RoundReports
             }
         }
 
+        /// <summary>
+        /// Called when the round ends.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnRoundEnded(RoundEndedEventArgs ev)
         {
             if (MainPlugin.Reporter is not null && !MainPlugin.Reporter.HasSent)
@@ -319,33 +304,9 @@ namespace RoundReports
         }
 
         /// <summary>
-        /// Returns if SerpentsHand is ready to spawn.
+        /// Called when a team respawns.
         /// </summary>
-        /// <returns>SH spawnable.</returns>
-        // Credit to RespawnTimer for this method
-        private bool IsSerpentsHandTeamSpawnable()
-        {
-            if (MainPlugin.SerpentsHandAssembly == null)
-                return false;
-
-            Type type = MainPlugin.SerpentsHandAssembly.GetType("SerpentsHand");
-            object singleton = type.GetField("Singleton").GetValue(null);
-            return (bool)type.GetField("IsSpawnable").GetValue(singleton);
-        }
-
-        /// <summary>
-        /// Returns if UIU is ready to spawn.
-        /// </summary>
-        /// <returns>UIU spawnable.</returns>
-        // and this method
-        private bool IsUIUTeamSpawnable()
-        {
-            if (MainPlugin.UIURescueSquadAssembly == null)
-                return false;
-
-            return (bool)MainPlugin.UIURescueSquadAssembly.GetType("UIURescueSquad.EventHandlers")?.GetField("IsSpawnable").GetValue(null);
-        }
-
+        /// <param name="ev">Event arguments.</param>
         public void OnRespawningTeam(RespawningTeamEventArgs ev)
         {
             if (!Round.InProgress || MainPlugin.IsRestarting) return;
@@ -370,6 +331,10 @@ namespace RoundReports
             Hold(stats);
         }
 
+        /// <summary>
+        /// Called when a player leaves.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnLeft(LeftEventArgs ev)
         {
             if (!Reporter.NameStore.ContainsKey(ev.Player))
@@ -381,15 +346,23 @@ namespace RoundReports
             }
         }
 
+        /// <summary>
+        /// Called when a player spawns.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnSpawned(SpawnedEventArgs ev)
         {
-            if (!Round.InProgress || MainPlugin.IsRestarting || Round.ElapsedTime.TotalMinutes <= 0.5 || !ECheck(ev.Player) || GetTeam(ev.Player) is not ("SH" or "UIU" or "FacilityForces" or "ChaosInsurgency")) return;
+            if (!Round.InProgress || MainPlugin.IsRestarting || Round.ElapsedTime.TotalMinutes <= 0.5 || !ECheck(ev.Player) || GetTeam(ev.Player) is not("SH" or "UIU" or "FacilityForces" or "ChaosInsurgency")) return;
             RespawnStats stats = GetStat<RespawnStats>();
             stats.TotalRespawned++;
             stats.Respawns.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player, typeof(Player))).Replace("{ROLE}", GetRole(ev.Player)));
             Hold(stats);
         }
 
+        /// <summary>
+        /// Called when a player takes damage.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnHurting(HurtingEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || MainPlugin.IsRestarting) return;
@@ -423,6 +396,10 @@ namespace RoundReports
             Hold(stats);
         }
 
+        /// <summary>
+        /// Called when a player dies (rip).
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnDying(DyingEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || MainPlugin.IsRestarting) return;
@@ -435,6 +412,7 @@ namespace RoundReports
                 string killerRole = GetRole(ev.Attacker);
                 string dyingRole = GetRole(ev.Player);
                 killStats.PlayerKills.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] {Reporter.GetDisplay(ev.Attacker, typeof(Player))} [{killerRole}] killed {Reporter.GetDisplay(ev.Player, typeof(Player))} [{dyingRole}]");
+
                 // Kill by player
                 if (!killStats.KillsByPlayer.ContainsKey(ev.Attacker))
                     killStats.KillsByPlayer.Add(ev.Attacker, 1);
@@ -450,9 +428,13 @@ namespace RoundReports
                 // Role kills
                 stats.TotalKills++;
                 if (GetRole(ev.Attacker) == "UIU")
+                {
                     stats.UIUKills++;
+                }
                 else if (GetRole(ev.Attacker) == "SerpentsHand")
+                {
                     stats.SerpentsHandKills++;
+                }
                 else
                 {
                     switch (ev.Attacker.Role.Team)
@@ -477,6 +459,7 @@ namespace RoundReports
                             break;
                     }
                 }
+
                 // First kill check
                 if (!FirstKill && MainPlugin.Reporter is not null && ECheck(ev.Attacker))
                 {
@@ -525,6 +508,10 @@ namespace RoundReports
                 IncrementPoints(ev.Player, ev.Player.IsScp && ev.Player.Role != RoleTypeId.Scp0492 ? MvpSettings.Points.ScpDied : MvpSettings.Points.Died, MainPlugin.Translations.Death); // Other causes
         }
 
+        /// <summary>
+        /// Called when an item is dropped.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnDroppingItem(DroppingItemEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player))
@@ -544,12 +531,20 @@ namespace RoundReports
             Hold(stats);
         }
 
+        /// <summary>
+        /// Called when a player enters the pocket dimension.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Scp106)) return;
             IncrementPoints(ev.Scp106, MvpSettings.Points.Scp106GrabPlayer, MainPlugin.Translations.GrabbedPlayer);
         }
 
+        /// <summary>
+        /// Called when a shot is fired.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnShooting(ShootingEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
@@ -558,6 +553,10 @@ namespace RoundReports
             Hold(stats);
         }
 
+        /// <summary>
+        /// Called when a weapon is reloaded.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnReloadingWeapon(ReloadingWeaponEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
@@ -566,12 +565,20 @@ namespace RoundReports
             Hold(stats);
         }
 
+        /// <summary>
+        /// Called when SCP-079 gains a level.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnScp079GainingLevel(GainingLevelEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             IncrementPoints(ev.Player, MvpSettings.Points.Scp079LeveledUp, MainPlugin.Translations.LeveledUp);
         }
 
+        /// <summary>
+        /// Called when SCP-079 interacts with a tesla.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnScp079InteractTesla(InteractingTeslaEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
@@ -583,25 +590,35 @@ namespace RoundReports
                     break;
                 }
             }
+
             Interactions++;
         }
 
+        /// <summary>
+        /// Called when SCP-079 interacts with a door.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnScp079TriggeringDoor(TriggeringDoorEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || ev.Door.IsOpen || !ECheck(ev.Player)) return;
             if (Player.List.Count(plr => plr != ev.Player && GetTeam(plr) is "SCPs" && Vector3.Distance(ev.Door.Transform.position, plr.GameObject.transform.position) <= 20) == 0)
                 return;
-            
+
             int pts = 0;
             if (ev.Door.IsKeycardDoor)
             {
                 if (ev.Door.IsGate) pts = MvpSettings.Points.Scp079OpenGate;
                 else pts = MvpSettings.Points.Scp079OpenKeycardDoor;
-            };
+            }
+
             IncrementPoints(ev.Player, pts, MainPlugin.Translations.OpenedDoor);
             Interactions++;
         }
 
+        /// <summary>
+        /// Called when SCP-096 charges.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnScp096Charge(ChargingEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
@@ -610,6 +627,10 @@ namespace RoundReports
             Hold(stats);
         }
 
+        /// <summary>
+        /// Called when SCP-096 enrages.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnScp096Enrage(EnragingEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
@@ -618,6 +639,10 @@ namespace RoundReports
             Hold(stats);
         }
 
+        /// <summary>
+        /// Called when SCP-106 teleports.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnScp106Teleport(TeleportingEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
@@ -626,6 +651,10 @@ namespace RoundReports
             Hold(stats);
         }
 
+        /// <summary>
+        /// Called when SCP-173 blinks.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnScp173Blink(BlinkingEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
@@ -634,6 +663,10 @@ namespace RoundReports
             Hold(stats);
         }
 
+        /// <summary>
+        /// Called when SCP-173 places tantrum.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnScp173Tantrum(PlacingTantrumEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
@@ -642,6 +675,10 @@ namespace RoundReports
             Hold(stats);
         }
 
+        /// <summary>
+        /// Called when SCP-939 lunges.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnScp939Lunge(LungingEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
@@ -650,6 +687,10 @@ namespace RoundReports
             Hold(stats);
         }
 
+        /// <summary>
+        /// Called when SCP-939 places an amnestic cloud.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnScp939Cloud(PlacingAmnesticCloudEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
@@ -658,6 +699,10 @@ namespace RoundReports
             Hold(stats);
         }
 
+        /// <summary>
+        /// Called when an item is used.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnUsedItem(UsedItemEventArgs ev)
         {
             if (!Round.InProgress || !ECheck(ev.Player)) return;
@@ -679,6 +724,7 @@ namespace RoundReports
                         stats.Scp1853Uses++;
                         break;
                 }
+
                 Hold(stats);
             }
             else
@@ -699,10 +745,15 @@ namespace RoundReports
                         stats.SCP500sConsumed++;
                         break;
                 }
+
                 Hold(stats);
             }
         }
 
+        /// <summary>
+        /// Called when a player interacts with a door.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnInteractingDoor(InteractingDoorEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
@@ -734,28 +785,42 @@ namespace RoundReports
                     MainPlugin.Reporter.AddRemark(remarkText);
                 }
             }
+
             if (ev.Door.IsKeycardDoor)
             {
                 ItemStats itemStats = GetStat<ItemStats>();
                 itemStats.KeycardScans++;
                 Hold(itemStats);
             }
+
             Hold(stats);
             Interactions++;
         }
 
+        /// <summary>
+        /// Called when a player interacts with an elevator.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnInteractingElevator(InteractingElevatorEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             Interactions++;
         }
 
+        /// <summary>
+        /// Called when a player interacts with a locker.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnInteractingLocker(InteractingLockerEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             Interactions++;
         }
 
+        /// <summary>
+        /// Called when a player interacts with SCP-330.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnInteractingScp330(InteractingScp330EventArgs ev)
         {
             if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
@@ -788,6 +853,10 @@ namespace RoundReports
             Interactions++;
         }
 
+        /// <summary>
+        /// Called when a player escapes.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnEscaping(EscapingEventArgs ev)
         {
             if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
@@ -801,9 +870,14 @@ namespace RoundReports
                     .Replace("{SECOND}", Round.ElapsedTime.Seconds.ToString());
                 MainPlugin.Reporter.AddRemark(escapeText);
             }
+
             IncrementPoints(ev.Player, MvpSettings.Points.Escaped, MainPlugin.Translations.Escaped);
         }
 
+        /// <summary>
+        /// Called when a player activates SCP-914.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnActivatingScp914(ActivatingEventArgs ev)
         {
             if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
@@ -813,6 +887,7 @@ namespace RoundReports
                 stats.FirstActivation = DateTime.Now;
                 stats.FirstActivator = ev.Player;
             }
+
             stats.TotalActivations++;
             if (!stats.Activations.ContainsKey(Scp914Object.KnobStatus))
                 stats.Activations.Add(Scp914Object.KnobStatus, 1);
@@ -823,9 +898,168 @@ namespace RoundReports
             Interactions++;
         }
 
+        /// <summary>
+        /// Called when a player modified SCP-914's knob setting.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
         public void OnChangingKnobSetting(ChangingKnobSettingEventArgs ev)
         {
             Interactions++;
+        }
+
+        /// <summary>
+        /// Called when a <see cref="Exiled.API.Features.Pickups.Pickup"/> is upgraded in SCP-914.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
+        public void On914UpgradingPickup(UpgradingPickupEventArgs ev)
+        {
+            if (!ev.IsAllowed || !Round.InProgress) return;
+            UpgradeItemLog(ev.Pickup.Type, ev.KnobSetting);
+        }
+
+        /// <summary>
+        /// Called when an inventory item is upgraded in SCP-914.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
+        public void On914UpgradingInventoryItem(UpgradingInventoryItemEventArgs ev)
+        {
+            if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
+            UpgradeItemLog(ev.Item.Type, ev.KnobSetting);
+        }
+
+        /// <summary>
+        /// Called when a generator is unlocked.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
+        public void OnUnlockingGenerator(UnlockingGeneratorEventArgs ev)
+        {
+            if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
+            IncrementPoints(ev.Player, MvpSettings.Points.UnlockGenerator, MainPlugin.Translations.UnlockedGenerator);
+        }
+
+        /// <summary>
+        /// Called when the warhead panel button is unlocked.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
+        public void OnActivatingWarheadPanel(ActivatingWarheadPanelEventArgs ev)
+        {
+            if (!ev.IsAllowed || !Round.InProgress) return;
+            FinalStats stats = GetStat<FinalStats>();
+            stats.ButtonUnlocked = true;
+            if (stats.ButtonUnlocker == null)
+            {
+                stats.ButtonUnlocker = ev.Player;
+                IncrementPoints(ev.Player, MvpSettings.Points.OpenWarheadPanel, MainPlugin.Translations.OpenedWarheadPanel);
+            }
+
+            Hold(stats);
+            Interactions++;
+        }
+
+        /// <summary>
+        /// Called when the warhead starts.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
+        public void OnWarheadStarting(StartingEventArgs ev)
+        {
+            if (!ev.IsAllowed || !Round.InProgress) return;
+            FinalStats stats = GetStat<FinalStats>();
+            stats.FirstActivator ??= ev.Player;
+            Hold(stats);
+            Interactions++;
+        }
+
+        /// <summary>
+        /// Called when the warhead is detonated.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
+        public void OnWarheadDetonated()
+        {
+            if (!Round.InProgress) return;
+            FinalStats stats = GetStat<FinalStats>();
+            if (!stats.Detonated)
+            {
+                stats.Detonated = true;
+                stats.DetonationTime = DateTime.Now;
+            }
+
+            Hold(stats);
+        }
+
+        /// <summary>
+        /// This is to account for plugins such as SCPSwap, as well as SCP deaths early on, etc.
+        /// </summary>
+        /// <returns>Coroutine.</returns>
+        private IEnumerator<float> RecordSCPsStats()
+        {
+            yield return Timing.WaitForSeconds(60f);
+            StartingStats stats = GetStat<StartingStats>();
+#pragma warning disable SA1312 // Variable names should begin with lower-case letter
+            List<RoleTypeId> SCPs = Player.Get(Team.SCPs).Where(ECheck).Select(player => player.Role.Type).ToList();
+#pragma warning restore SA1312 // Variable names should begin with lower-case letter
+            SCPs.Sort();
+            stats.SCPs = SCPs;
+            Hold(stats);
+        }
+
+        /// <summary>
+        /// Fills out <see cref="FinalStats"/>.
+        /// </summary>
+        /// <param name="leadingTeam">The winning team of the round.</param>
+        private void FillOutFinalStats(LeadingTeam leadingTeam = LeadingTeam.Draw)
+        {
+            // Fill out door destroyed stat
+            FinalStats stats = GetStat<FinalStats>();
+            stats.DoorsDestroyed = Door.List.Count(d => d.IsBroken);
+
+            // Fill out final stats
+            stats.EndTime = DateTime.Now;
+            stats.WinningTeam = leadingTeam switch
+            {
+                LeadingTeam.Anomalies => MainPlugin.Translations.ScpTeam,
+                LeadingTeam.ChaosInsurgency => MainPlugin.Translations.InsurgencyTeam,
+                LeadingTeam.FacilityForces => MainPlugin.Translations.MtfTeam,
+                LeadingTeam.Draw => MainPlugin.Translations.Stalemate,
+                _ => MainPlugin.Translations.Unknown
+            };
+            stats.TotalInteractions = Interactions;
+
+            // Set Leading Team
+            if (MainPlugin.Reporter is not null)
+                MainPlugin.Reporter.WinTeam = leadingTeam;
+
+            // Finish with final stats
+            stats.RoundTime = Round.ElapsedTime;
+            foreach (Player player in Player.Get(plr => plr.IsAlive && ECheck(plr)))
+                stats.SurvivingPlayers.Add($"{Reporter.GetDisplay(player, typeof(Player))} ({GetRole(player)})");
+
+            Hold(stats);
+
+            // Compile MVP info
+            if (MvpSettings.MvpEnabled)
+            {
+                var sortedHumanData = Points[PointTeam.Human].Where(data => data.Value > 0).OrderByDescending(data => data.Value);
+                var sortedSCPData = Points[PointTeam.SCP].Where(data => data.Value > 0).OrderByDescending(data => data.Value);
+#pragma warning disable SA1312 // Variable names should begin with lower-case letter
+                MVPStats MVPInfo = GetStat<MVPStats>();
+#pragma warning restore SA1312 // Variable names should begin with lower-case letter
+
+                if (sortedHumanData.Count() >= 1)
+                {
+                    KeyValuePair<Player, int> mvp = sortedHumanData.First();
+                    MVPInfo.HumanMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
+                }
+
+                if (sortedSCPData.Count() >= 1)
+                {
+                    KeyValuePair<Player, int> mvp = sortedSCPData.First();
+                    MVPInfo.SCPMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
+                }
+
+                MVPInfo.HumanPoints = sortedHumanData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
+                MVPInfo.SCPPoints = sortedSCPData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
+                Hold(MVPInfo);
+            }
         }
 
         private void UpgradeItemLog(ItemType type, Scp914KnobSetting mode)
@@ -840,6 +1074,7 @@ namespace RoundReports
                     .Replace("{MODE}", mode.ToString());
                 MainPlugin.Reporter.AddRemark(upgradeText);
             }
+
             if (type.IsKeycard())
                 stats.KeycardUpgrades++;
             else if (type.IsWeapon(false))
@@ -853,57 +1088,32 @@ namespace RoundReports
             Hold(stats);
         }
 
-        public void On914UpgradingPickup(UpgradingPickupEventArgs ev)
+        /// <summary>
+        /// Returns if SerpentsHand is ready to spawn.
+        /// </summary>
+        /// <returns>SH spawnable.</returns>
+        // Credit to RespawnTimer for this method
+        private bool IsSerpentsHandTeamSpawnable()
         {
-            if (!ev.IsAllowed || !Round.InProgress) return;
-            UpgradeItemLog(ev.Pickup.Type, ev.KnobSetting);
+            if (MainPlugin.SerpentsHandAssembly == null)
+                return false;
+
+            Type type = MainPlugin.SerpentsHandAssembly.GetType("SerpentsHand");
+            object singleton = type.GetField("Singleton").GetValue(null);
+            return (bool)type.GetField("IsSpawnable").GetValue(singleton);
         }
 
-        public void On914UpgradingInventoryItem(UpgradingInventoryItemEventArgs ev)
+        /// <summary>
+        /// Returns if UIU is ready to spawn.
+        /// </summary>
+        /// <returns>UIU spawnable.</returns>
+        // and this method
+        private bool IsUIUTeamSpawnable()
         {
-            if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
-            UpgradeItemLog(ev.Item.Type, ev.KnobSetting);
-        }
+            if (MainPlugin.UIURescueSquadAssembly == null)
+                return false;
 
-        public void OnUnlockingGenerator(UnlockingGeneratorEventArgs ev)
-        {
-            if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
-            IncrementPoints(ev.Player, MvpSettings.Points.UnlockGenerator, MainPlugin.Translations.UnlockedGenerator);
-        }
-
-        public void OnActivatingWarheadPanel(ActivatingWarheadPanelEventArgs ev)
-        {
-            if (!ev.IsAllowed || !Round.InProgress) return;
-            FinalStats stats = GetStat<FinalStats>();
-            stats.ButtonUnlocked = true;
-            if (stats.ButtonUnlocker == null)
-            {
-                stats.ButtonUnlocker = ev.Player;
-                IncrementPoints(ev.Player, MvpSettings.Points.OpenWarheadPanel, MainPlugin.Translations.OpenedWarheadPanel);
-            }
-            Hold(stats);
-            Interactions++;
-        }
-
-        public void OnWarheadStarting(StartingEventArgs ev)
-        {
-            if (!ev.IsAllowed || !Round.InProgress) return;
-            FinalStats stats = GetStat<FinalStats>();
-            stats.FirstActivator ??= ev.Player;
-            Hold(stats);
-            Interactions++;
-        }
-
-        public void OnWarheadDetonated()
-        {
-            if (!Round.InProgress) return;
-            FinalStats stats = GetStat<FinalStats>();
-            if (!stats.Detonated)
-            {
-                stats.Detonated = true;
-                stats.DetonationTime = DateTime.Now;
-            }
-            Hold(stats);
+            return (bool)MainPlugin.UIURescueSquadAssembly.GetType("UIURescueSquad.EventHandlers")?.GetField("IsSpawnable").GetValue(null);
         }
     }
 }

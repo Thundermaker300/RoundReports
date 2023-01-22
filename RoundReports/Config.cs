@@ -1,12 +1,14 @@
-﻿using Exiled.API.Features;
-using Exiled.API.Interfaces;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using EBroadcast = Exiled.API.Features.Broadcast;
-
-namespace RoundReports
+﻿namespace RoundReports
 {
+#pragma warning disable SA1600 // Elements should be documented
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using Exiled.API.Interfaces;
+    using EBroadcast = Exiled.API.Features.Broadcast;
+
+    /// <summary>
+    /// Defines configuration for the Round Reports plugin.
+    /// </summary>
     public class Config : IConfig
     {
         [Description("Whether or not the plugin is active.")]
@@ -16,17 +18,20 @@ namespace RoundReports
         public bool Debug { get; set; } = false;
 
         [Description("Your Paste.ee key. Get this from https://paste.ee/account/api after creating a paste.ee account. The plugin cannot function without a valid Pastee key!")]
-        public string PasteKey { get; set; } = "";
+        public string PasteKey { get; set; } = string.Empty;
 
         [Description("Time until reports expire. Valid values: Never, 1H, 12H, 1D, 3D, 7D, 14D, 1M, 2M, 3M, 6M, 1Y, 2Y")]
         public string ExpiryTime { get; set; } = "1M";
 
         [Description("Provide a Discord webhook to send reports to.")]
         public string DiscordWebhook { get; set; } = string.Empty;
+
         [Description("Send report links in server console when compiled?")]
         public bool SendInConsole { get; set; } = true;
+
         [Description("If set to true, users with Do Not Track enabled will be excluded from all stats entirely. If set to false, they will be included with a removed name (including in round remarks). See the plugin's GitHub page for more information.")]
         public bool ExcludeDNTUsers { get; set; } = false;
+
         [Description("If set to true, stats from tutorial users will be entirely ignored. Does not affect plugin-based roles such as Serpent's Hand.")]
         public bool ExcludeTutorials { get; set; } = true;
 
@@ -38,9 +43,12 @@ namespace RoundReports
 
         [Description("Determines the format of timestamps.")]
         public string FullTimeFormat { get; set; } = "MMMM dd, yyyy hh:mm:ss tt";
+
         public string ShortTimeFormat { get; set; } = "HH:mm:ss";
+
         [Description("Determine which statistics are NOT included in the report. Some stats will only be shown if applicable (eg. Serpent's Hand kills will only show if the server has Serpent's Hand installed).")]
         public List<StatType> IgnoredStats { get; set; } = new();
+
         [Description("A list of players (by user id) who will be ignored from stats, regardless of their do not track setting. For single-player stats (eg. warhead button opener) and kill logs, they will be shown as a do not track player.")]
         public List<string> IgnoredUsers { get; set; } = new() { "12345@steam" };
 
@@ -49,5 +57,6 @@ namespace RoundReports
 
         [Description("Settings for the MVP system.")]
         public MVPConfigs MvpSettings { get; set; } = new();
+#pragma warning restore SA1600 // Elements should be documented
     }
 }

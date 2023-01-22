@@ -1,16 +1,18 @@
-﻿using Exiled.API.Features;
-using Exiled.API.Features.Pools;
-using InventorySystem.Items.Usables.Scp330;
-using Scp914;
-using System;
-using System.Collections.Generic;
-
-namespace RoundReports
+﻿namespace RoundReports
 {
+#pragma warning disable SA1600
+    using System;
+    using System.Collections.Generic;
+    using Exiled.API.Features;
+    using Exiled.API.Features.Pools;
+    using InventorySystem.Items.Usables.Scp330;
+    using Scp914;
+
     public class SCPStats : IReportStat
     {
         [Translation(nameof(Translation.ScpTitle))]
         public string Title => "SCP Statistics";
+
         public int Order => 7;
 
         [HideIfDefault]
@@ -146,4 +148,5 @@ namespace RoundReports
             DictionaryPool<ItemType, int>.Pool.Return(Upgrades);
         }
     }
+#pragma warning restore SA1600
 }

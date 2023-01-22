@@ -1,22 +1,30 @@
-﻿using CommandSystem;
-using System;
-using Exiled.Permissions.Extensions;
-using Exiled.API.Features;
-using System.Linq;
-
-namespace RoundReports.Commands.MvpCommand
+﻿namespace RoundReports.Commands.MvpCommand
 {
+    using System;
+    using System.Linq;
+    using CommandSystem;
+    using Exiled.API.Features;
+    using Exiled.Permissions.Extensions;
+
+    /// <summary>
+    /// Command to add MVP points.
+    /// </summary>
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class Add : ICommand, IUsageProvider
     {
+        /// <inheritdoc/>
         public string Command => "add";
 
+        /// <inheritdoc/>
         public string[] Aliases => new[] { "a" };
 
+        /// <inheritdoc/>
         public string Description => "Adds points to the provided player.";
 
+        /// <inheritdoc/>
         public string[] Usage => new[] { "players", "SCP/Human", "amount", "reason" };
 
+        /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             if (!sender.CheckPermission("rr.mvp.add"))
@@ -76,7 +84,7 @@ namespace RoundReports.Commands.MvpCommand
             {
                 response = "Zero or less than zero points have been provided. Player's point values have not changed.";
                 return false;
-            };
+            }
 
             string reason = string.Join(" ", arguments.Skip(3));
             MainPlugin.Handlers.IncrementPoints(player, amount, reason, pt, true);
