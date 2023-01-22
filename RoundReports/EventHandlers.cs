@@ -865,6 +865,12 @@ namespace RoundReports
             UpgradeItemLog(ev.Item.Type, ev.KnobSetting);
         }
 
+        public void OnUnlockingGenerator(UnlockingGeneratorEventArgs ev)
+        {
+            if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
+            IncrementPoints(ev.Player, MvpSettings.Points.UnlockGenerator, MainPlugin.Translations.UnlockedGenerator);
+        }
+
         public void OnActivatingWarheadPanel(ActivatingWarheadPanelEventArgs ev)
         {
             if (!ev.IsAllowed || !Round.InProgress) return;

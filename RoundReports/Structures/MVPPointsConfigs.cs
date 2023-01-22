@@ -10,6 +10,7 @@ namespace RoundReports
         public int KillEnemy { get; set; } = 2;
         public int KillScientist { get; set; } = 3;
         public int OpenWarheadPanel { get; set; } = 2;
+        public int UnlockGenerator { get; set; } = 1;
         public int Escaped { get; set; } = 5;
         public int Scp079LeveledUp { get; set; } = 5;
         public int Scp079TeslaKill { get; set; } = 5;

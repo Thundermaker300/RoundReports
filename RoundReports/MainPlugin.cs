@@ -83,6 +83,7 @@ namespace RoundReports
 
             PlayerEvents.Shooting += Handlers.OnShooting;
             PlayerEvents.ReloadingWeapon += Handlers.OnReloadingWeapon;
+            PlayerEvents.UnlockingGenerator += Handlers.OnUnlockingGenerator;
 
             Scp079Events.GainingLevel += Handlers.OnScp079GainingLevel;
             //Scp079Events.LockingDown += Handlers.OnScp079Lockdown;
@@ -159,6 +160,7 @@ namespace RoundReports
 
             PlayerEvents.Shooting -= Handlers.OnShooting;
             PlayerEvents.ReloadingWeapon -= Handlers.OnReloadingWeapon;
+            PlayerEvents.UnlockingGenerator -= Handlers.OnUnlockingGenerator;
 
             Scp079Events.GainingLevel -= Handlers.OnScp079GainingLevel;
             //Scp079Events.LockingDown -= Handlers.OnScp079Lockdown;
