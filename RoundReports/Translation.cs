@@ -182,6 +182,7 @@ namespace RoundReports
         public string KilledEnemy { get; set; } = "Killed Enemy";
         public string Escaped { get; set; } = "Escaped";
         public string OpenedWarheadPanel { get; set; } = "Opened Warhead Panel";
+        public string UnlockedGenerator { get; set; } = "Unlocked Generator";
         public string GrabbedPlayer { get; set; } = "Grabbed Player";
         public string LeveledUp { get; set; } = "Leveled Up";
         public string AssistKill { get; set; } = "Assist Kill";
