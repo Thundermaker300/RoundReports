@@ -26,6 +26,8 @@ namespace RoundReports
         public bool HasSent { get; private set; }
         public LeadingTeam WinTeam { get; set; } = LeadingTeam.Draw;
         public string Link { get; set; } = string.Empty;
+        public string UploadTime { get; set; } = string.Empty;
+        public string ExpireTime { get; set; } = string.Empty;
         private List<string> Remarks { get; set; }
         private PasteEntry ReportData;
         public static string DoNotTrackText => MainPlugin.Translations.DoNotTrack;
@@ -340,6 +342,8 @@ namespace RoundReports
                 else
                 {
                     Link = response.Link;
+                    UploadTime = $"<t:{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}:D>";
+                    ExpireTime = StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime) == 0 ? MainPlugin.Translations.Never : $"<t:{DateTimeOffset.UtcNow.AddSeconds(StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime)).ToUnixTimeSeconds()}:D>";
                     DiscordConfig config = MainPlugin.Configs.DiscordSettings;
 
                     if (MainPlugin.Singleton.Config.SendInConsole)
@@ -349,6 +353,26 @@ namespace RoundReports
                     {
                         Log.Debug("Sending report to Discord.");
                         Log.Debug("Building webhook information.");
+
+                        // Process Fields
+                        List<EmbedField> fields = ListPool<EmbedField>.Pool.Get();
+
+                        if (config.Embed.Enabled)
+                        {
+                            foreach (EmbedField field in config.Embed.Fields)
+                            {
+                                EmbedField newField = new()
+                                {
+                                    Name = ProcessReportArgs(field.Name),
+                                    Value = ProcessReportArgs(field.Value),
+                                    Inline = field.Inline
+                                };
+
+                                fields.Add(newField);
+                            }
+                        }
+
+                        // Setup and send webhook
                         DiscordHook hookData = new()
                         {
                             Username = ProcessReportArgs(config.Username ?? "Round Reports"),
@@ -370,21 +394,7 @@ namespace RoundReports
                                         _ => 10197915,
                                     } : config.Embed.CustomColor,
                                     Description = ProcessReportArgs(config.Embed.Description),
-                                    Fields = new()
-                                    {
-                                        new()
-                                        {
-                                            Name = MainPlugin.Translations.PostDate,
-                                            Value = $"<t:{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}:D>",
-                                            Inline = true
-                                        },
-                                        new()
-                                        {
-                                            Name = MainPlugin.Translations.ExpireDate,
-                                            Value = StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime) == 0 ? MainPlugin.Translations.Never : $"<t:{DateTimeOffset.UtcNow.AddSeconds(StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime)).ToUnixTimeSeconds()}:D>",
-                                            Inline = true,
-                                        }
-                                    },
+                                    Fields = fields.Count > 0 ? fields : null,
                                     Footer = new()
                                     {
                                         Text = ProcessReportArgs(config.Embed.Footer),
@@ -399,12 +409,16 @@ namespace RoundReports
                         yield return Timing.WaitUntilDone(discordWWW.SendWebRequest());
 
                         if (discordWWW.isHttpError || discordWWW.isNetworkError)
+                        {
                             Log.Warn($"Error when attempting to send report to discord log: {discordWWW.error}");
+                        }
                         else
                         {
                             if (MainPlugin.Singleton.Config.SendInConsole)
                                 Log.Info("Report sent to Discord successfully.");
                         }
+
+                        ListPool<EmbedField>.Pool.Return(fields);
                     }
 
                     // Broadcast
@@ -582,6 +596,8 @@ namespace RoundReports
             .Replace("{TOTAL914ACTIVATIONS}", GetStat<SCPStats>().TotalActivations.ToString())
             .Replace("{TOTALITEMUPGRADES}", GetStat<SCPStats>().TotalItemUpgrades.ToString())
             .Replace("{TOTALINTERACTIONS}", GetStat<FinalStats>().TotalInteractions.ToString())
-            .Replace("{REPORTLINK}", Link);
+            .Replace("{REPORTLINK}", Link)
+            .Replace("{POSTDATE}", UploadTime)
+            .Replace("{EXPIREDATE}", ExpireTime);
     }
 }

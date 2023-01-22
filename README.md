@@ -79,6 +79,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | DoorsOpened           | Yes                         | The total amount of open door interactions.                                             |
 | Drops                 |                             | Each item type and the amount of times it's been dropped.                               |
 | EndTime               |                             | The end time of the round.                                                              |
+| ExpireDate*           |                             | The date that the report will expire, in Discord time formatting.                       |
 | FirearmUpgrades       |                             | The total amount of times a firearm was upgraded.                                       |
 | First330Use           |                             | The time in the round the first SCP-330 candy was obtained.                             |
 | First330User          | Yes                         | The name of the player who used SCP-330 first.                                          |
@@ -103,8 +104,9 @@ MVP is calculated by granting players points for specific actions. These points 
 | PlayerDrops           |                             | Each player and the amount of items they've dropped.                                    |
 | PlayerKills           |                             | Each player and the amount of players they've killed.                                   |
 | PointLogs             |                             | A log for each time points are added or removed.                                        |
+| PostDate*             |                             | The date that the report was posted, in Discord time formatting.                        |
 | Respawns              |                             | Each respawn that occurs.                                                               |
-| ReportLink*           | Yes                         | Link to the report.
+| ReportLink*           | Yes                         | Link to the report.                                                                     |
 | RoundTime             | Yes                         | The total time of the round.                                                            |
 | ScientistKills        | Yes                         | The total amount of scientist kills in the round.                                       |
 | Scp018sThrown         |                             | The total amount of SCP-018s thrown.                                                    |

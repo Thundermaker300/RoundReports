@@ -27,8 +27,6 @@ namespace RoundReports
         public string Unknown { get; set; } = "Unknown";
 
         // Webhook Text
-        public string PostDate { get; set; } = "Post Date";
-        public string ExpireDate { get; set; } = "Expire Date";
         public string WinText { get; set; } = "{TEAM} Win";
         // Door Stats
         public string DoorStatsTitle { get; set; } = "Door Statistics";

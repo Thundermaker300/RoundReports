@@ -33,6 +33,23 @@ namespace RoundReports
         [Description("The description of the embed.")]
         public string Description { get; set; } = "{WINNINGTEAM} Win\n[View Round Report]({REPORTLINK})";
 
+        [Description("A list of fields in the embed.")]
+        public List<EmbedField> Fields { get; set; } = new List<EmbedField>()
+        {
+            new()
+            {
+                Name = "Post Date",
+                Value = "{POSTDATE}",
+                Inline = true
+            },
+            new()
+            {
+                Name = "Expiration Date",
+                Value = "{EXPIREDATE}",
+                Inline = true
+            }
+        };
+
         [Description("The footer text of the embed.")]
         public string Footer { get; set; } = "{PLAYERCOUNT} players connected";
 
