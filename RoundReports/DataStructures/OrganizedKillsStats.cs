@@ -39,6 +39,12 @@
 
         public void Cleanup()
         {
+            foreach (var kvp in KillsByPlayer)
+                PercentIntPool.Pool.Return(kvp.Value);
+
+            foreach (var kvp in KillsByZone)
+                PercentIntPool.Pool.Return(kvp.Value);
+
             ListPool<string>.Pool.Return(PlayerKills);
             DictionaryPool<Player, PercentInt>.Pool.Return(KillsByPlayer);
             DictionaryPool<DamageType, int>.Pool.Return(KillsByType);

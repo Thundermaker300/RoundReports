@@ -143,6 +143,9 @@
 
         public void Cleanup()
         {
+            foreach (var kvp in Upgrades)
+                PercentIntPool.Pool.Return(kvp.Value);
+
             DictionaryPool<CandyKindID, int>.Pool.Return(CandiesTaken);
             DictionaryPool<Player, int>.Pool.Return(CandiesByPlayer);
             DictionaryPool<ItemType, PercentInt>.Pool.Return(Upgrades);

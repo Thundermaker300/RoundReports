@@ -103,6 +103,7 @@
     <Compile Include="EventHandlers.cs" />
     <Compile Include="MainPlugin.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Pools\PercentIntPool.cs" />
     <Compile Include="Structures\DiscordConfig.cs" />
     <Compile Include="Structures\DiscordEmbedConfig.cs" />
     <Compile Include="Structures\DiscordStructures.cs" />

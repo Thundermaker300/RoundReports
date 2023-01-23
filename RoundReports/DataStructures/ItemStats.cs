@@ -69,6 +69,12 @@
 
         public void Cleanup()
         {
+            foreach (var kvp in Drops)
+                PercentIntPool.Pool.Return(kvp.Value);
+
+            foreach (var kvp in PlayerDrops)
+                PercentIntPool.Pool.Return(kvp.Value);
+
             DictionaryPool<ItemType, PercentInt>.Pool.Return(Drops);
             DictionaryPool<Player, PercentInt>.Pool.Return(PlayerDrops);
             DictionaryPool<FirearmType, PercentInt>.Pool.Return(ShotsByFirearm);

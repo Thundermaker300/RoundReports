@@ -131,6 +131,12 @@
 
         public void Cleanup()
         {
+            foreach (var kvp in PlayerDoorsOpened)
+                PercentIntPool.Pool.Return(kvp.Value);
+
+            foreach (var kvp in PlayerDoorsClosed)
+                PercentIntPool.Pool.Return(kvp.Value);
+
             ListPool<string>.Pool.Return(SurvivingPlayers);
             DictionaryPool<Player, PercentInt>.Pool.Return(PlayerDoorsOpened);
             DictionaryPool<Player, PercentInt>.Pool.Return(PlayerDoorsClosed);

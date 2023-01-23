@@ -89,6 +89,15 @@
         }
 
         /// <summary>
+        /// Returns a <see cref="PercentInt"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="total">The total.</param>
+        /// <param name="updater">The updater method.</param>
+        /// <returns>The <see cref="PercentInt"/></returns>
+        public static PercentInt GetPI(int value, int total, Func<int> updater) => PercentIntPool.Pool.Get(value, total, updater);
+
+        /// <summary>
         /// Returns string of team. Will return SH or UIU for respective teams.
         /// </summary>
         /// <param name="player">Player.</param>
@@ -382,7 +391,7 @@
 
                 // Check damage type
                 if (!stats.DamageByType.ContainsKey(ev.DamageHandler.Type))
-                    stats.DamageByType.Add(ev.DamageHandler.Type, new(amount, stats.TotalDamage, () => MainPlugin.Reporter.GetStat<OrganizedDamageStats>().TotalDamage));
+                    stats.DamageByType.Add(ev.DamageHandler.Type, GetPI(amount, stats.TotalDamage, () => MainPlugin.Reporter.GetStat<OrganizedDamageStats>().TotalDamage));
                 else
                     stats.DamageByType[ev.DamageHandler.Type].IncrementValue(amount);
             }
@@ -392,7 +401,7 @@
             {
                 stats.PlayerDamage += amount;
                 if (!stats.DamageByPlayer.ContainsKey(ev.Attacker))
-                    stats.DamageByPlayer.Add(ev.Attacker, new(amount, stats.TotalDamage, () => MainPlugin.Reporter.GetStat<OrganizedDamageStats>().TotalDamage));
+                    stats.DamageByPlayer.Add(ev.Attacker, GetPI(amount, stats.TotalDamage, () => MainPlugin.Reporter.GetStat<OrganizedDamageStats>().TotalDamage));
                 else
                     stats.DamageByPlayer[ev.Attacker].IncrementValue(amount);
             }
@@ -419,7 +428,7 @@
 
                 // Kill by player
                 if (!killStats.KillsByPlayer.ContainsKey(ev.Attacker))
-                    killStats.KillsByPlayer.Add(ev.Attacker, new(1, stats.TotalKills, () => MainPlugin.Reporter.GetStat<FinalStats>().TotalKills));
+                    killStats.KillsByPlayer.Add(ev.Attacker, GetPI(1, stats.TotalKills, () => MainPlugin.Reporter.GetStat<FinalStats>().TotalKills));
                 else
                     killStats.KillsByPlayer[ev.Attacker].IncrementValue(1);
 
@@ -427,7 +436,7 @@
                 if (killStats.KillsByZone.ContainsKey(ev.Player.Zone))
                     killStats.KillsByZone[ev.Player.Zone].IncrementValue(1);
                 else
-                    killStats.KillsByZone.Add(ev.Player.Zone, new(1, stats.TotalKills, () => MainPlugin.Reporter.GetStat<FinalStats>().TotalKills));
+                    killStats.KillsByZone.Add(ev.Player.Zone, GetPI(1, stats.TotalKills, () => MainPlugin.Reporter.GetStat<FinalStats>().TotalKills));
 
                 // Role kills
                 stats.TotalKills++;
@@ -526,12 +535,12 @@
             if (stats.Drops.ContainsKey(ev.Item.Type))
                 stats.Drops[ev.Item.Type].IncrementValue(1);
             else
-                stats.Drops[ev.Item.Type] = new(1, stats.TotalDrops, () => MainPlugin.Reporter.GetStat<ItemStats>().TotalDrops);
+                stats.Drops[ev.Item.Type] = GetPI(1, stats.TotalDrops, () => MainPlugin.Reporter.GetStat<ItemStats>().TotalDrops);
 
             if (stats.PlayerDrops.ContainsKey(ev.Player))
                 stats.PlayerDrops[ev.Player].IncrementValue(1);
             else
-                stats.PlayerDrops[ev.Player] = new(1, stats.TotalDrops, () => MainPlugin.Reporter.GetStat<ItemStats>().TotalDrops);
+                stats.PlayerDrops[ev.Player] = GetPI(1, stats.TotalDrops, () => MainPlugin.Reporter.GetStat<ItemStats>().TotalDrops);
             Hold(stats);
         }
 
@@ -561,7 +570,7 @@
             {
                 if (!stats.ShotsByFirearm.ContainsKey(firearm.FirearmType))
                 {
-                    stats.ShotsByFirearm[firearm.FirearmType] = new(1, stats.TotalShotsFired, () => MainPlugin.Reporter.GetStat<ItemStats>().TotalShotsFired);
+                    stats.ShotsByFirearm[firearm.FirearmType] = GetPI(1, stats.TotalShotsFired, () => MainPlugin.Reporter.GetStat<ItemStats>().TotalShotsFired);
                 }
                 else
                 {
@@ -784,7 +793,7 @@
                 if (stats.PlayerDoorsClosed.ContainsKey(ev.Player))
                     stats.PlayerDoorsClosed[ev.Player].IncrementValue(1);
                 else
-                    stats.PlayerDoorsClosed.Add(ev.Player, new(1, stats.DoorsClosed, () => MainPlugin.Reporter.GetStat<FinalStats>().DoorsClosed));
+                    stats.PlayerDoorsClosed.Add(ev.Player, GetPI(1, stats.DoorsClosed, () => MainPlugin.Reporter.GetStat<FinalStats>().DoorsClosed));
             }
             else
             {
@@ -792,7 +801,7 @@
                 if (stats.PlayerDoorsOpened.ContainsKey(ev.Player))
                     stats.PlayerDoorsOpened[ev.Player].IncrementValue(1);
                 else
-                    stats.PlayerDoorsOpened.Add(ev.Player, new(1, stats.DoorsOpened, () => MainPlugin.Reporter.GetStat<FinalStats>().DoorsOpened));
+                    stats.PlayerDoorsOpened.Add(ev.Player, GetPI(1, stats.DoorsOpened, () => MainPlugin.Reporter.GetStat<FinalStats>().DoorsOpened));
 
                 if (!FirstDoor && ev.Player is not null && MainPlugin.Reporter is not null)
                 {
@@ -909,7 +918,7 @@
 
             stats.TotalActivations++;
             if (!stats.Activations.ContainsKey(Scp914Object.KnobStatus))
-                stats.Activations.Add(Scp914Object.KnobStatus, new(1, stats.TotalActivations, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalActivations));
+                stats.Activations.Add(Scp914Object.KnobStatus, GetPI(1, stats.TotalActivations, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalActivations));
             else
                 stats.Activations[Scp914Object.KnobStatus].IncrementValue(1);
 
@@ -1100,7 +1109,7 @@
                 stats.FirearmUpgrades++;
 
             if (!stats.Upgrades.ContainsKey(type))
-                stats.Upgrades.Add(type, new(1, stats.TotalItemUpgrades, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalItemUpgrades));
+                stats.Upgrades.Add(type, GetPI(1, stats.TotalItemUpgrades, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalItemUpgrades));
             else
                 stats.Upgrades[type].IncrementValue(1);
 
