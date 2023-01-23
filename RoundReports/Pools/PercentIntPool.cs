@@ -45,10 +45,14 @@
             return result;
         }
 
+        /// <inheritdoc/>
         public void Return(PercentInt obj)
         {
             obj.Value = 0;
             obj.Total = 0;
+            obj.UpdaterMethod = null;
+
+            pool.Enqueue(obj);
         }
     }
 }
