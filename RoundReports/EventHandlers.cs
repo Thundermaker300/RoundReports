@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
@@ -9,6 +10,8 @@
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Pools;
     using Exiled.API.Features.Roles;
+    using Exiled.CustomRoles.API;
+    using Exiled.CustomRoles.API.Features;
     using Exiled.Events;
     using Exiled.Events.EventArgs.Player;
     using Exiled.Events.EventArgs.Scp079;
@@ -81,6 +84,12 @@
             else if (player.SessionVariables.ContainsKey("IsUIU"))
                 return "UIU";
 
+            ReadOnlyCollection<CustomRole> customRoles = player.GetCustomRoles();
+            if (customRoles.Any(r => r.Name == "SCP-008"))
+                return "Scp008";
+            else if (customRoles.Any(r => r.Name == "SCP-035"))
+                return "Scp035";
+
             return player.Role.Type.ToString();
         }
 
@@ -106,6 +115,12 @@
                 return "SH";
             else if (player.SessionVariables.ContainsKey("IsUIU"))
                 return "UIU";
+
+            ReadOnlyCollection<CustomRole> customRoles = player.GetCustomRoles();
+            if (customRoles.Any(r => r.Name == "SCP-008"))
+                return Team.SCPs.ToString();
+            else if (customRoles.Any(r => r.Name == "SCP-035"))
+                return Team.SCPs.ToString();
 
             return player.Role.Team.ToString();
         }
@@ -256,7 +271,7 @@
                 StartingStats stats = new()
                 {
                     ClassDPersonnel = Player.Get(RoleTypeId.ClassD).Count(player => ECheck(player)),
-                    SCPs = Player.Get(Team.SCPs).Where(player => ECheck(player)).Select(player => player.Role.Type).ToList(),
+                    SCPs = Player.Get(player => GetTeam(player) is "SCPs" && ECheck(player)).Select(GetRole).ToList(),
                     FacilityGuards = Player.Get(RoleTypeId.FacilityGuard).Count(player => ECheck(player)),
                     Scientists = Player.Get(RoleTypeId.Scientist).Count(player => ECheck(player)),
                     StartTime = DateTime.Now,
@@ -491,7 +506,7 @@
             {
                 if (ev.DamageHandler.Type == DamageType.CardiacArrest)
                 {
-                    IEnumerable<Player> doctors = Player.Get(RoleTypeId.Scp049).Where(bird => Vector3.Distance(bird.Position, ev.Player.Position) < 12);
+                    IEnumerable<Player> doctors = Player.Get(ply => GetRole(ply) is "Scp049").Where(bird => Vector3.Distance(bird.Position, ev.Player.Position) < 12);
                     foreach (Player birds in doctors)
                     {
                         IncrementPoints(birds, MvpSettings.Points.KillEnemy, MainPlugin.Translations.KilledEnemy);
@@ -1029,7 +1044,7 @@
             yield return Timing.WaitForSeconds(60f);
             StartingStats stats = GetStat<StartingStats>();
 #pragma warning disable SA1312 // Variable names should begin with lower-case letter
-            List<RoleTypeId> SCPs = Player.Get(Team.SCPs).Where(ECheck).Select(player => player.Role.Type).ToList();
+            List<string> SCPs = Player.Get(player => GetTeam(player) is "SCPs" && ECheck(player)).Select(GetRole).ToList();
 #pragma warning restore SA1312 // Variable names should begin with lower-case letter
             SCPs.Sort();
             stats.SCPs = SCPs;

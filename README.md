@@ -11,14 +11,20 @@ Important Notes:
 * This plugin requires **Newtonsoft.json** in your plugin's dependencies folder in order to work. Click [here](https://github.com/Thundermaker300/RoundReports/releases/download/v0.5.5/Newtonsoft.Json.dll) to download it.
 * Statistics from users with Do Not Track (DNT) enabled are treated differently, please see "Note on DNT Players" section below.
 
- ## Commands
- ### pausereport
- Permission: rr.pause  
- Disables reporting for the duration of the round. Automatically unpauses at the start of the next round.  
+## Supported Plugins
+* SCP-008-X
+* SCP-035
+* Serpent's Hand
+* UIU (Unusual Incidents Unit)
 
- ### addremark / remark
- Permission: rr.remark  
- Adds a remark to the report. Can be used to specify event rounds & etc.  
+## Commands
+### pausereport
+Permission: rr.pause  
+Disables reporting for the duration of the round. Automatically unpauses at the start of the next round.  
+
+### addremark / remark
+Permission: rr.remark  
+Adds a remark to the report. Can be used to specify event rounds & etc.  
   
 ## Note on DNT Players
 Players with Do Not Track enabled will never have their username present on reports. How their stats are handled is based on the `ExcludeDNTUsers` config. If this config is set to `true`, no stats at all will be recorded except for kill logs (in which case their name will be removed). If this config is set to `false`, their stats will still be included but their name will be removed. Do Not Track players will never be included in the MVP statistics, regardless of this setting's value.

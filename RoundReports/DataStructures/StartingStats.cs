@@ -24,7 +24,7 @@
         [Rule(Rule.Alphabetical | Rule.CommaSeparatedList)]
         [Translation(nameof(Translation.Scps))]
         [BindStat(StatType.StartSCP)]
-        public List<RoleTypeId> SCPs { get; set; } // Created in code
+        public List<string> SCPs { get; set; } // Created in code
 
         [Translation(nameof(Translation.ClassDPersonnel))]
         [BindStat(StatType.StartClassD)]
@@ -48,7 +48,7 @@
 
         public void Cleanup()
         {
-            ListPool<RoleTypeId>.Pool.Return(SCPs);
+            ListPool<string>.Pool.Return(SCPs);
             ListPool<string>.Pool.Return(Players);
         }
     }
