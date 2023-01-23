@@ -557,9 +557,13 @@
             if (firearm is not null)
             {
                 if (!stats.ShotsByFirearm.ContainsKey(firearm.FirearmType))
-                    stats.ShotsByFirearm[firearm.FirearmType] = 1;
+                {
+                    stats.ShotsByFirearm[firearm.FirearmType] = new(1, stats.TotalShotsFired, () => MainPlugin.Reporter.GetStat<ItemStats>().TotalShotsFired);
+                }
                 else
-                    stats.ShotsByFirearm[firearm.FirearmType]++;
+                {
+                    stats.ShotsByFirearm[firearm.FirearmType].IncrementValue(1, stats.TotalShotsFired);
+                }
             }
 
             Hold(stats);

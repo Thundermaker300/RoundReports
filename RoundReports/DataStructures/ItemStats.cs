@@ -58,20 +58,20 @@
 
         [Translation(nameof(Translation.ShotsByFirearm))]
         [BindStat(StatType.ShotsByFirearm)]
-        public Dictionary<FirearmType, int> ShotsByFirearm { get; set; }
+        public Dictionary<FirearmType, PercentInt> ShotsByFirearm { get; set; }
 
         public void Setup()
         {
             Drops = DictionaryPool<ItemType, int>.Pool.Get();
             PlayerDrops = DictionaryPool<Player, int>.Pool.Get();
-            ShotsByFirearm = DictionaryPool<FirearmType, int>.Pool.Get();
+            ShotsByFirearm = DictionaryPool<FirearmType, PercentInt>.Pool.Get();
         }
 
         public void Cleanup()
         {
             DictionaryPool<ItemType, int>.Pool.Return(Drops);
             DictionaryPool<Player, int>.Pool.Return(PlayerDrops);
-            DictionaryPool<FirearmType, int>.Pool.Return(ShotsByFirearm);
+            DictionaryPool<FirearmType, PercentInt>.Pool.Return(ShotsByFirearm);
         }
     }
 #pragma warning restore SA1600

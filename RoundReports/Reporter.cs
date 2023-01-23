@@ -145,6 +145,13 @@
                     return MainPlugin.Translations.NoData;
             }
 
+            if (val is PercentInt perInt)
+            {
+                if (perInt.UpdaterMethod is not null)
+                    perInt.Total = perInt.UpdaterMethod();
+                return $"{perInt.Value} ({perInt.Percent}%)";
+            }
+
             if (val is bool b)
                 return b ? MainPlugin.Translations.Yes : MainPlugin.Translations.No;
             if (val is Player plr)
