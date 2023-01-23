@@ -70,6 +70,8 @@
         /// </summary>
         public int Interactions { get; set; } = 0;
 
+        public bool FinalStatsFilledOut { get; set; } = false;
+
         /// <summary>
         /// Returns string of role. Will return SerpentsHand or UIU for respective roles.
         /// </summary>
@@ -235,6 +237,7 @@
             FirstKill = false;
             FirstDoor = false;
             Interactions = 0;
+            FinalStatsFilledOut = false;
             Points.Clear();
             Points[PointTeam.SCP] = new();
             Points[PointTeam.Human] = new();
@@ -291,8 +294,9 @@
         public void OnRestarting()
         {
             MainPlugin.IsRestarting = true;
-            if (MainPlugin.Reporter is not null && !MainPlugin.Reporter.HasSent)
+            if (MainPlugin.Reporter is not null && !MainPlugin.Reporter.HasSent && !FinalStatsFilledOut)
             {
+                FinalStatsFilledOut = true;
                 FillOutFinalStats();
                 SendData();
             }
@@ -304,8 +308,9 @@
         /// <param name="ev">Event arguments.</param>
         public void OnRoundEnded(RoundEndedEventArgs ev)
         {
-            if (MainPlugin.Reporter is not null && !MainPlugin.Reporter.HasSent)
+            if (MainPlugin.Reporter is not null && !MainPlugin.Reporter.HasSent && !FinalStatsFilledOut)
             {
+                FinalStatsFilledOut = true;
                 FillOutFinalStats(ev.LeadingTeam);
                 SendData();
             }
