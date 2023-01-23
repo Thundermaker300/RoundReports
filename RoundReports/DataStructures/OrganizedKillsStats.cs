@@ -19,7 +19,7 @@
 
         [Translation(nameof(Translation.KillsbyType))]
         [BindStat(StatType.KillsByType)]
-        public Dictionary<DamageType, PercentInt> KillsByType { get; set; }
+        public Dictionary<DamageType, int> KillsByType { get; set; }
 
         [Translation(nameof(Translation.KillsByZone))]
         [BindStat(StatType.KillsByZone)]
@@ -33,7 +33,7 @@
         {
             PlayerKills = ListPool<string>.Pool.Get();
             KillsByPlayer = DictionaryPool<Player, PercentInt>.Pool.Get();
-            KillsByType = DictionaryPool<DamageType, PercentInt>.Pool.Get();
+            KillsByType = DictionaryPool<DamageType, int>.Pool.Get();
             KillsByZone = DictionaryPool<ZoneType, PercentInt>.Pool.Get();
         }
 
@@ -41,7 +41,7 @@
         {
             ListPool<string>.Pool.Return(PlayerKills);
             DictionaryPool<Player, PercentInt>.Pool.Return(KillsByPlayer);
-            DictionaryPool<DamageType, PercentInt>.Pool.Return(KillsByType);
+            DictionaryPool<DamageType, int>.Pool.Return(KillsByType);
             DictionaryPool<ZoneType, PercentInt>.Pool.Return(KillsByZone);
         }
     }

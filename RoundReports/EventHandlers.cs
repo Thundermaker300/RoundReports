@@ -356,7 +356,7 @@
         /// <param name="ev">Event arguments.</param>
         public void OnSpawned(SpawnedEventArgs ev)
         {
-            if (!Round.InProgress || MainPlugin.IsRestarting || Round.ElapsedTime.TotalMinutes <= 0.5 || !ECheck(ev.Player) || GetTeam(ev.Player) is not("SH" or "UIU" or "FoundationForces" or "ChaosInsurgency")) return;
+            if (!Round.InProgress || MainPlugin.IsRestarting || Round.ElapsedTime.TotalSeconds <= 30 || !ECheck(ev.Player) || GetTeam(ev.Player) is not("SH" or "UIU" or "FoundationForces" or "ChaosInsurgency")) return;
             RespawnStats stats = GetStat<RespawnStats>();
             stats.TotalRespawned++;
             stats.Respawns.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player, typeof(Player))).Replace("{ROLE}", GetRole(ev.Player)));
@@ -382,9 +382,9 @@
 
                 // Check damage type
                 if (!stats.DamageByType.ContainsKey(ev.DamageHandler.Type))
-                    stats.DamageByType.Add(ev.DamageHandler.Type, amount);
+                    stats.DamageByType.Add(ev.DamageHandler.Type, new(amount, stats.TotalDamage, () => MainPlugin.Reporter.GetStat<OrganizedDamageStats>().TotalDamage));
                 else
-                    stats.DamageByType[ev.DamageHandler.Type] += amount;
+                    stats.DamageByType[ev.DamageHandler.Type].IncrementValue(amount, stats.TotalDamage);
             }
 
             // Check Attacker
@@ -392,9 +392,9 @@
             {
                 stats.PlayerDamage += amount;
                 if (!stats.DamageByPlayer.ContainsKey(ev.Attacker))
-                    stats.DamageByPlayer.Add(ev.Attacker, amount);
+                    stats.DamageByPlayer.Add(ev.Attacker, new(amount, stats.TotalDamage, () => MainPlugin.Reporter.GetStat<OrganizedDamageStats>().TotalDamage));
                 else
-                    stats.DamageByPlayer[ev.Attacker] += amount;
+                    stats.DamageByPlayer[ev.Attacker].IncrementValue(amount, stats.TotalDamage);
             }
 
             Hold(stats);
@@ -499,9 +499,9 @@
 
             // Kill by type
             if (!killStats.KillsByType.ContainsKey(ev.DamageHandler.Type))
-                killStats.KillsByType.Add(ev.DamageHandler.Type, new(1, stats.TotalKills, () => MainPlugin.Reporter.GetStat<FinalStats>().TotalKills));
+                killStats.KillsByType.Add(ev.DamageHandler.Type, 1);
             else
-                killStats.KillsByType[ev.DamageHandler.Type].IncrementValue(1, stats.TotalKills);
+                killStats.KillsByType[ev.DamageHandler.Type]++;
             Hold(killStats);
             Hold(stats);
 
@@ -529,9 +529,9 @@
                 stats.Drops[ev.Item.Type] = new(1, stats.TotalDrops, () => MainPlugin.Reporter.GetStat<ItemStats>().TotalDrops);
 
             if (stats.PlayerDrops.ContainsKey(ev.Player))
-                stats.PlayerDrops[ev.Player]++;
+                stats.PlayerDrops[ev.Player].IncrementValue(1, stats.TotalDrops);
             else
-                stats.PlayerDrops[ev.Player] = 1;
+                stats.PlayerDrops[ev.Player] = new(1, stats.TotalDrops, () => MainPlugin.Reporter.GetStat<ItemStats>().TotalDrops);
             Hold(stats);
         }
 

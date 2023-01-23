@@ -23,22 +23,22 @@
 
         [Translation(nameof(Translation.DamageByPlayer))]
         [BindStat(StatType.DamageByPlayer)]
-        public Dictionary<Player, int> DamageByPlayer { get; set; }
+        public Dictionary<Player, PercentInt> DamageByPlayer { get; set; }
 
         [Translation(nameof(Translation.DamageByType))]
         [BindStat(StatType.DamageByType)]
-        public Dictionary<DamageType, int> DamageByType { get; set; }
+        public Dictionary<DamageType, PercentInt> DamageByType { get; set; }
 
         public void Setup()
         {
-            DamageByPlayer = DictionaryPool<Player, int>.Pool.Get();
-            DamageByType = DictionaryPool<DamageType, int>.Pool.Get();
+            DamageByPlayer = DictionaryPool<Player, PercentInt>.Pool.Get();
+            DamageByType = DictionaryPool<DamageType, PercentInt>.Pool.Get();
         }
 
         public void Cleanup()
         {
-            DictionaryPool<Player, int>.Pool.Return(DamageByPlayer);
-            DictionaryPool<DamageType, int>.Pool.Return(DamageByType);
+            DictionaryPool<Player, PercentInt>.Pool.Return(DamageByPlayer);
+            DictionaryPool<DamageType, PercentInt>.Pool.Return(DamageByType);
         }
     }
 #pragma warning restore SA1600
