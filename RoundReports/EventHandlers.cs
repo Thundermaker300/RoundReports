@@ -112,6 +112,9 @@
         /// <returns>Boolean.</returns>
         public static bool ECheck(Player ply)
         {
+            if (MainPlugin.Reporter is null)
+                return false;
+
             if (ply is null)
                 return false;
 
