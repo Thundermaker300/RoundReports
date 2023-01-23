@@ -172,7 +172,7 @@
         /// <param name="overrideRoleChecks">Override dead/tutorial checks when adding points.</param>
         public void IncrementPoints(Player plr, int amount, string reason = "Unknown", PointTeam? teamOverride = null, bool overrideRoleChecks = false)
         {
-            if (!MvpSettings.MvpEnabled || plr is null || plr.DoNotTrack || (overrideRoleChecks == false && (GetRole(plr) == "Tutorial" || plr.IsDead)) || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
+            if (!MvpSettings.MvpEnabled || plr is null || plr.DoNotTrack || (overrideRoleChecks == false && (MvpSettings.RoleBlacklist.Any(role => role == GetRole(plr)) || plr.IsDead)) || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
                 return;
 
             if (amount == 0) return;

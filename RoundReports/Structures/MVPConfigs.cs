@@ -14,9 +14,8 @@
         [Description("Whether or not the MVP system is enabled.")]
         public bool MvpEnabled { get; set; } = true;
 
-        // TODO Make this config work.
-        [Description("Roles that cannot gain or lose points. Plugin-based roles are not affected by this setting.")]
-        public List<RoleTypeId> RoleBlacklist { get; set; } = new() { RoleTypeId.Tutorial };
+        [Description("Roles that cannot gain or lose points. Any RoleType as well as SerpentsHand and UIU are supported.")]
+        public List<string> RoleBlacklist { get; set; } = new() { "Tutorial" };
 
         [Description("Minimum amount of points per round that a user can have.")]
         public int MinPoints { get; set; } = -500;
