@@ -37,11 +37,6 @@
         public MVPConfigs MvpSettings => MainPlugin.Singleton.Config.MvpSettings;
 
         /// <summary>
-        /// Gets or sets stats currently being held.
-        /// </summary>
-        public List<IReportStat> Holding { get; set; }
-
-        /// <summary>
         /// Gets or sets a <see cref="Dictionary{TKey, TValue}"/> of <see cref="PointTeam"/> and players' points in each.
         /// </summary>
         public Dictionary<PointTeam, Dictionary<Player, int>> Points { get; set; } = new();
@@ -152,11 +147,7 @@
         /// <param name="stat">The data of the stat.</param>
         public void Hold<T>(T stat)
             where T : class, IReportStat
-        {
-            Log.Debug($"Updating stat: {typeof(T).Name}");
-            Holding.RemoveAll(r => r.GetType() == typeof(T));
-            Holding.Add(stat);
-        }
+            => MainPlugin.Reporter?.SetStat(stat);
 
         /// <summary>
         /// Obtains a stat, setting it up if it doesn't already exist.
@@ -165,15 +156,7 @@
         /// <returns>Stat.</returns>
         public T GetStat<T>()
             where T : class, IReportStat, new()
-        {
-            if (Holding.FirstOrDefault(r => r.GetType() == typeof(T)) is not T value)
-            {
-                value = new T();
-                value.Setup();
-            }
-
-            return value;
-        }
+            => MainPlugin.Reporter?.GetStat<T>() ?? null;
 
         /// <summary>
         /// Increments MVP points. Ignored if user: Is null, Is DNT, Is role Tutorial, IsDead, or is an ignored user.
@@ -236,7 +219,6 @@
             FirstKill = false;
             FirstDoor = false;
             Interactions = 0;
-            Holding = ListPool<IReportStat>.Pool.Get();
             Points.Clear();
             Points[PointTeam.SCP] = new();
             Points[PointTeam.Human] = new();
@@ -252,18 +234,12 @@
             if (MainPlugin.Reporter is null)
                 return;
 
-            // Set Stats
-            foreach (IReportStat stat in Holding)
-                MainPlugin.Reporter.SetStat(stat);
-
             // Send
             if (!MainPlugin.Reporter.HasSent)
             {
                 Log.Debug("Report upload request received, step: 1.");
                 MainPlugin.Reporter.SendReport();
             }
-
-            ListPool<IReportStat>.Pool.Return(Holding);
         }
 
         /// <summary>
