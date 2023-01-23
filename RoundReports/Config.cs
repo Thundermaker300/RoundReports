@@ -35,6 +35,9 @@
         [Description("If set to true, stats from tutorial users will be entirely ignored. Does not affect plugin-based roles such as Serpent's Hand.")]
         public bool ExcludeTutorials { get; set; } = true;
 
+        [Description("If set to true, certain integer stats will include a percentage next to them (eg. player doors opened).")]
+        public bool IncludePercents { get; set; } = true;
+
         [Description("Broadcast(s) to show at the end of the round. A full list of arguments are available on the plugin's GitHub page. Set to [] (or set broadcast's show value to false) to disable. Additional broadcasts can be added and removed.")]
         public List<EBroadcast> EndingBroadcasts { get; set; } = new List<EBroadcast> { new("<b>{HUMANMVP}</b> was the human MVP of this round!", duration: 3), new("<b>{SCPMVP}</b> was the SCP MVP of this round!", duration: 3), new("View the end-of-round report on our Discord server!", duration: 3) };
 

@@ -149,7 +149,7 @@
             {
                 if (perInt.UpdaterMethod is not null)
                     perInt.Total = perInt.UpdaterMethod();
-                if (perInt.Total == 0)
+                if (perInt.Total == 0 || !MainPlugin.Configs.IncludePercents)
                     return perInt.Value.ToString();
 
                 return $"{perInt.Value} ({perInt.Percent}%)";
