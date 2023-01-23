@@ -419,15 +419,15 @@
 
                 // Kill by player
                 if (!killStats.KillsByPlayer.ContainsKey(ev.Attacker))
-                    killStats.KillsByPlayer.Add(ev.Attacker, 1);
+                    killStats.KillsByPlayer.Add(ev.Attacker, new(1, stats.TotalKills, () => MainPlugin.Reporter.GetStat<FinalStats>().TotalKills));
                 else
-                    killStats.KillsByPlayer[ev.Attacker]++;
+                    killStats.KillsByPlayer[ev.Attacker].IncrementValue(1, stats.TotalKills);
 
                 // Kill by zone
                 if (killStats.KillsByZone.ContainsKey(ev.Player.Zone))
-                    killStats.KillsByZone[ev.Player.Zone]++;
+                    killStats.KillsByZone[ev.Player.Zone].IncrementValue(1, stats.TotalKills);
                 else
-                    killStats.KillsByZone.Add(ev.Player.Zone, 1);
+                    killStats.KillsByZone.Add(ev.Player.Zone, new(1, stats.TotalKills, () => MainPlugin.Reporter.GetStat<FinalStats>().TotalKills));
 
                 // Role kills
                 stats.TotalKills++;
@@ -499,9 +499,9 @@
 
             // Kill by type
             if (!killStats.KillsByType.ContainsKey(ev.DamageHandler.Type))
-                killStats.KillsByType.Add(ev.DamageHandler.Type, 1);
+                killStats.KillsByType.Add(ev.DamageHandler.Type, new(1, stats.TotalKills, () => MainPlugin.Reporter.GetStat<FinalStats>().TotalKills));
             else
-                killStats.KillsByType[ev.DamageHandler.Type]++;
+                killStats.KillsByType[ev.DamageHandler.Type].IncrementValue(1, stats.TotalKills);
             Hold(killStats);
             Hold(stats);
 
@@ -524,9 +524,9 @@
             stats.TotalDrops++;
 
             if (stats.Drops.ContainsKey(ev.Item.Type))
-                stats.Drops[ev.Item.Type]++;
+                stats.Drops[ev.Item.Type].IncrementValue(1, stats.TotalDrops);
             else
-                stats.Drops[ev.Item.Type] = 1;
+                stats.Drops[ev.Item.Type] = new(1, stats.TotalDrops, () => MainPlugin.Reporter.GetStat<ItemStats>().TotalDrops);
 
             if (stats.PlayerDrops.ContainsKey(ev.Player))
                 stats.PlayerDrops[ev.Player]++;

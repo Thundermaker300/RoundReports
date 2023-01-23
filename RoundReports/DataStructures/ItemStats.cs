@@ -20,7 +20,7 @@
 
         [Translation(nameof(Translation.Drops))]
         [BindStat(StatType.Drops)]
-        public Dictionary<ItemType, int> Drops { get; set; }
+        public Dictionary<ItemType, PercentInt> Drops { get; set; }
 
         [Translation(nameof(Translation.PlayerDrops))]
         [BindStat(StatType.PlayerDrops)]
@@ -62,14 +62,14 @@
 
         public void Setup()
         {
-            Drops = DictionaryPool<ItemType, int>.Pool.Get();
+            Drops = DictionaryPool<ItemType, PercentInt>.Pool.Get();
             PlayerDrops = DictionaryPool<Player, int>.Pool.Get();
             ShotsByFirearm = DictionaryPool<FirearmType, PercentInt>.Pool.Get();
         }
 
         public void Cleanup()
         {
-            DictionaryPool<ItemType, int>.Pool.Return(Drops);
+            DictionaryPool<ItemType, PercentInt>.Pool.Return(Drops);
             DictionaryPool<Player, int>.Pool.Return(PlayerDrops);
             DictionaryPool<FirearmType, PercentInt>.Pool.Return(ShotsByFirearm);
         }
