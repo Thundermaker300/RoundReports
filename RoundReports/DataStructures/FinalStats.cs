@@ -131,10 +131,10 @@
 
         public void Cleanup()
         {
-            foreach (var kvp in PlayerDoorsOpened)
+            foreach (KeyValuePair<Player, PercentInt> kvp in PlayerDoorsOpened)
                 PercentIntPool.Pool.Return(kvp.Value);
 
-            foreach (var kvp in PlayerDoorsClosed)
+            foreach (KeyValuePair<Player, PercentInt> kvp in PlayerDoorsClosed)
                 PercentIntPool.Pool.Return(kvp.Value);
 
             ListPool<string>.Pool.Return(SurvivingPlayers);

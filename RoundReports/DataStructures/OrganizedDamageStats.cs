@@ -37,10 +37,10 @@
 
         public void Cleanup()
         {
-            foreach (var kvp in DamageByPlayer)
+            foreach (KeyValuePair<Player, PercentInt> kvp in DamageByPlayer)
                 PercentIntPool.Pool.Return(kvp.Value);
 
-            foreach (var kvp in DamageByType)
+            foreach (KeyValuePair<DamageType, PercentInt> kvp in DamageByType)
                 PercentIntPool.Pool.Return(kvp.Value);
 
             DictionaryPool<Player, PercentInt>.Pool.Return(DamageByPlayer);

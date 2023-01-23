@@ -481,7 +481,7 @@
         {
             Log.Debug("Report upload request received, step: 3.");
             yield return Timing.WaitForSeconds(0.5f);
-            var reportData = BuildReport();
+            PasteEntry reportData = BuildReport();
 
             Log.Debug("Report upload request received, step: 4.");
             Timing.RunCoroutine(TryUpload(reportData));

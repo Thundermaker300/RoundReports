@@ -143,7 +143,7 @@
 
         public void Cleanup()
         {
-            foreach (var kvp in Upgrades)
+            foreach (KeyValuePair<ItemType, PercentInt> kvp in Upgrades)
                 PercentIntPool.Pool.Return(kvp.Value);
 
             DictionaryPool<CandyKindID, int>.Pool.Return(CandiesTaken);

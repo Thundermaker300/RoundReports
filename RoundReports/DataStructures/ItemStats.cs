@@ -69,10 +69,10 @@
 
         public void Cleanup()
         {
-            foreach (var kvp in Drops)
+            foreach (KeyValuePair<ItemType, PercentInt> kvp in Drops)
                 PercentIntPool.Pool.Return(kvp.Value);
 
-            foreach (var kvp in PlayerDrops)
+            foreach (KeyValuePair<Player, PercentInt> kvp in PlayerDrops)
                 PercentIntPool.Pool.Return(kvp.Value);
 
             DictionaryPool<ItemType, PercentInt>.Pool.Return(Drops);

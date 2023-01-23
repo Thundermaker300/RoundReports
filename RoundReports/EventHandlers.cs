@@ -578,7 +578,7 @@
             ItemStats stats = GetStat<ItemStats>();
             stats.TotalShotsFired++;
 
-            var firearm = (Firearm)ev.Player.CurrentItem;
+            Firearm firearm = (Firearm)ev.Player.CurrentItem;
             if (firearm is not null)
             {
                 if (!stats.ShotsByFirearm.ContainsKey(firearm.FirearmType))
