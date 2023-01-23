@@ -73,6 +73,10 @@
         [BindStat(StatType.SurvivingPlayers)]
         public List<string> SurvivingPlayers { get; set; }
 
+        [Translation(nameof(Translation.TotalInteractions))]
+        [BindStat(StatType.TotalInteractions)]
+        public int TotalInteractions { get; set; }
+
         [Header(nameof(Translation.WarheadStatsTitle))]
         [Translation(nameof(Translation.ButtonUnlocked))]
         [BindStat(StatType.ButtonUnlocked)]
@@ -114,10 +118,6 @@
         [Translation(nameof(Translation.PlayerDoorsClosed))]
         [BindStat(StatType.PlayerDoorsClosed)]
         public Dictionary<Player, int> PlayerDoorsClosed { get; set; }
-
-        [Translation(nameof(Translation.TotalInteractions))]
-        [BindStat(StatType.TotalInteractions)]
-        public int TotalInteractions { get; set; }
 
         public void Setup()
         {
