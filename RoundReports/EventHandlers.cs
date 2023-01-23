@@ -1048,8 +1048,7 @@
             stats.TotalInteractions = Interactions;
 
             // Set Leading Team
-            if (MainPlugin.Reporter is not null)
-                MainPlugin.Reporter.WinTeam = leadingTeam;
+            MainPlugin.Reporter.WinTeam = leadingTeam;
 
             // Finish with final stats
             stats.RoundTime = Round.ElapsedTime;
