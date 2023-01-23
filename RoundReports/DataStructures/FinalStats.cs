@@ -113,17 +113,17 @@
 
         [Translation(nameof(Translation.PlayerDoorsOpened))]
         [BindStat(StatType.PlayerDoorsOpened)]
-        public Dictionary<Player, int> PlayerDoorsOpened { get; set; }
+        public Dictionary<Player, PercentInt> PlayerDoorsOpened { get; set; }
 
         [Translation(nameof(Translation.PlayerDoorsClosed))]
         [BindStat(StatType.PlayerDoorsClosed)]
-        public Dictionary<Player, int> PlayerDoorsClosed { get; set; }
+        public Dictionary<Player, PercentInt> PlayerDoorsClosed { get; set; }
 
         public void Setup()
         {
             SurvivingPlayers = ListPool<string>.Pool.Get();
-            PlayerDoorsOpened = DictionaryPool<Player, int>.Pool.Get();
-            PlayerDoorsClosed = DictionaryPool<Player, int>.Pool.Get();
+            PlayerDoorsOpened = DictionaryPool<Player, PercentInt>.Pool.Get();
+            PlayerDoorsClosed = DictionaryPool<Player, PercentInt>.Pool.Get();
             WinningTeam = MainPlugin.Translations.NoData;
             RoundTime = TimeSpan.Zero;
             EndTime = DateTime.MinValue;
@@ -132,8 +132,8 @@
         public void Cleanup()
         {
             ListPool<string>.Pool.Return(SurvivingPlayers);
-            DictionaryPool<Player, int>.Pool.Return(PlayerDoorsOpened);
-            DictionaryPool<Player, int>.Pool.Return(PlayerDoorsClosed);
+            DictionaryPool<Player, PercentInt>.Pool.Return(PlayerDoorsOpened);
+            DictionaryPool<Player, PercentInt>.Pool.Return(PlayerDoorsClosed);
         }
     }
 #pragma warning restore SA1600

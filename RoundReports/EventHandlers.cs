@@ -384,7 +384,7 @@
                 if (!stats.DamageByType.ContainsKey(ev.DamageHandler.Type))
                     stats.DamageByType.Add(ev.DamageHandler.Type, new(amount, stats.TotalDamage, () => MainPlugin.Reporter.GetStat<OrganizedDamageStats>().TotalDamage));
                 else
-                    stats.DamageByType[ev.DamageHandler.Type].IncrementValue(amount, stats.TotalDamage);
+                    stats.DamageByType[ev.DamageHandler.Type].IncrementValue(amount);
             }
 
             // Check Attacker
@@ -394,7 +394,7 @@
                 if (!stats.DamageByPlayer.ContainsKey(ev.Attacker))
                     stats.DamageByPlayer.Add(ev.Attacker, new(amount, stats.TotalDamage, () => MainPlugin.Reporter.GetStat<OrganizedDamageStats>().TotalDamage));
                 else
-                    stats.DamageByPlayer[ev.Attacker].IncrementValue(amount, stats.TotalDamage);
+                    stats.DamageByPlayer[ev.Attacker].IncrementValue(amount);
             }
 
             Hold(stats);
@@ -421,11 +421,11 @@
                 if (!killStats.KillsByPlayer.ContainsKey(ev.Attacker))
                     killStats.KillsByPlayer.Add(ev.Attacker, new(1, stats.TotalKills, () => MainPlugin.Reporter.GetStat<FinalStats>().TotalKills));
                 else
-                    killStats.KillsByPlayer[ev.Attacker].IncrementValue(1, stats.TotalKills);
+                    killStats.KillsByPlayer[ev.Attacker].IncrementValue(1);
 
                 // Kill by zone
                 if (killStats.KillsByZone.ContainsKey(ev.Player.Zone))
-                    killStats.KillsByZone[ev.Player.Zone].IncrementValue(1, stats.TotalKills);
+                    killStats.KillsByZone[ev.Player.Zone].IncrementValue(1);
                 else
                     killStats.KillsByZone.Add(ev.Player.Zone, new(1, stats.TotalKills, () => MainPlugin.Reporter.GetStat<FinalStats>().TotalKills));
 
@@ -524,12 +524,12 @@
             stats.TotalDrops++;
 
             if (stats.Drops.ContainsKey(ev.Item.Type))
-                stats.Drops[ev.Item.Type].IncrementValue(1, stats.TotalDrops);
+                stats.Drops[ev.Item.Type].IncrementValue(1);
             else
                 stats.Drops[ev.Item.Type] = new(1, stats.TotalDrops, () => MainPlugin.Reporter.GetStat<ItemStats>().TotalDrops);
 
             if (stats.PlayerDrops.ContainsKey(ev.Player))
-                stats.PlayerDrops[ev.Player].IncrementValue(1, stats.TotalDrops);
+                stats.PlayerDrops[ev.Player].IncrementValue(1);
             else
                 stats.PlayerDrops[ev.Player] = new(1, stats.TotalDrops, () => MainPlugin.Reporter.GetStat<ItemStats>().TotalDrops);
             Hold(stats);
@@ -565,7 +565,7 @@
                 }
                 else
                 {
-                    stats.ShotsByFirearm[firearm.FirearmType].IncrementValue(1, stats.TotalShotsFired);
+                    stats.ShotsByFirearm[firearm.FirearmType].IncrementValue(1);
                 }
             }
 
@@ -782,17 +782,17 @@
             {
                 stats.DoorsClosed++;
                 if (stats.PlayerDoorsClosed.ContainsKey(ev.Player))
-                    stats.PlayerDoorsClosed[ev.Player]++;
+                    stats.PlayerDoorsClosed[ev.Player].IncrementValue(1);
                 else
-                    stats.PlayerDoorsClosed.Add(ev.Player, 1);
+                    stats.PlayerDoorsClosed.Add(ev.Player, new(1, stats.DoorsClosed, () => MainPlugin.Reporter.GetStat<FinalStats>().DoorsClosed));
             }
             else
             {
                 stats.DoorsOpened++;
                 if (stats.PlayerDoorsOpened.ContainsKey(ev.Player))
-                    stats.PlayerDoorsOpened[ev.Player]++;
+                    stats.PlayerDoorsOpened[ev.Player].IncrementValue(1);
                 else
-                    stats.PlayerDoorsOpened.Add(ev.Player, 1);
+                    stats.PlayerDoorsOpened.Add(ev.Player, new(1, stats.DoorsOpened, () => MainPlugin.Reporter.GetStat<FinalStats>().DoorsOpened));
 
                 if (!FirstDoor && ev.Player is not null && MainPlugin.Reporter is not null)
                 {
@@ -909,9 +909,9 @@
 
             stats.TotalActivations++;
             if (!stats.Activations.ContainsKey(Scp914Object.KnobStatus))
-                stats.Activations.Add(Scp914Object.KnobStatus, 1);
+                stats.Activations.Add(Scp914Object.KnobStatus, new(1, stats.TotalActivations, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalActivations));
             else
-                stats.Activations[Scp914Object.KnobStatus]++;
+                stats.Activations[Scp914Object.KnobStatus].IncrementValue(1);
 
             Hold(stats);
             Interactions++;
@@ -1100,9 +1100,9 @@
                 stats.FirearmUpgrades++;
 
             if (!stats.Upgrades.ContainsKey(type))
-                stats.Upgrades.Add(type, 1);
+                stats.Upgrades.Add(type, new(1, stats.TotalItemUpgrades, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalItemUpgrades));
             else
-                stats.Upgrades[type]++;
+                stats.Upgrades[type].IncrementValue(1);
 
             Hold(stats);
         }

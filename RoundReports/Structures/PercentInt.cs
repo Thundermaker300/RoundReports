@@ -61,10 +61,12 @@
         /// </summary>
         /// <param name="valueIncrement">The value to increment the value by.</param>
         /// <param name="newTotal">The new total.</param>
-        public void IncrementValue(int valueIncrement, int newTotal)
+        public void IncrementValue(int valueIncrement, int? newTotal = null)
         {
             Value += valueIncrement;
-            Total = newTotal;
+
+            if (newTotal.HasValue)
+                Total = newTotal.Value;
         }
     }
 }

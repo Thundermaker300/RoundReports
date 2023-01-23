@@ -120,11 +120,11 @@
 
         [Translation(nameof(Translation.Activations))]
         [BindStat(StatType.AllActivations)]
-        public Dictionary<Scp914KnobSetting, int> Activations { get; set; }
+        public Dictionary<Scp914KnobSetting, PercentInt> Activations { get; set; }
 
         [Translation(nameof(Translation.Upgrades))]
         [BindStat(StatType.AllUpgrades)]
-        public Dictionary<ItemType, int> Upgrades { get; set; } = new();
+        public Dictionary<ItemType, PercentInt> Upgrades { get; set; } = new();
 
         public void Setup()
         {
@@ -132,20 +132,20 @@
             CandiesByPlayer = DictionaryPool<Player, int>.Pool.Get();
             Activations = new() // Todo: Convert this to DictPool
             {
-                [Scp914KnobSetting.Rough] = 0,
-                [Scp914KnobSetting.Coarse] = 0,
-                [Scp914KnobSetting.OneToOne] = 0,
-                [Scp914KnobSetting.Fine] = 0,
-                [Scp914KnobSetting.VeryFine] = 0,
+                [Scp914KnobSetting.Rough] = new(0, 0, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalActivations),
+                [Scp914KnobSetting.Coarse] = new(0, 0, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalActivations),
+                [Scp914KnobSetting.OneToOne] = new(0, 0, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalActivations),
+                [Scp914KnobSetting.Fine] = new(0, 0, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalActivations),
+                [Scp914KnobSetting.VeryFine] = new(0, 0, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalActivations),
             };
-            Upgrades = DictionaryPool<ItemType, int>.Pool.Get();
+            Upgrades = DictionaryPool<ItemType, PercentInt>.Pool.Get();
         }
 
         public void Cleanup()
         {
             DictionaryPool<CandyKindID, int>.Pool.Return(CandiesTaken);
             DictionaryPool<Player, int>.Pool.Return(CandiesByPlayer);
-            DictionaryPool<ItemType, int>.Pool.Return(Upgrades);
+            DictionaryPool<ItemType, PercentInt>.Pool.Return(Upgrades);
         }
     }
 #pragma warning restore SA1600
