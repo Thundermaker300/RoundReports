@@ -271,6 +271,9 @@
         /// </summary>
         public void OnRoundStarted()
         {
+            if (MainPlugin.Reporter is null)
+                return;
+
             Timing.CallDelayed(.5f, () =>
             {
                 StartingStats stats = new()
@@ -322,7 +325,7 @@
         /// <param name="ev">Event arguments.</param>
         public void OnRespawningTeam(RespawningTeamEventArgs ev)
         {
-            if (!Round.InProgress || MainPlugin.IsRestarting) return;
+            if (!Round.InProgress || MainPlugin.IsRestarting || MainPlugin.Reporter is null) return;
             if (!ev.IsAllowed || ev.Players.Count < 1) return;
             RespawnStats stats = GetStat<RespawnStats>();
 
@@ -378,7 +381,7 @@
         /// <param name="ev">Event arguments.</param>
         public void OnHurting(HurtingEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed || MainPlugin.IsRestarting) return;
+            if (!Round.InProgress || !ev.IsAllowed || MainPlugin.IsRestarting || MainPlugin.Reporter is null) return;
             int amount = (int)Math.Round(ev.Amount);
             if (ev.Amount == -1 || ev.Amount > 150) amount = 150;
 
@@ -415,7 +418,7 @@
         /// <param name="ev">Event arguments.</param>
         public void OnDying(DyingEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed || MainPlugin.IsRestarting) return;
+            if (!Round.InProgress || !ev.IsAllowed || MainPlugin.IsRestarting || MainPlugin.Reporter is null ) return;
             FinalStats stats = GetStat<FinalStats>();
             OrganizedKillsStats killStats = GetStat<OrganizedKillsStats>();
             stats.TotalDeaths++;
@@ -954,7 +957,7 @@
         /// <param name="ev">Event arguments.</param>
         public void On914UpgradingPickup(UpgradingPickupEventArgs ev)
         {
-            if (!ev.IsAllowed || !Round.InProgress) return;
+            if (!ev.IsAllowed || !Round.InProgress || MainPlugin.Reporter is null) return;
             UpgradeItemLog(ev.Pickup.Type, ev.KnobSetting);
         }
 
@@ -984,7 +987,7 @@
         /// <param name="ev">Event arguments.</param>
         public void OnActivatingWarheadPanel(ActivatingWarheadPanelEventArgs ev)
         {
-            if (!ev.IsAllowed || !Round.InProgress) return;
+            if (!ev.IsAllowed || !Round.InProgress || MainPlugin.Reporter is null) return;
             FinalStats stats = GetStat<FinalStats>();
             stats.ButtonUnlocked = true;
             if (stats.ButtonUnlocker == null)
@@ -1003,7 +1006,7 @@
         /// <param name="ev">Event arguments.</param>
         public void OnWarheadStarting(StartingEventArgs ev)
         {
-            if (!ev.IsAllowed || !Round.InProgress) return;
+            if (!ev.IsAllowed || !Round.InProgress || MainPlugin.Reporter is null) return;
             FinalStats stats = GetStat<FinalStats>();
             stats.FirstActivator ??= ev.Player;
             Hold(stats);
@@ -1016,7 +1019,7 @@
         /// <param name="ev">Event arguments.</param>
         public void OnWarheadDetonated()
         {
-            if (!Round.InProgress) return;
+            if (!Round.InProgress || MainPlugin.Reporter is null) return;
             FinalStats stats = GetStat<FinalStats>();
             if (!stats.Detonated)
             {
@@ -1049,6 +1052,9 @@
         /// <param name="leadingTeam">The winning team of the round.</param>
         private void FillOutFinalStats(LeadingTeam leadingTeam = LeadingTeam.Draw)
         {
+            if (MainPlugin.Reporter is null)
+                return;
+
             // Fill out door destroyed stat
             FinalStats stats = GetStat<FinalStats>();
             stats.DoorsDestroyed = Door.List.Count(d => d.IsBroken);
