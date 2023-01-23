@@ -132,6 +132,7 @@
             PlayerEvents.Shooting += Handlers.OnShooting;
             PlayerEvents.ReloadingWeapon += Handlers.OnReloadingWeapon;
             PlayerEvents.UnlockingGenerator += Handlers.OnUnlockingGenerator;
+            PlayerEvents.PlayerDamageWindow += Handlers.OnDamagingWindow;
 
             Scp079Events.GainingLevel += Handlers.OnScp079GainingLevel;
             Scp079Events.TriggeringDoor += Handlers.OnScp079TriggeringDoor;
@@ -208,6 +209,7 @@
             PlayerEvents.Shooting -= Handlers.OnShooting;
             PlayerEvents.ReloadingWeapon -= Handlers.OnReloadingWeapon;
             PlayerEvents.UnlockingGenerator -= Handlers.OnUnlockingGenerator;
+            PlayerEvents.PlayerDamageWindow -= Handlers.OnDamagingWindow;
 
             Scp079Events.GainingLevel -= Handlers.OnScp079GainingLevel;
             Scp079Events.TriggeringDoor -= Handlers.OnScp079TriggeringDoor;

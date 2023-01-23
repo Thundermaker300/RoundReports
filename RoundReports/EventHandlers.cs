@@ -9,6 +9,7 @@
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Pools;
     using Exiled.API.Features.Roles;
+    using Exiled.Events;
     using Exiled.Events.EventArgs.Player;
     using Exiled.Events.EventArgs.Scp079;
     using Exiled.Events.EventArgs.Scp096;
@@ -612,6 +613,19 @@
             }
 
             Interactions++;
+        }
+
+        /// <summary>
+        /// Called when a player damages a window.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
+        public void OnDamagingWindow(DamagingWindowEventArgs ev)
+        {
+            if (!Round.InProgress || !ECheck(ev.Player)) return;
+            if (ev.Window.Type is GlassType.Scp079Trigger && Player.Get(RoleTypeId.Scp079).Count() > 0)
+            {
+                IncrementPoints(ev.Player, MvpSettings.Points.RecontainScp079, MainPlugin.Translations.RecontainScp079);
+            }
         }
 
         /// <summary>

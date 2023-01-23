@@ -20,6 +20,8 @@
 
         public int UnlockGenerator { get; set; } = 1;
 
+        public int RecontainScp079 { get; set; } = 3;
+
         public int Escaped { get; set; } = 5;
 
         public int Scp079LeveledUp { get; set; } = 5;

@@ -284,6 +284,8 @@
 
         public string KilledEnemy { get; set; } = "Killed Enemy";
 
+        public string RecontainScp079 { get; set; } = "Recontain SCP-079";
+
         public string Escaped { get; set; } = "Escaped";
 
         public string OpenedWarheadPanel { get; set; } = "Opened Warhead Panel";
