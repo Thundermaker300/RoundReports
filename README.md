@@ -35,6 +35,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | Kill Scientist                        | +3               |
 | Kill Player (Not Scientist)           | +2               |
 | Open Warhead Panel (Surface)          | +2               |
+| Unlock Generator                      | +1               |
 | Die (Most Causes)                     | -1               |
 | Die (Warhead, Decontamination, Tesla) | -2               |
 | Take 3 Candies                        | -10              |
@@ -80,7 +81,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | DoorsOpened           | Yes                         | The total amount of open door interactions.                                             |
 | Drops                 |                             | Each item type and the amount of times it's been dropped.                               |
 | EndTime               |                             | The end time of the round.                                                              |
-| ExpireDate*           |                             | The date that the report will expire, in Discord time formatting.                       |
+| ExpireDate*           | Yes                         | The date that the report will expire, in Discord time formatting.                       |
 | FirearmUpgrades       |                             | The total amount of times a firearm was upgraded.                                       |
 | First330Use           |                             | The time in the round the first SCP-330 candy was obtained.                             |
 | First330User          | Yes                         | The name of the player who used SCP-330 first.                                          |
@@ -105,7 +106,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | PlayerDrops           |                             | Each player and the amount of items they've dropped.                                    |
 | PlayerKills           |                             | Each player and the amount of players they've killed.                                   |
 | PointLogs             |                             | A log for each time points are added or removed.                                        |
-| PostDate*             |                             | The date that the report was posted, in Discord time formatting.                        |
+| PostDate*             | Yes                         | The date that the report was posted, in Discord time formatting.                        |
 | Respawns              |                             | Each respawn that occurs.                                                               |
 | ReportLink*           | Yes                         | Link to the report.                                                                     |
 | RoundTime             | Yes                         | The total time of the round.                                                            |
@@ -126,6 +127,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | SCPMVP                | Yes                         | The SCP MVP of the round.                                                               |
 | SCPPoints             |                             | Each player who has played an SCP and the amount of points they received.               |
 | SerpentsHandKills     |                             | The total amount of Serpent's Hand kills (only if the plugin is installed).             |
+| ShotsByFirearm        |                             | A list of each firearm and the amount of times it was fired.                            |
 | SeveredHands          |                             | The total amount of hands severed from SCP-330. Only shown if value is greater than 0.  |
 | SpawnWaves            | Yes                         | List of each spawn wave. Converts to the total amount of respawn waves in broadcasts.   |
 | StartClassD           |                             | The amount of Class-D personnel at the start of the round.                              |

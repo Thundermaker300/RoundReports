@@ -2,6 +2,7 @@
 {
 #pragma warning disable SA1600
     using System.Collections.Generic;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Pools;
 
@@ -55,16 +56,22 @@
         [BindStat(StatType.TotalReloads)]
         public int TotalReloads { get; set; }
 
+        [Translation(nameof(Translation.ShotsByFirearm))]
+        [BindStat(StatType.ShotsByFirearm)]
+        public Dictionary<FirearmType, int> ShotsByFirearm { get; set; }
+
         public void Setup()
         {
             Drops = DictionaryPool<ItemType, int>.Pool.Get();
             PlayerDrops = DictionaryPool<Player, int>.Pool.Get();
+            ShotsByFirearm = DictionaryPool<FirearmType, int>.Pool.Get();
         }
 
         public void Cleanup()
         {
             DictionaryPool<ItemType, int>.Pool.Return(Drops);
             DictionaryPool<Player, int>.Pool.Return(PlayerDrops);
+            DictionaryPool<FirearmType, int>.Pool.Return(ShotsByFirearm);
         }
     }
 #pragma warning restore SA1600

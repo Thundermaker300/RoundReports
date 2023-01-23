@@ -6,6 +6,7 @@
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using Exiled.API.Features.Pools;
     using Exiled.API.Features.Roles;
     using Exiled.Events.EventArgs.Player;
@@ -548,8 +549,19 @@
         public void OnShooting(ShootingEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
+
             ItemStats stats = GetStat<ItemStats>();
             stats.TotalShotsFired++;
+
+            var firearm = (Firearm)ev.Player.CurrentItem;
+            if (firearm is not null)
+            {
+                if (!stats.ShotsByFirearm.ContainsKey(firearm.FirearmType))
+                    stats.ShotsByFirearm[firearm.FirearmType] = 1;
+                else
+                    stats.ShotsByFirearm[firearm.FirearmType]++;
+            }
+
             Hold(stats);
         }
 

@@ -70,6 +70,7 @@
         //-- Firearm
         TotalShotsFired,
         TotalReloads,
+        ShotsByFirearm,
 
         // SCP Stats
         Scp096Charges,
