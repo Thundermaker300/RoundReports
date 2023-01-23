@@ -506,6 +506,19 @@
                 }
             }
 
+            // Edge case for SCP-049 kills
+            else
+            {
+                if (ev.DamageHandler.Type == DamageType.CardiacArrest)
+                {
+                    IEnumerable<Player> doctors = Player.Get(RoleTypeId.Scp049).Where(bird => Vector3.Distance(bird.Position, ev.Player.Position) < 12);
+                    foreach (Player birds in doctors)
+                    {
+                        IncrementPoints(birds, MvpSettings.Points.KillEnemy, MainPlugin.Translations.KilledEnemy);
+                    }
+                }
+            }
+
             // Kill by type
             if (!killStats.KillsByType.ContainsKey(ev.DamageHandler.Type))
                 killStats.KillsByType.Add(ev.DamageHandler.Type, 1);
