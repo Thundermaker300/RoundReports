@@ -1094,22 +1094,24 @@
             // Compile MVP info
             if (MvpSettings.MvpEnabled)
             {
-                var sortedHumanData = Points[PointTeam.Human].Where(data => data.Value > 0).OrderByDescending(data => data.Value);
-                var sortedSCPData = Points[PointTeam.SCP].Where(data => data.Value > 0).OrderByDescending(data => data.Value);
+                var sortedHumanData = Points[PointTeam.Human].OrderByDescending(data => data.Value);
+                var sortedSCPData = Points[PointTeam.SCP].OrderByDescending(data => data.Value);
 #pragma warning disable SA1312 // Variable names should begin with lower-case letter
                 MVPStats MVPInfo = GetStat<MVPStats>();
 #pragma warning restore SA1312 // Variable names should begin with lower-case letter
 
                 if (sortedHumanData.Count() >= 1)
                 {
-                    KeyValuePair<Player, int> mvp = sortedHumanData.First();
-                    MVPInfo.HumanMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
+                    KeyValuePair<Player, int>? mvp = sortedHumanData.First(data => data.Value > 0);
+                    if (mvp.HasValue)
+                        MVPInfo.HumanMVP = mvp.Value.Key.Nickname + $" ({mvp.Value.Value} points)";
                 }
 
                 if (sortedSCPData.Count() >= 1)
                 {
-                    KeyValuePair<Player, int> mvp = sortedSCPData.First();
-                    MVPInfo.SCPMVP = mvp.Key.Nickname + $" ({mvp.Value} points)";
+                    KeyValuePair<Player, int>? mvp = sortedSCPData.First(data => data.Value > 0);
+                    if (mvp.HasValue)
+                        MVPInfo.SCPMVP = mvp.Value.Key.Nickname + $" ({mvp.Value.Value} points)";
                 }
 
                 MVPInfo.HumanPoints = sortedHumanData.ToDictionary(kp => kp.Key, kp2 => kp2.Value);
