@@ -70,6 +70,9 @@
         /// </summary>
         public int Interactions { get; set; } = 0;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether or not final stats have been filled out.
+        /// </summary>
         public bool FinalStatsFilledOut { get; set; } = false;
 
         /// <summary>
@@ -101,7 +104,7 @@
         /// <param name="value">The value.</param>
         /// <param name="total">The total.</param>
         /// <param name="updater">The updater method.</param>
-        /// <returns>The <see cref="PercentInt"/></returns>
+        /// <returns>The <see cref="PercentInt"/>.</returns>
         public static PercentInt GetPI(int value, int total, Func<int> updater) => PercentIntPool.Pool.Get(value, total, updater);
 
         /// <summary>
@@ -415,7 +418,7 @@
         /// <param name="ev">Event arguments.</param>
         public void OnDying(DyingEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed || MainPlugin.IsRestarting || MainPlugin.Reporter is null ) return;
+            if (!Round.InProgress || !ev.IsAllowed || MainPlugin.IsRestarting || MainPlugin.Reporter is null) return;
             FinalStats stats = GetStat<FinalStats>();
             OrganizedKillsStats killStats = GetStat<OrganizedKillsStats>();
             stats.TotalDeaths++;
