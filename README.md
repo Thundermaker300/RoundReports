@@ -25,12 +25,24 @@ Disables reporting for the duration of the round. Automatically unpauses at the 
 ### addremark / remark
 Permission: rr.remark  
 Adds a remark to the report. Can be used to specify event rounds & etc.  
+
+### mvp
+Permission: N/A  
+Parent command to add and remove MVP points.  
+  
+#### mvp add
+Permission: rr.mvp.add  
+Grants the amount of points to the player.  
+  
+#### mvp remove
+Permission: rr.mvp.remove  
+Removes the amount of points from the player.  
   
 ## Note on DNT Players
 Players with Do Not Track enabled will never have their username present on reports. How their stats are handled is based on the `ExcludeDNTUsers` config. If this config is set to `true`, no stats at all will be recorded except for kill logs (in which case their name will be removed). If this config is set to `false`, their stats will still be included but their name will be removed. Do Not Track players will never be included in the MVP statistics, regardless of this setting's value.
 
 ## MVP Statistic Info
-MVP is calculated by granting players points for specific actions. These points can also be taken away by other actions. There are two separate point systems, and as such two separate MVPs: One for SCPs, and one for humans. Full list of actions and the points they grant or remove below. (Configurable: Coming soon)
+MVP is calculated by granting players points for specific actions. These points can also be taken away by other actions. There are two separate point systems, and as such two separate MVPs: One for SCPs, and one for humans. Full list of actions and the default points they grant or remove below (can be configured).
 
 ### Human Points
 
