@@ -499,9 +499,9 @@
                     IncrementPoints(ev.Attacker, MvpSettings.Points.KillEnemy, MainPlugin.Translations.KilledEnemy); // Other kills
 
                 // Grant points to SCP-079 if death in a locked down/blackout room
-                if (GetTeam(ev.Attacker) == "SCPs")
+                if (GetTeam(ev.Attacker) == "SCPs" || ev.DamageHandler.Type == DamageType.CardiacArrest)
                 {
-                    foreach (Player player in Player.List)
+                    foreach (Player player in Player.Get(ECheck))
                     {
                         if (player.Role is Scp079Role role && role.SubroutineModule.TryGetSubroutine(out Scp079RewardManager manager) && manager._markedRooms.ContainsKey(ev.Player.CurrentRoom.Identifier))
                             IncrementPoints(player, MvpSettings.Points.Scp079AssistKill, MainPlugin.Translations.AssistKill);
@@ -568,6 +568,13 @@
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Scp106)) return;
             IncrementPoints(ev.Scp106, MvpSettings.Points.Scp106GrabPlayer, MainPlugin.Translations.GrabbedPlayer);
+
+            foreach (Player player in Player.Get(ECheck))
+            {
+                if (player.Role is Scp079Role role && role.SubroutineModule.TryGetSubroutine(out Scp079RewardManager manager) && manager._markedRooms.ContainsKey(ev.Player.CurrentRoom.Identifier))
+                    IncrementPoints(player, MvpSettings.Points.Scp079AssistKill, MainPlugin.Translations.AssistKill);
+            }
+
         }
 
         /// <summary>
