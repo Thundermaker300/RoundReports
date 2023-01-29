@@ -59,6 +59,7 @@
 
         TotalRooms,
         RoomsByZone,
+        TotalCameras,
         TotalDoors,
 
         TeslaAmount,

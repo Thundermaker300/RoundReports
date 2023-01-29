@@ -35,6 +35,10 @@
         [BindStat(StatType.RoomsByZone)]
         public Dictionary<ZoneType, PercentInt> RoomsByZone { get; set; }
 
+        [Translation(nameof(Translation.TotalCameras))]
+        [BindStat(StatType.TotalCameras)]
+        public int TotalCameras { get; set; }
+
         [Translation(nameof(Translation.TotalDoors))]
         [BindStat(StatType.TotalDoors)]
         public int TotalDoors { get; set; }

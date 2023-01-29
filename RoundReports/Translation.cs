@@ -260,6 +260,8 @@
 
         public string RoomsByZone { get; set; } = "Rooms By Zone";
 
+        public string TotalCameras { get; set; } = "Total Cameras";
+
         public string TotalDoors { get; set; } = "Total Doors";
 
         public string TeslaTitle { get; set; } = "Tesla Gates";

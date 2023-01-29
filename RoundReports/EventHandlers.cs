@@ -257,8 +257,10 @@
 
             // Map Generation Stats
             var stats = GetStat<MiscStats>();
+            stats.TotalCameras = Camera.List.Count();
             stats.TotalDoors = Door.List.Count();
             stats.TotalRooms = Room.List.Count();
+            stats.TeslaAmount = TeslaGate.List.Count();
 
             foreach (var room in Room.List)
             {
@@ -268,7 +270,6 @@
                     stats.RoomsByZone[room.Zone].IncrementValue(1);
             }
 
-            stats.TeslaAmount = TeslaGate.List.Count();
             Hold(stats);
         }
 
