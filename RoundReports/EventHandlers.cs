@@ -260,7 +260,7 @@
             stats.TotalCameras = Camera.List.Count();
             stats.TotalDoors = Door.List.Count();
             stats.TotalRooms = Room.List.Count();
-            stats.TeslaAmount = TeslaGate.List.Count();
+            stats.TotalTeslaGates = TeslaGate.List.Count();
 
             foreach (var room in Room.List)
             {

@@ -62,7 +62,7 @@
         TotalCameras,
         TotalDoors,
 
-        TeslaAmount,
+        TotalTeslaGates,
         TeslaShocks,
         TeslaDamage,
 

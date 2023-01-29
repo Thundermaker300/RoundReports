@@ -266,7 +266,7 @@
 
         public string TeslaTitle { get; set; } = "Tesla Gates";
 
-        public string TeslaAmount { get; set; } = "Number of Tesla Gates";
+        public string TotalTeslaGates { get; set; } = "Total Tesla Gates";
 
         public string TeslaShocks { get; set; } = "Total Tesla Gate Shocks";
 

@@ -44,9 +44,9 @@
         public int TotalDoors { get; set; }
 
         [Header(nameof(Translation.TeslaTitle))]
-        [Translation(nameof(Translation.TeslaAmount))]
-        [BindStat(StatType.TeslaAmount)]
-        public int TeslaAmount { get; set; }
+        [Translation(nameof(Translation.TotalTeslaGates))]
+        [BindStat(StatType.TotalTeslaGates)]
+        public int TotalTeslaGates { get; set; }
 
         [Translation(nameof(Translation.TeslaShocks))]
         [BindStat(StatType.TeslaShocks)]

@@ -158,13 +158,13 @@ MVP is calculated by granting players points for specific actions. These points 
 | StartSCP              |                             | A list of every SCP at the start of the round.                                          |
 | StartTime             | Yes                         | The time that the round started.                                                        |
 | SurvivingPlayers      |                             | Each player that is alive at the end of the round.                                      |
-| TeslaAmount           |                             | Total amount of tesla gates in the round.                                               |
 | TeslaDamage           |                             | Total amount of tesla damage delt in the round.                                         |
 | TeslaShocks           |                             | Total amount of tesla activations in the round.                                         |
 | Total914Activations   | Yes                         | The total amount of times SCP-914 was activated.                                        |
 | TotalCandiesTaken     | Yes                         | The total amount of candies taken.                                                      |
 | TotalDamage           | Yes                         | The total amount of damage dealt.                                                       |
 | TotalDeaths           | Yes                         | The total amount of deaths.                                                             |
+| TotalCameras          |                             | The total amount of cameras on the map.                                                 |
 | TotalDoors            |                             | The total amount of doors on the map.                                                   |
 | TotalDrops            | Yes                         | The total amount of items dropped.                                                      |
 | TotalInteractions     | Yes                         | The total amount of interactions that took place (doors, elevators, Scp330, etc)        |
@@ -174,6 +174,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | TotalRespawned        | Yes                         | The total amount of respawned players.                                                  |
 | TotalRooms            |                             | The total amount of rooms generated.                                                    |
 | TotalShotsFired       | Yes                         | The total amount of shots fired.                                                        |
+| TotalTeslaGates       |                             | Total amount of tesla gates in the round.                                               |
 | TutorialKills         |                             | The total amount of tutorial kills. Only shown if value is greater than 0.              |
 | UIUKills              |                             | The total amount of UIU kills (only if the plugin is installed).                        |
 | UptimeRound*          | Yes                         | The number of rounds since the server has last restarted.                               |
