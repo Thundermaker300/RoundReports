@@ -127,6 +127,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | PostDate*             | Yes                         | The date that the report was posted, in Discord time formatting.                        |
 | Respawns              |                             | Each respawn that occurs.                                                               |
 | ReportLink*           | Yes                         | Link to the report.                                                                     |
+| RoomsByZone           |                             | A list of each zone and the amount of rooms it contains.                                |
 | RoundTime             | Yes                         | The total time of the round.                                                            |
 | ScientistKills        | Yes                         | The total amount of scientist kills in the round.                                       |
 | Scp018sThrown         |                             | The total amount of SCP-018s thrown.                                                    |
@@ -162,12 +163,14 @@ MVP is calculated by granting players points for specific actions. These points 
 | TotalCandiesTaken     | Yes                         | The total amount of candies taken.                                                      |
 | TotalDamage           | Yes                         | The total amount of damage dealt.                                                       |
 | TotalDeaths           | Yes                         | The total amount of deaths.                                                             |
+| TotalDoors            |                             | The total amount of doors on the map.                                                   |
 | TotalDrops            | Yes                         | The total amount of items dropped.                                                      |
 | TotalInteractions     | Yes                         | The total amount of interactions that took place (doors, elevators, Scp330, etc)        |
 | TotalItemUpgrades     | Yes                         | The total amount of item upgrades.                                                      |
 | TotalKills            | Yes                         | The total amount of kills in the round.                                                 |
 | TotalReloads          | Yes                         | The total amount of firearm reloads.                                                    |
 | TotalRespawned        | Yes                         | The total amount of respawned players.                                                  |
+| TotalRooms            |                             | The total amount of rooms generated.                                                    |
 | TotalShotsFired       | Yes                         | The total amount of shots fired.                                                        |
 | TutorialKills         |                             | The total amount of tutorial kills. Only shown if value is greater than 0.              |
 | UIUKills              |                             | The total amount of UIU kills (only if the plugin is installed).                        |

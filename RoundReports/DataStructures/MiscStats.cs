@@ -2,6 +2,7 @@
 {
 #pragma warning disable SA1600
     using System.Collections.Generic;
+    using Exiled.API.Enums;
     using Exiled.API.Features.Pools;
 
     public class MiscStats : IReportStat
@@ -25,6 +26,19 @@
         [BindStat(StatType.Respawns)]
         public List<string> Respawns { get; set; }
 
+        [Header(nameof(Translation.MapTitle))]
+        [Translation(nameof(Translation.TotalRooms))]
+        [BindStat(StatType.TotalRooms)]
+        public int TotalRooms { get; set; }
+
+        [Translation(nameof(Translation.RoomsByZone))]
+        [BindStat(StatType.RoomsByZone)]
+        public Dictionary<ZoneType, PercentInt> RoomsByZone { get; set; }
+
+        [Translation(nameof(Translation.TotalDoors))]
+        [BindStat(StatType.TotalDoors)]
+        public int TotalDoors { get; set; }
+
         [Header(nameof(Translation.TeslaTitle))]
         [Translation(nameof(Translation.TeslaAmount))]
         [BindStat(StatType.TeslaAmount)]
@@ -42,12 +56,14 @@
         {
             SpawnWaves = ListPool<string>.Pool.Get();
             Respawns = ListPool<string>.Pool.Get();
+            RoomsByZone = DictionaryPool<ZoneType, PercentInt>.Pool.Get();
         }
 
         public void Cleanup()
         {
             ListPool<string>.Pool.Return(SpawnWaves);
             ListPool<string>.Pool.Return(Respawns);
+            DictionaryPool<ZoneType, PercentInt>.Pool.Return(RoomsByZone);
         }
     }
 #pragma warning restore SA1600

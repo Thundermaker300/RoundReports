@@ -249,6 +249,17 @@
 
             // Map Generation Stats
             var stats = GetStat<MiscStats>();
+            stats.TotalDoors = Door.List.Count();
+            stats.TotalRooms = Room.List.Count();
+
+            foreach (var room in Room.List)
+            {
+                if (!stats.RoomsByZone.ContainsKey(room.Zone))
+                    stats.RoomsByZone[room.Zone] = GetPI(1, stats.TotalRooms, () => MainPlugin.Reporter.GetStat<MiscStats>().TotalRooms);
+                else
+                    stats.RoomsByZone[room.Zone].IncrementValue(1);
+            }
+
             stats.TeslaAmount = TeslaGate.List.Count();
             Hold(stats);
         }

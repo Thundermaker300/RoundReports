@@ -57,6 +57,10 @@
         TotalRespawned,
         Respawns,
 
+        TotalRooms,
+        RoomsByZone,
+        TotalDoors,
+
         TeslaAmount,
         TeslaShocks,
         TeslaDamage,

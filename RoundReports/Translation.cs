@@ -250,6 +250,14 @@
 
         public string RespawnLog { get; set; } = "{PLAYER} respawned as {ROLE}.";
 
+        public string MapTitle { get; set; } = "Map Stats";
+
+        public string TotalRooms { get; set; } = "Total Rooms";
+
+        public string RoomsByZone { get; set; } = "Rooms By Zone";
+
+        public string TotalDoors { get; set; } = "Total Doors";
+
         public string TeslaTitle { get; set; } = "Tesla Gates";
 
         public string TeslaAmount { get; set; } = "Number of Tesla Gates";
