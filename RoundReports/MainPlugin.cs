@@ -128,6 +128,7 @@
             PlayerEvents.Escaping += Handlers.OnEscaping;
             PlayerEvents.DroppingItem += Handlers.OnDroppingItem;
             PlayerEvents.EnteringPocketDimension += Handlers.OnEnteringPocketDimension;
+            PlayerEvents.TriggeringTesla += Handlers.OnTriggeringTesla;
 
             PlayerEvents.Shooting += Handlers.OnShooting;
             PlayerEvents.ReloadingWeapon += Handlers.OnReloadingWeapon;
@@ -205,6 +206,7 @@
             PlayerEvents.Escaping -= Handlers.OnEscaping;
             PlayerEvents.DroppingItem -= Handlers.OnDroppingItem;
             PlayerEvents.EnteringPocketDimension -= Handlers.OnEnteringPocketDimension;
+            PlayerEvents.TriggeringTesla -= Handlers.OnTriggeringTesla;
 
             PlayerEvents.Shooting -= Handlers.OnShooting;
             PlayerEvents.ReloadingWeapon -= Handlers.OnReloadingWeapon;

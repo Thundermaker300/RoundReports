@@ -155,6 +155,9 @@ MVP is calculated by granting players points for specific actions. These points 
 | StartSCP              |                             | A list of every SCP at the start of the round.                                          |
 | StartTime             | Yes                         | The time that the round started.                                                        |
 | SurvivingPlayers      |                             | Each player that is alive at the end of the round.                                      |
+| TeslaAmount           |                             | Total amount of tesla gates in the round.                                               |
+| TeslaDamage           |                             | Total amount of tesla damage delt in the round.                                         |
+| TeslaShocks           |                             | Total amount of tesla activations in the round.                                         |
 | Total914Activations   | Yes                         | The total amount of times SCP-914 was activated.                                        |
 | TotalCandiesTaken     | Yes                         | The total amount of candies taken.                                                      |
 | TotalDamage           | Yes                         | The total amount of damage dealt.                                                       |

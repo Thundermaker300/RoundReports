@@ -237,8 +237,10 @@
 
         public string DetonationTime { get; set; } = "Detonation Time";
 
-        // Respawn Stats
-        public string RespawnTitle { get; set; } = "Respawn Statistics";
+        // Miscellaneous Stats
+        public string MiscTitle { get; set; } = "Miscellaneous Stats";
+
+        public string RespawnTitle { get; set; } = "Respawns";
 
         public string SpawnWaves { get; set; } = "Spawn Waves";
 
@@ -247,6 +249,14 @@
         public string Respawns { get; set; } = "Respawns";
 
         public string RespawnLog { get; set; } = "{PLAYER} respawned as {ROLE}.";
+
+        public string TeslaTitle { get; set; } = "Tesla Gates";
+
+        public string TeslaAmount { get; set; } = "Number of Tesla Gates";
+
+        public string TeslaShocks { get; set; } = "Total Tesla Gate Shocks";
+
+        public string TeslaDamage { get; set; } = "Total Tesla Gate Damage";
 
         // MVPs
         public string MVPTitle { get; set; } = "Round MVPs";

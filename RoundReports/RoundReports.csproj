@@ -94,7 +94,7 @@
     <Compile Include="DataStructures\MVPStats.cs" />
     <Compile Include="DataStructures\OrganizedDamageStats.cs" />
     <Compile Include="DataStructures\OrganizedKillsStats.cs" />
-    <Compile Include="DataStructures\RespawnStats.cs" />
+    <Compile Include="DataStructures\MiscStats.cs" />
     <Compile Include="DataStructures\StartingStats.cs" />
     <Compile Include="Enums\EmbedColorType.cs" />
     <Compile Include="Enums\PointTeam.cs" />
@@ -119,7 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EXILED">
-      <Version>6.0.0-beta.25</Version>
+      <Version>6.0.0-beta.24</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.2</Version>

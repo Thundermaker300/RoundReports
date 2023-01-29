@@ -4,13 +4,14 @@
     using System.Collections.Generic;
     using Exiled.API.Features.Pools;
 
-    public class RespawnStats : IReportStat
+    public class MiscStats : IReportStat
     {
-        [Translation(nameof(Translation.RespawnTitle))]
-        public string Title => "Respawn Statistics";
+        [Translation(nameof(Translation.MiscTitle))]
+        public string Title => "Miscellaneous Statistics";
 
-        public int Order => 6;
+        public int Order => 8;
 
+        [Header(nameof(Translation.RespawnTitle))]
         [Rule(Rule.CommaSeparatedList)]
         [Translation(nameof(Translation.SpawnWaves))]
         [BindStat(StatType.SpawnWaves)]
@@ -23,6 +24,19 @@
         [Translation(nameof(Translation.Respawns))]
         [BindStat(StatType.Respawns)]
         public List<string> Respawns { get; set; }
+
+        [Header(nameof(Translation.TeslaTitle))]
+        [Translation(nameof(Translation.TeslaAmount))]
+        [BindStat(StatType.TeslaAmount)]
+        public int TeslaAmount { get; set; }
+
+        [Translation(nameof(Translation.TeslaShocks))]
+        [BindStat(StatType.TeslaShocks)]
+        public int TeslaShocks { get; set; }
+
+        [Translation(nameof(Translation.TeslaDamage))]
+        [BindStat(StatType.TeslaDamage)]
+        public int TeslaDamage { get; set; }
 
         public void Setup()
         {

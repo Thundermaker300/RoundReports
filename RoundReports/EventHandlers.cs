@@ -246,6 +246,11 @@
             Points[PointTeam.Human] = new();
             MainPlugin.Reporter = new Reporter();
             MainPlugin.IsRestarting = false;
+
+            // Map Generation Stats
+            var stats = GetStat<MiscStats>();
+            stats.TeslaAmount = TeslaGate.List.Count();
+            Hold(stats);
         }
 
         /// <summary>
@@ -327,7 +332,7 @@
         {
             if (!Round.InProgress || MainPlugin.IsRestarting || MainPlugin.Reporter is null) return;
             if (!ev.IsAllowed || ev.Players.Count < 1) return;
-            RespawnStats stats = GetStat<RespawnStats>();
+            MiscStats stats = GetStat<MiscStats>();
 
             if (ev.NextKnownTeam is Respawning.SpawnableTeamType.NineTailedFox)
             {
@@ -369,7 +374,7 @@
         public void OnSpawned(SpawnedEventArgs ev)
         {
             if (!Round.InProgress || MainPlugin.IsRestarting || Round.ElapsedTime.TotalSeconds <= 30 || !ECheck(ev.Player) || GetTeam(ev.Player) is not("SH" or "UIU" or "FoundationForces" or "ChaosInsurgency")) return;
-            RespawnStats stats = GetStat<RespawnStats>();
+            MiscStats stats = GetStat<MiscStats>();
             stats.TotalRespawned++;
             stats.Respawns.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player, typeof(Player))).Replace("{ROLE}", GetRole(ev.Player)));
             Hold(stats);
@@ -410,6 +415,11 @@
             }
 
             Hold(stats);
+
+            // Tesla Gate damage
+            var miscStats = GetStat<MiscStats>();
+            miscStats.TeslaDamage += (int)ev.Amount;
+            Hold(miscStats);
         }
 
         /// <summary>
@@ -574,7 +584,20 @@
                 if (player.Role is Scp079Role role && role.SubroutineModule.TryGetSubroutine(out Scp079RewardManager manager) && manager._markedRooms.ContainsKey(ev.Player.CurrentRoom.Identifier))
                     IncrementPoints(player, MvpSettings.Points.Scp079AssistKill, MainPlugin.Translations.AssistKill);
             }
+        }
 
+        /// <summary>
+        /// Called when a tesla gate is triggered.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
+        public void OnTriggeringTesla(TriggeringTeslaEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
+            var stats = GetStat<MiscStats>();
+
+            stats.TeslaShocks++;
+
+            Hold(stats);
         }
 
         /// <summary>

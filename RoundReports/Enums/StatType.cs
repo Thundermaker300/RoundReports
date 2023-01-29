@@ -52,10 +52,14 @@
         PlayerDoorsOpened,
         PlayerDoorsClosed,
 
-        // Respawn Stats
+        // Misc Stats
         SpawnWaves,
         TotalRespawned,
         Respawns,
+
+        TeslaAmount,
+        TeslaShocks,
+        TeslaDamage,
 
         // Item Stats
         TotalDrops,
