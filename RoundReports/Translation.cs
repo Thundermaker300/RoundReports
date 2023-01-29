@@ -194,7 +194,11 @@
         public string Scp1853Uses { get; set; } = "SCP-1853 Uses";
 
         // SCP Stats
-        [Description("The following seven SCP-related stats only show on the report if each is activated at least once.")]
+        [Description("The following SCP-related stats only show on the report if each is activated at least once.")]
+        public string Scp079CamerasUsed { get; set; } = "SCP-079 Cameras Used";
+
+        public string Scp079MostUsedCamera { get; set; } = "SCP-079 Most Used Camera";
+
         public string Scp096Charges { get; set; } = "SCP-096 Charges";
 
         public string Scp096Enrages { get; set; } = "SCP-096 Enrages";

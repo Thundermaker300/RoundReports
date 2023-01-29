@@ -3,6 +3,7 @@
 #pragma warning disable SA1600
     using System;
     using System.Collections.Generic;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Pools;
     using InventorySystem.Items.Usables.Scp330;
@@ -14,6 +15,16 @@
         public string Title => "SCP Statistics";
 
         public int Order => 7;
+
+        [HideIfDefault]
+        [Translation(nameof(Translation.Scp079CamerasUsed))]
+        [BindStat(StatType.Scp079CamerasUsed)]
+        public PercentInt Scp079CamerasUsed { get; set; } // Created by script
+
+        [HideIfDefault]
+        [Translation(nameof(Translation.Scp079MostUsedCamera))]
+        [BindStat(StatType.Scp079MostUsedCamera)]
+        public CameraType Scp079MostUsedCamera { get; set; } = CameraType.Unknown;
 
         [HideIfDefault]
         [Translation(nameof(Translation.Scp096Charges))]
@@ -149,6 +160,9 @@
             DictionaryPool<CandyKindID, int>.Pool.Return(CandiesTaken);
             DictionaryPool<Player, int>.Pool.Return(CandiesByPlayer);
             DictionaryPool<ItemType, PercentInt>.Pool.Return(Upgrades);
+
+            if (Scp079CamerasUsed is not null)
+                PercentIntPool.Pool.Return(Scp079CamerasUsed);
         }
     }
 #pragma warning restore SA1600

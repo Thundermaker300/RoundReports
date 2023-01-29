@@ -81,6 +81,8 @@
         ShotsByFirearm,
 
         // SCP Stats
+        Scp079CamerasUsed,
+        Scp079MostUsedCamera,
         Scp096Charges,
         Scp096Enrages,
         Scp106Teleports,

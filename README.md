@@ -131,6 +131,8 @@ MVP is calculated by granting players points for specific actions. These points 
 | RoundTime             | Yes                         | The total time of the round.                                                            |
 | ScientistKills        | Yes                         | The total amount of scientist kills in the round.                                       |
 | Scp018sThrown         |                             | The total amount of SCP-018s thrown.                                                    |
+| Scp079CamerasUsed     |                             | The total amount of cameras SCP-079 has visited. Only shown if value is greater than 0. |
+| Scp079MostUsedCamera  |                             | The camera SCP-079 used the most. Will not be shown if not applicable (no SCP-079).     |
 | Scp096Charges         |                             | The total amount of SCP-096 charges. Only shown if value is greater than 0.             |
 | Scp096Enrages         |                             | The total amount of SCP-096 enrages. Only shown if value is greater than 0.             |
 | Scp106Teleports       |                             | The total amount of SCP-106 teleports. Only shown if value is greater than 0.           |

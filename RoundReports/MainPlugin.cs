@@ -138,6 +138,7 @@
             Scp079Events.GainingLevel += Handlers.OnScp079GainingLevel;
             Scp079Events.TriggeringDoor += Handlers.OnScp079TriggeringDoor;
             Scp079Events.InteractingTesla += Handlers.OnScp079InteractTesla;
+            Scp079Events.ChangingCamera += Handlers.OnScp079ChangingCamera;
 
             Scp096Events.Charging += Handlers.OnScp096Charge;
             Scp096Events.Enraging += Handlers.OnScp096Enrage;
@@ -216,6 +217,7 @@
             Scp079Events.GainingLevel -= Handlers.OnScp079GainingLevel;
             Scp079Events.TriggeringDoor -= Handlers.OnScp079TriggeringDoor;
             Scp079Events.InteractingTesla -= Handlers.OnScp079InteractTesla;
+            Scp079Events.ChangingCamera -= Handlers.OnScp079ChangingCamera;
 
             Scp096Events.Charging -= Handlers.OnScp096Charge;
             Scp096Events.Enraging -= Handlers.OnScp096Enrage;

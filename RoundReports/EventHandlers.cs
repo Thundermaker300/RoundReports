@@ -25,9 +25,11 @@
     using Exiled.Events.EventArgs.Warhead;
     using MEC;
     using PlayerRoles;
+    using PlayerRoles.PlayableScps.Scp079.Cameras;
     using PlayerRoles.PlayableScps.Scp079.Rewards;
     using Scp914;
     using UnityEngine;
+    using Camera = Exiled.API.Features.Camera;
     using Scp914Object = Exiled.API.Features.Scp914;
 
     /// <summary>
@@ -69,6 +71,11 @@
         /// Gets or sets the total amount of interactions that have occurred.
         /// </summary>
         public int Interactions { get; set; } = 0;
+
+        /// <summary>
+        /// Gets SCP-079 used cameras.
+        /// </summary>
+        public Dictionary<Camera, int> UsedCameras { get; } = new();
 
         /// <summary>
         /// Gets or sets a value indicating whether or not final stats have been filled out.
@@ -240,6 +247,7 @@
             FirstKill = false;
             FirstDoor = false;
             Interactions = 0;
+            UsedCameras.Clear();
             FinalStatsFilledOut = false;
             Points.Clear();
             Points[PointTeam.SCP] = new();
@@ -680,6 +688,30 @@
         }
 
         /// <summary>
+        /// Called when SCP-079 changes cameras.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
+        public void OnScp079ChangingCamera(ChangingCameraEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
+            if (UsedCameras.ContainsKey(ev.Camera))
+            {
+                UsedCameras[ev.Camera]++;
+                return;
+            }
+
+            var stats = GetStat<SCPStats>();
+            if (stats.Scp079CamerasUsed is null)
+                stats.Scp079CamerasUsed = GetPI(1, Camera.List.Count(), () => Camera.List.Count());
+            else
+                stats.Scp079CamerasUsed.IncrementValue(1);
+
+            UsedCameras.Add(ev.Camera, 1);
+
+            Hold(stats);
+        }
+
+        /// <summary>
         /// Called when a player damages a window.
         /// </summary>
         /// <param name="ev">Event arguments.</param>
@@ -856,6 +888,7 @@
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             if (ev.Player is null) return;
+
             FinalStats stats = GetStat<FinalStats>();
             if (ev.Door.IsOpen)
             {
@@ -1112,6 +1145,16 @@
             // Fill out door destroyed stat
             FinalStats stats = GetStat<FinalStats>();
             stats.DoorsDestroyed = Door.List.Count(d => d.IsBroken);
+
+            // Fill out SCP-079 most used camera
+            if (UsedCameras.Count > 0)
+            {
+                var topCamera = UsedCameras.OrderByDescending(kvp => kvp.Value).FirstOrDefault();
+                SCPStats scpStats = GetStat<SCPStats>();
+                scpStats.Scp079MostUsedCamera = topCamera.Key.Type;
+
+                Hold(scpStats);
+            }
 
             // Fill out final stats
             stats.EndTime = DateTime.Now;
