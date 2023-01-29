@@ -14,6 +14,7 @@
     using Exiled.CustomRoles.API.Features;
     using Exiled.Events;
     using Exiled.Events.EventArgs.Player;
+    using Exiled.Events.EventArgs.Scp049;
     using Exiled.Events.EventArgs.Scp079;
     using Exiled.Events.EventArgs.Scp096;
     using Exiled.Events.EventArgs.Scp106;
@@ -723,6 +724,19 @@
             {
                 IncrementPoints(ev.Player, MvpSettings.Points.RecontainScp079, MainPlugin.Translations.RecontainScp079);
             }
+        }
+
+        /// <summary>
+        /// Called when SCP-049 recalls.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
+        public void OnScp049Recalling(FinishingRecallEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
+
+            SCPStats stat = GetStat<SCPStats>();
+            stat.Scp049Revives++;
+            Hold(stat);
         }
 
         /// <summary>

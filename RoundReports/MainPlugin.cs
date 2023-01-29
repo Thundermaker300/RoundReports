@@ -9,6 +9,7 @@
     using Exiled.Loader;
 
     using PlayerEvents = Exiled.Events.Handlers.Player;
+    using Scp049Events = Exiled.Events.Handlers.Scp049;
     using Scp079Events = Exiled.Events.Handlers.Scp079;
     using Scp096Events = Exiled.Events.Handlers.Scp096;
     using Scp106Events = Exiled.Events.Handlers.Scp106;
@@ -135,6 +136,8 @@
             PlayerEvents.UnlockingGenerator += Handlers.OnUnlockingGenerator;
             PlayerEvents.PlayerDamageWindow += Handlers.OnDamagingWindow;
 
+            Scp049Events.FinishingRecall += Handlers.OnScp049Recalling;
+
             Scp079Events.GainingLevel += Handlers.OnScp079GainingLevel;
             Scp079Events.TriggeringDoor += Handlers.OnScp079TriggeringDoor;
             Scp079Events.InteractingTesla += Handlers.OnScp079InteractTesla;
@@ -213,6 +216,8 @@
             PlayerEvents.ReloadingWeapon -= Handlers.OnReloadingWeapon;
             PlayerEvents.UnlockingGenerator -= Handlers.OnUnlockingGenerator;
             PlayerEvents.PlayerDamageWindow -= Handlers.OnDamagingWindow;
+
+            Scp049Events.FinishingRecall -= Handlers.OnScp049Recalling;
 
             Scp079Events.GainingLevel -= Handlers.OnScp079GainingLevel;
             Scp079Events.TriggeringDoor -= Handlers.OnScp079TriggeringDoor;

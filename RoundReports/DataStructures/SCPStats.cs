@@ -16,6 +16,12 @@
 
         public int Order => 7;
 
+        [Header(nameof(Translation.ScpTitle))]
+        [HideIfDefault]
+        [Translation(nameof(Translation.Scp049Revives))]
+        [BindStat(StatType.Scp049Revives)]
+        public int Scp049Revives { get; set; } = 0;
+
         [HideIfDefault]
         [Translation(nameof(Translation.Scp079CamerasUsed))]
         [BindStat(StatType.Scp079CamerasUsed)]
