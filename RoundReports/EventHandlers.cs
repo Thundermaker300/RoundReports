@@ -204,7 +204,7 @@
             if (Points[PT].ContainsKey(plr))
                 Points[PT][plr] += amount;
             else
-                Points[PT][plr] = 0 + amount;
+                Points[PT][plr] = amount;
 
             if (Points[PT][plr] < MvpSettings.MinPoints)
                 Points[PT][plr] = MvpSettings.MinPoints;
