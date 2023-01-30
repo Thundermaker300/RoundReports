@@ -147,14 +147,13 @@
         {
             CandiesTaken = DictionaryPool<CandyKindID, int>.Pool.Get();
             CandiesByPlayer = DictionaryPool<Player, int>.Pool.Get();
-            Activations = new() // Todo: Convert this to DictPool
+            Activations = DictionaryPool<Scp914KnobSetting, PercentInt>.Pool.Get();
+
+            foreach (Scp914KnobSetting setting in (Scp914KnobSetting[])Enum.GetValues(typeof(Scp914KnobSetting)))
             {
-                [Scp914KnobSetting.Rough] = new(0, 0, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalActivations),
-                [Scp914KnobSetting.Coarse] = new(0, 0, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalActivations),
-                [Scp914KnobSetting.OneToOne] = new(0, 0, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalActivations),
-                [Scp914KnobSetting.Fine] = new(0, 0, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalActivations),
-                [Scp914KnobSetting.VeryFine] = new(0, 0, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalActivations),
-            };
+                Activations.Add(setting, new(0, 0, () => MainPlugin.Reporter.GetStat<SCPStats>().TotalActivations));
+            }
+
             Upgrades = DictionaryPool<ItemType, PercentInt>.Pool.Get();
         }
 
@@ -165,6 +164,7 @@
 
             DictionaryPool<CandyKindID, int>.Pool.Return(CandiesTaken);
             DictionaryPool<Player, int>.Pool.Return(CandiesByPlayer);
+            DictionaryPool<Scp914KnobSetting, PercentInt>.Pool.Return(Activations);
             DictionaryPool<ItemType, PercentInt>.Pool.Return(Upgrades);
 
             if (Scp079CamerasUsed is not null)
