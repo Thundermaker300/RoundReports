@@ -15,7 +15,7 @@
         public bool MvpEnabled { get; set; } = true;
 
         [Description("Roles that cannot gain or lose points. Any RoleType as well as SerpentsHand and UIU are supported.")]
-        public List<string> RoleBlacklist { get; set; } = new() { "Tutorial" };
+        public List<CustomRT> RoleBlacklist { get; set; } = new() { CustomRT.Tutorial };
 
         [Description("Minimum amount of points per round that a user can have.")]
         public int MinPoints { get; set; } = -500;

@@ -154,7 +154,7 @@
             bool flag = true;
             if (ply is not null)
             {
-                if (GetRole(ply) == "Tutorial" && MainPlugin.Configs.ExcludeTutorials)
+                if (GetRole(ply) is CustomRT.Tutorial && MainPlugin.Configs.ExcludeTutorials)
                     return false; // Exit func early (we don't want to show hidden message for tutorial exclusion)
             }
 
@@ -222,7 +222,7 @@
             MVPStats logs = GetStat<MVPStats>();
             string str = (amount > 0 ? MainPlugin.Translations.AddPointsLog : MainPlugin.Translations.RemovePointsLog)
                 .Replace("{PLAYER}", plr.Nickname)
-                .Replace("{ROLE}", GetRole(plr))
+                .Replace("{ROLE}", GetRole(plr).ToString())
                 .Replace("{AMOUNT}", amount.ToString())
                 .Replace("{REASON}", reason);
             logs.PointLogs.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] {str}");
@@ -303,7 +303,7 @@
                 StartingStats stats = new()
                 {
                     ClassDPersonnel = Player.Get(RoleTypeId.ClassD).Count(player => ECheck(player)),
-                    SCPs = Player.Get(player => GetTeam(player) is "SCPs" && ECheck(player)).Select(GetRole).ToList(),
+                    SCPs = Player.Get(player => GetTeam(player) is CustomTeam.SCPs && ECheck(player)).Select((ply) => GetRole(ply).ToString()).ToList(),
                     FacilityGuards = Player.Get(RoleTypeId.FacilityGuard).Count(player => ECheck(player)),
                     Scientists = Player.Get(RoleTypeId.Scientist).Count(player => ECheck(player)),
                     StartTime = DateTime.Now,
@@ -394,11 +394,14 @@
         /// <param name="ev">Event arguments.</param>
         public void OnSpawned(SpawnedEventArgs ev)
         {
-            if (!Round.InProgress || MainPlugin.IsRestarting || Round.ElapsedTime.TotalSeconds <= 30 || !ECheck(ev.Player) || GetTeam(ev.Player) is not("SH" or "UIU" or "FoundationForces" or "ChaosInsurgency")) return;
-            MiscStats stats = GetStat<MiscStats>();
-            stats.TotalRespawned++;
-            stats.Respawns.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player, typeof(Player))).Replace("{ROLE}", GetRole(ev.Player)));
-            Hold(stats);
+            if (!Round.InProgress || MainPlugin.IsRestarting || Round.ElapsedTime.TotalSeconds <= 30 || !ECheck(ev.Player)) return;
+            if (GetTeam(ev.Player) is CustomTeam.FoundationForces or CustomTeam.ChaosInsurgency or CustomTeam.SH or CustomTeam.UIU)
+            {
+                MiscStats stats = GetStat<MiscStats>();
+                stats.TotalRespawned++;
+                stats.Respawns.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] " + MainPlugin.Translations.RespawnLog.Replace("{PLAYER}", Reporter.GetDisplay(ev.Player, typeof(Player))).Replace("{ROLE}", GetRole(ev.Player).ToString()));
+                Hold(stats);
+            }
         }
 
         /// <summary>
@@ -456,8 +459,8 @@
             if (ev.Attacker is not null)
             {
                 // Kill logs
-                string killerRole = GetRole(ev.Attacker);
-                string dyingRole = GetRole(ev.Player);
+                string killerRole = GetRole(ev.Attacker).ToString();
+                string dyingRole = GetRole(ev.Player).ToString();
                 killStats.PlayerKills.Insert(0, $"[{Reporter.GetDisplay(Round.ElapsedTime)}] {Reporter.GetDisplay(ev.Attacker, typeof(Player))} [{killerRole}] killed {Reporter.GetDisplay(ev.Player, typeof(Player))} [{dyingRole}]");
 
                 // Kill by player
@@ -474,11 +477,11 @@
 
                 // Role kills
                 stats.TotalKills++;
-                if (GetRole(ev.Attacker) == "UIU")
+                if (GetTeam(ev.Attacker) is CustomTeam.UIU)
                 {
                     stats.UIUKills++;
                 }
-                else if (GetRole(ev.Attacker) == "SerpentsHand")
+                else if (GetTeam(ev.Attacker) is CustomTeam.SH)
                 {
                     stats.SerpentsHandKills++;
                 }
@@ -512,7 +515,7 @@
                 {
                     string killText = MainPlugin.Translations.KillRemark
                         .Replace("{PLAYER}", Reporter.GetDisplay(ev.Attacker, typeof(Player)))
-                        .Replace("{ROLE}", GetRole(ev.Attacker))
+                        .Replace("{ROLE}", GetRole(ev.Attacker).ToString())
                         .Replace("{TARGET}", Reporter.GetDisplay(ev.Player, typeof(Player)))
                         .Replace("{TARGETROLE}", dyingRole);
                     MainPlugin.Reporter.AddRemark(killText);
@@ -522,15 +525,15 @@
                 // Killer points
                 if (ev.Player.Role.Side == ev.Attacker.Role.Side && ev.DamageHandler.Type != DamageType.Scp018)
                     IncrementPoints(ev.Attacker, MvpSettings.Points.KillTeammate, MainPlugin.Translations.KilledTeammate); // Kill teammate
-                else if (GetTeam(ev.Player) == "SCPs" && GetRole(ev.Player) != "Scp0492")
+                else if (GetTeam(ev.Player) is CustomTeam.SCPs && GetRole(ev.Player) != CustomRT.Scp0492)
                     IncrementPoints(ev.Attacker, MvpSettings.Points.KillScp, MainPlugin.Translations.KilledSCP); // Kill SCP
-                else if (GetTeam(ev.Player) == "Scientists")
+                else if (GetTeam(ev.Player) is CustomTeam.Scientists)
                     IncrementPoints(ev.Attacker, MvpSettings.Points.KillScientist, MainPlugin.Translations.KilledScientist); // Kill scientist
                 else
                     IncrementPoints(ev.Attacker, MvpSettings.Points.KillEnemy, MainPlugin.Translations.KilledEnemy); // Other kills
 
                 // Grant points to SCP-079 if death in a locked down/blackout room
-                if (GetTeam(ev.Attacker) == "SCPs" || ev.DamageHandler.Type == DamageType.CardiacArrest)
+                if (GetTeam(ev.Attacker) is CustomTeam.SCPs || ev.DamageHandler.Type == DamageType.CardiacArrest)
                 {
                     foreach (Player player in Player.Get(ECheck))
                     {
@@ -545,7 +548,7 @@
             {
                 if (ev.DamageHandler.Type == DamageType.CardiacArrest)
                 {
-                    IEnumerable<Player> doctors = Player.Get(ply => GetRole(ply) is "Scp049").Where(bird => Vector3.Distance(bird.Position, ev.Player.Position) < 12);
+                    IEnumerable<Player> doctors = Player.Get(ply => GetRole(ply) is CustomRT.Scp049).Where(bird => Vector3.Distance(bird.Position, ev.Player.Position) < 12);
                     foreach (Player birds in doctors)
                     {
                         IncrementPoints(birds, MvpSettings.Points.KillEnemy, MainPlugin.Translations.KilledEnemy);
@@ -746,7 +749,7 @@
         public void OnScp079TriggeringDoor(TriggeringDoorEventArgs ev)
         {
             if (!Round.InProgress || !ev.IsAllowed || ev.Door.IsOpen || !ECheck(ev.Player)) return;
-            if (Player.List.Count(plr => plr != ev.Player && GetTeam(plr) is "SCPs" && Vector3.Distance(ev.Door.Transform.position, plr.GameObject.transform.position) <= 20) == 0)
+            if (Player.List.Count(plr => plr != ev.Player && GetTeam(plr) is CustomTeam.SCPs && Vector3.Distance(ev.Door.Transform.position, plr.GameObject.transform.position) <= 20) == 0)
                 return;
 
             int pts = 0;
@@ -926,7 +929,7 @@
                     FirstDoor = true;
                     string remarkText = MainPlugin.Translations.DoorRemark
                         .Replace("{PLAYER}", Reporter.GetDisplay(ev.Player, typeof(Player)))
-                        .Replace("{ROLE}", GetRole(ev.Player))
+                        .Replace("{ROLE}", GetRole(ev.Player).ToString())
                         .Replace("{MILLISECOND}", Round.ElapsedTime.Milliseconds.ToString());
                     MainPlugin.Reporter.AddRemark(remarkText);
                 }
@@ -1011,7 +1014,7 @@
                 FirstEscape = true;
                 string escapeText = MainPlugin.Translations.EscapeRemark
                     .Replace("{PLAYER}", Reporter.GetDisplay(ev.Player, typeof(Player)))
-                    .Replace("{ROLE}", GetRole(ev.Player))
+                    .Replace("{ROLE}", GetRole(ev.Player).ToString())
                     .Replace("{MINUTE}", Round.ElapsedTime.Minutes.ToString())
                     .Replace("{SECOND}", Round.ElapsedTime.Seconds.ToString());
                 MainPlugin.Reporter.AddRemark(escapeText);
@@ -1141,7 +1144,7 @@
             yield return Timing.WaitForSeconds(60f);
             StartingStats stats = GetStat<StartingStats>();
 #pragma warning disable SA1312 // Variable names should begin with lower-case letter
-            List<string> SCPs = Player.Get(player => GetTeam(player) is "SCPs" && ECheck(player)).Select(GetRole).ToList();
+            List<string> SCPs = Player.Get(player => GetTeam(player) is CustomTeam.SCPs && ECheck(player)).Select(ply => GetRole(ply).ToString()).ToList();
 #pragma warning restore SA1312 // Variable names should begin with lower-case letter
             SCPs.Sort();
             stats.SCPs = SCPs;

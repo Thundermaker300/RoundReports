@@ -10,7 +10,9 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="PercentInt"/> class.
         /// </summary>
-        public PercentInt() { }
+        public PercentInt()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PercentInt"/> class.
