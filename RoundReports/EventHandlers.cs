@@ -84,26 +84,26 @@
         public bool FinalStatsFilledOut { get; set; } = false;
 
         /// <summary>
-        /// Returns string of role. Will return SerpentsHand or UIU for respective roles.
+        /// Returns <see cref="CustomRT"/> of role. Will return SerpentsHand or UIU for respective roles.
         /// </summary>
         /// <param name="player">Player.</param>
         /// <returns>Player's role.</returns>
-        public static string GetRole(Player player)
+        public static CustomRT GetRole(Player player)
         {
             if (player is null)
-                return RoleTypeId.None.ToString();
+                return CustomRT.None;
             if (player.SessionVariables.ContainsKey("IsSH"))
-                return "SerpentsHand";
+                return CustomRT.SerpentsHand;
             else if (player.SessionVariables.ContainsKey("IsUIU"))
-                return "UIU";
+                return CustomRT.UIU;
 
             ReadOnlyCollection<CustomRole> customRoles = player.GetCustomRoles();
             if (customRoles.Any(r => r.Name == "SCP-008"))
-                return "Scp008";
+                return CustomRT.Scp008;
             else if (customRoles.Any(r => r.Name == "SCP-035"))
-                return "Scp035";
+                return CustomRT.Scp035;
 
-            return player.Role.Type.ToString();
+            return (CustomRT)Enum.Parse(typeof(CustomRT), player.Role.Type.ToString());
         }
 
         /// <summary>
@@ -116,26 +116,26 @@
         public static PercentInt GetPI(int value, int total, Func<int> updater) => PercentIntPool.Pool.Get(value, total, updater);
 
         /// <summary>
-        /// Returns string of team. Will return SH or UIU for respective teams.
+        /// Returns <see cref="CustomTeam"/> of team. Will return SH or UIU for respective teams.
         /// </summary>
         /// <param name="player">Player.</param>
         /// <returns>Player's team.</returns>
-        public static string GetTeam(Player player)
+        public static CustomTeam GetTeam(Player player)
         {
             if (player is null)
-                return Team.Dead.ToString();
+                return CustomTeam.Dead;
             if (player.SessionVariables.ContainsKey("IsSH"))
-                return "SH";
+                return CustomTeam.SH;
             else if (player.SessionVariables.ContainsKey("IsUIU"))
-                return "UIU";
+                return CustomTeam.UIU;
 
             ReadOnlyCollection<CustomRole> customRoles = player.GetCustomRoles();
             if (customRoles.Any(r => r.Name == "SCP-008"))
-                return Team.SCPs.ToString();
+                return CustomTeam.SCPs;
             else if (customRoles.Any(r => r.Name == "SCP-035"))
-                return Team.SCPs.ToString();
+                return CustomTeam.SCPs;
 
-            return player.Role.Team.ToString();
+            return (CustomTeam)Enum.Parse(typeof(CustomTeam), player.Role.Team.ToString());
         }
 
         /// <summary>
