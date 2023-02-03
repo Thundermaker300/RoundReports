@@ -84,6 +84,8 @@ MVP is calculated by granting players points for specific actions. These points 
 | AdrenalinesConsumed   |                             | The total amount of adrenalines consumed.                                               |
 | AllActivations        |                             | Each SCP-914 mode and the total amount of activations.                                  |
 | AllUpgrades           |                             | Each item type and the amount of times it's been upgraded in SCP-914.                   |
+| AverageDamagePerPlayer|                             | The average amount of damage dealt per player (total damage divded by amount of players)|
+| AverageShotsPerFirearm|                             | The average amount of shots per firearm (total shots divded by amount of firearms)      |
 | ButtonUnlocked        |                             | Yes/No if the warhead button was opened.                                                |
 | ButtonUnlocker        | Yes                         | The name of the player who unlocked the warhead.                                        |
 | CandiesByPlayer       |                             | Each player and the amount of candies they've taken from SCP-330.                       |
@@ -131,6 +133,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | RoundTime             | Yes                         | The total time of the round.                                                            |
 | ScientistKills        | Yes                         | The total amount of scientist kills in the round.                                       |
 | Scp018sThrown         |                             | The total amount of SCP-018s thrown.                                                    |
+| Scp049Revives         |                             | The total amount of revivals by SCP-049.                                                |
 | Scp079CamerasUsed     |                             | The total amount of cameras SCP-079 has visited. Only shown if value is greater than 0. |
 | Scp079MostUsedCamera  |                             | The camera SCP-079 used the most. Will not be shown if not applicable (no SCP-079).     |
 | Scp096Charges         |                             | The total amount of SCP-096 charges. Only shown if value is greater than 0.             |
