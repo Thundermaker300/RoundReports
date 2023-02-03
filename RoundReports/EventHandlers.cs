@@ -600,7 +600,7 @@
         /// <param name="ev">Event arguments.</param>
         public void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Scp106)) return;
+            if (!Round.InProgress || !ev.IsAllowed || ev.Player is null || ev.Scp106 is null || !ECheck(ev.Scp106)) return;
             IncrementPoints(ev.Scp106, MvpSettings.Points.Scp106GrabPlayer, MainPlugin.Translations.GrabbedPlayer);
 
             foreach (Player player in Player.Get(ECheck))
