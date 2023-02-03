@@ -1205,16 +1205,16 @@
                 MVPStats MVPInfo = GetStat<MVPStats>();
 #pragma warning restore SA1312 // Variable names should begin with lower-case letter
 
-                if (sortedHumanData.Count() >= 1)
+                if (sortedHumanData.Count(data => data.Value > 0) >= 1)
                 {
-                    KeyValuePair<Player, int>? mvp = sortedHumanData.First(data => data.Value > 0);
+                    KeyValuePair<Player, int>? mvp = sortedHumanData.FirstOrDefault(data => data.Value > 0);
                     if (mvp.HasValue)
                         MVPInfo.HumanMVP = mvp.Value.Key.Nickname + $" ({mvp.Value.Value} points)";
                 }
 
-                if (sortedSCPData.Count() >= 1)
+                if (sortedSCPData.Count(data => data.Value > 0) >= 1)
                 {
-                    KeyValuePair<Player, int>? mvp = sortedSCPData.First(data => data.Value > 0);
+                    KeyValuePair<Player, int>? mvp = sortedSCPData.FirstOrDefault(data => data.Value > 0);
                     if (mvp.HasValue)
                         MVPInfo.SCPMVP = mvp.Value.Key.Nickname + $" ({mvp.Value.Value} points)";
                 }
