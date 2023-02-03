@@ -160,6 +160,11 @@
 
             if (val is bool b)
                 return b ? MainPlugin.Translations.Yes : MainPlugin.Translations.No;
+            if (val is float @float)
+                return Math.Round(@float, 2).ToString();
+            if (val is double @double)
+                return Math.Round(@double, 2).ToString();
+
             if (val is Player plr)
             {
                 if (!plr.IsConnected)
