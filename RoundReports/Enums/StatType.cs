@@ -79,6 +79,7 @@
         //-- Firearm
         TotalShotsFired,
         TotalReloads,
+        AverageShotsPerFirearm,
         ShotsByFirearm,
 
         // SCP Stats

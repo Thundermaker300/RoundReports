@@ -122,6 +122,8 @@
 
         public string TotalReloads { get; set; } = "Total Reloads";
 
+        public string AverageShotsPerFirearm { get; set; } = "Avg. Shots Per Firearm";
+
         public string ShotsByFirearm { get; set; } = "Shots by Firearm";
 
         // Organized Damage Stats

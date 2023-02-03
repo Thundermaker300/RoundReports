@@ -56,6 +56,10 @@
         [BindStat(StatType.TotalReloads)]
         public int TotalReloads { get; set; }
 
+        [Translation(nameof(Translation.AverageShotsPerFirearm))]
+        [BindStat(StatType.AverageShotsPerFirearm)]
+        public int AverageShotsPerFirearm { get; set; }
+
         [Translation(nameof(Translation.ShotsByFirearm))]
         [BindStat(StatType.ShotsByFirearm)]
         public Dictionary<FirearmType, PercentInt> ShotsByFirearm { get; set; }
@@ -82,6 +86,10 @@
 
         public void FillOutFinal()
         {
+            if (TotalShotsFired > 0 && ShotsByFirearm.Count > 0)
+            {
+                AverageShotsPerFirearm = TotalShotsFired / ShotsByFirearm.Count;
+            }
         }
     }
 #pragma warning restore SA1600
