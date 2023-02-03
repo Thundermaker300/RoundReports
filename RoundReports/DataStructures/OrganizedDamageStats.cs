@@ -50,6 +50,14 @@
             DictionaryPool<Player, PercentInt>.Pool.Return(DamageByPlayer);
             DictionaryPool<DamageType, PercentInt>.Pool.Return(DamageByType);
         }
+
+        public void FillOutFinal()
+        {
+            if (DamageByPlayer.Count > 0 && PlayerDamage > 0)
+            {
+                AverageDamagePerPlayer = PlayerDamage / DamageByPlayer.Count;
+            }
+        }
     }
 #pragma warning restore SA1600
 }

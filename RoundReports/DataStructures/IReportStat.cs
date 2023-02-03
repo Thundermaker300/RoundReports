@@ -24,5 +24,10 @@
         /// Called when the stat is being cleaned up.
         /// </summary>
         public void Cleanup();
+
+        /// <summary>
+        /// Called when the round ends, before the stats are uploaded.
+        /// </summary>
+        public void FillOutFinal();
     }
 }

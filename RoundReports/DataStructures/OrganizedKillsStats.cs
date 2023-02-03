@@ -50,6 +50,10 @@
             DictionaryPool<DamageType, int>.Pool.Return(KillsByType);
             DictionaryPool<ZoneType, PercentInt>.Pool.Return(KillsByZone);
         }
+
+        public void FillOutFinal()
+        {
+        }
     }
 #pragma warning restore SA1600
 }

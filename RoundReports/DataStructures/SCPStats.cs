@@ -3,6 +3,7 @@
 #pragma warning disable SA1600
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Pools;
@@ -169,6 +170,15 @@
 
             if (Scp079CamerasUsed is not null)
                 PercentIntPool.Pool.Return(Scp079CamerasUsed);
+        }
+
+        public void FillOutFinal()
+        {
+            if (MainPlugin.Handlers.UsedCameras.Count > 0)
+            {
+                var topCamera = MainPlugin.Handlers.UsedCameras.OrderByDescending(kvp => kvp.Value).FirstOrDefault();
+                Scp079MostUsedCamera = topCamera.Key.Type;
+            }
         }
     }
 #pragma warning restore SA1600

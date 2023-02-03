@@ -79,6 +79,10 @@
             DictionaryPool<Player, PercentInt>.Pool.Return(PlayerDrops);
             DictionaryPool<FirearmType, PercentInt>.Pool.Return(ShotsByFirearm);
         }
+
+        public void FillOutFinal()
+        {
+        }
     }
 #pragma warning restore SA1600
 }

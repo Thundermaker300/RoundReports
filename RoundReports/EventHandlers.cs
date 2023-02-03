@@ -1160,30 +1160,18 @@
             if (MainPlugin.Reporter is null)
                 return;
 
-            // Fill out door destroyed stat
-            FinalStats stats = GetStat<FinalStats>();
-            stats.DoorsDestroyed = Door.List.Count(d => d.IsBroken);
+            MainPlugin.Reporter.AddMissingStats();
 
-            // Fill out SCP-079 most used camera
-            if (UsedCameras.Count > 0)
+            foreach (IReportStat stat in MainPlugin.Reporter.Stats)
             {
-                var topCamera = UsedCameras.OrderByDescending(kvp => kvp.Value).FirstOrDefault();
-                SCPStats scpStats = GetStat<SCPStats>();
-                scpStats.Scp079MostUsedCamera = topCamera.Key.Type;
+                if (stat is null) continue;
 
-                Hold(scpStats);
+                stat.FillOutFinal();
             }
 
-            // Average damage stat
-            var damageStats = GetStat<OrganizedDamageStats>();
-            if (damageStats.DamageByPlayer.Count > 0 && damageStats.PlayerDamage > 0)
-            {
-                damageStats.AverageDamagePerPlayer = damageStats.PlayerDamage / damageStats.DamageByPlayer.Count;
-            }
-            Hold(damageStats);
+            var stats = GetStat<FinalStats>();
 
             // Fill out final stats
-            stats.EndTime = DateTime.Now;
             stats.WinningTeam = leadingTeam switch
             {
                 LeadingTeam.Anomalies => MainPlugin.Translations.ScpTeam,
@@ -1192,15 +1180,9 @@
                 LeadingTeam.Draw => MainPlugin.Translations.Stalemate,
                 _ => MainPlugin.Translations.Unknown
             };
-            stats.TotalInteractions = Interactions;
 
             // Set Leading Team
             MainPlugin.Reporter.WinTeam = leadingTeam;
-
-            // Finish with final stats
-            stats.RoundTime = Round.ElapsedTime;
-            foreach (Player player in Player.Get(plr => plr.IsAlive && ECheck(plr)))
-                stats.SurvivingPlayers.Add($"{Reporter.GetDisplay(player, typeof(Player))} ({GetRole(player)})");
 
             Hold(stats);
 

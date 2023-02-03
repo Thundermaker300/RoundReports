@@ -69,6 +69,10 @@
             ListPool<string>.Pool.Return(Respawns);
             DictionaryPool<ZoneType, PercentInt>.Pool.Return(RoomsByZone);
         }
+
+        public void FillOutFinal()
+        {
+        }
     }
 #pragma warning restore SA1600
 }

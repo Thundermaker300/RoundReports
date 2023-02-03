@@ -42,6 +42,10 @@
         {
             ListPool<string>.Pool.Return(PointLogs);
         }
+
+        public void FillOutFinal()
+        {
+        }
     }
 #pragma warning restore SA1600
 }

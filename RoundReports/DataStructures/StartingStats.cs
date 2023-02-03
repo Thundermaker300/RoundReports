@@ -51,6 +51,10 @@
             ListPool<string>.Pool.Return(SCPs);
             ListPool<string>.Pool.Return(Players);
         }
+
+        public void FillOutFinal()
+        {
+        }
     }
 #pragma warning restore SA1600
 }

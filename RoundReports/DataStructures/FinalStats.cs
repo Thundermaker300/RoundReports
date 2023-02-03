@@ -3,6 +3,7 @@
 #pragma warning disable SA1600
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Exiled.API.Features;
     using Exiled.API.Features.Pools;
 
@@ -140,6 +141,17 @@
             ListPool<string>.Pool.Return(SurvivingPlayers);
             DictionaryPool<Player, PercentInt>.Pool.Return(PlayerDoorsOpened);
             DictionaryPool<Player, PercentInt>.Pool.Return(PlayerDoorsClosed);
+        }
+
+        public void FillOutFinal()
+        {
+            DoorsDestroyed = Door.List.Count(d => d.IsBroken);
+            EndTime = DateTime.Now;
+            RoundTime = Round.ElapsedTime;
+            TotalInteractions = MainPlugin.Handlers.Interactions;
+
+            foreach (Player player in Player.Get(plr => plr.IsAlive && EventHandlers.ECheck(plr)))
+                SurvivingPlayers.Add($"{Reporter.GetDisplay(player, typeof(Player))} ({EventHandlers.GetRole(player)})");
         }
     }
 #pragma warning restore SA1600

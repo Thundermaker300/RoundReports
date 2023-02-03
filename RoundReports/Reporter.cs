@@ -91,9 +91,12 @@
         /// </summary>
         public bool AtLeastOneHidden { get; set; } = false;
 
-        private List<string> Remarks { get; set; }
+        /// <summary>
+        /// Gets or sets the stats.
+        /// </summary>
+        public List<IReportStat> Stats { get; set; }
 
-        private List<IReportStat> Stats { get; set; }
+        private List<string> Remarks { get; set; }
 
         /// <summary>
         /// Gets the default value of a type.
@@ -328,14 +331,10 @@
         }
 
         /// <summary>
-        /// Creates the round report. Uses all statistics stored in <see cref="Stats"/>.
+        /// Adds all missing stats into the <see cref="Stats"/> table.
         /// </summary>
-        /// <returns>The report to be sent, in the form of a <see cref="PasteEntry"/>.</returns>
-        public PasteEntry BuildReport()
+        public void AddMissingStats()
         {
-            Log.Debug("Building report...");
-            PasteEntry entry = new PasteEntry() { Description = $"{MainPlugin.Singleton.Config.ServerName} | {DateTime.Now.ToString("MMMM dd, yyyy hh:mm:ss tt")}", Sections = new(1) };
-            entry.Expiration = StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime);
             foreach (Type type in Assembly.GetExecutingAssembly().GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IReportStat))))
             {
                 if (!Stats.Any(r => r.GetType() == type))
@@ -352,6 +351,17 @@
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Creates the round report. Uses all statistics stored in <see cref="Stats"/>.
+        /// </summary>
+        /// <returns>The report to be sent, in the form of a <see cref="PasteEntry"/>.</returns>
+        public PasteEntry BuildReport()
+        {
+            Log.Debug("Building report...");
+            PasteEntry entry = new PasteEntry() { Description = $"{MainPlugin.Singleton.Config.ServerName} | {DateTime.Now.ToString("MMMM dd, yyyy hh:mm:ss tt")}", Sections = new(1) };
+            entry.Expiration = StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime);
 
             // Remarks
             if (Remarks.Count > 0)
