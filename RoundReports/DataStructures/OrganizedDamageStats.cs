@@ -23,7 +23,7 @@
 
         [Translation(nameof(Translation.AverageDamagePerPlayer))]
         [BindStat(StatType.AverageDamagePerPlayer)]
-        public int AverageDamagePerPlayer { get; set; }
+        public float AverageDamagePerPlayer { get; set; }
 
         [Translation(nameof(Translation.DamageByPlayer))]
         [BindStat(StatType.DamageByPlayer)]

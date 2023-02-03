@@ -58,7 +58,7 @@
 
         [Translation(nameof(Translation.AverageShotsPerFirearm))]
         [BindStat(StatType.AverageShotsPerFirearm)]
-        public int AverageShotsPerFirearm { get; set; }
+        public float AverageShotsPerFirearm { get; set; }
 
         [Translation(nameof(Translation.ShotsByFirearm))]
         [BindStat(StatType.ShotsByFirearm)]
