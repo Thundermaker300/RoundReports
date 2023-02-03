@@ -21,6 +21,10 @@
         [BindStat(StatType.PlayerDamage)]
         public int PlayerDamage { get; set; }
 
+        [Translation(nameof(Translation.AverageDamagePerPlayer))]
+        [BindStat(StatType.AverageDamagePerPlayer)]
+        public int AverageDamagePerPlayer { get; set; }
+
         [Translation(nameof(Translation.DamageByPlayer))]
         [BindStat(StatType.DamageByPlayer)]
         public Dictionary<Player, PercentInt> DamageByPlayer { get; set; }

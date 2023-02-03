@@ -125,6 +125,7 @@
         // Damage Stats
         TotalDamage,
         PlayerDamage,
+        AverageDamagePerPlayer,
         DamageByPlayer,
         DamageByType,
 

@@ -1174,6 +1174,14 @@
                 Hold(scpStats);
             }
 
+            // Average damage stat
+            var damageStats = GetStat<OrganizedDamageStats>();
+            if (damageStats.DamageByPlayer.Count > 0 && damageStats.PlayerDamage > 0)
+            {
+                damageStats.AverageDamagePerPlayer = damageStats.PlayerDamage / damageStats.DamageByPlayer.Count;
+            }
+            Hold(damageStats);
+
             // Fill out final stats
             stats.EndTime = DateTime.Now;
             stats.WinningTeam = leadingTeam switch

@@ -131,6 +131,8 @@
 
         public string PlayerDamage { get; set; } = "Player Damage";
 
+        public string AverageDamagePerPlayer { get; set; } = "Avg. Damage Per Player";
+
         public string DamageByPlayer { get; set; } = "Damage By Player";
 
         public string DamageByType { get; set; } = "Damage By Type";
