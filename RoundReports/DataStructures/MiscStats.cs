@@ -72,6 +72,11 @@
 
         public void FillOutFinal()
         {
+            OrganizedDamageStats stats = MainPlugin.Reporter?.GetStat<OrganizedDamageStats>();
+            if (stats is not null && stats.DamageByType.TryGetValue(DamageType.Tesla, out PercentInt value))
+            {
+                TeslaDamage = value.Value;
+            }
         }
     }
 #pragma warning restore SA1600

@@ -439,11 +439,6 @@
             }
 
             Hold(stats);
-
-            // Tesla Gate damage
-            var miscStats = GetStat<MiscStats>();
-            miscStats.TeslaDamage += (int)ev.Amount;
-            Hold(miscStats);
         }
 
         /// <summary>
