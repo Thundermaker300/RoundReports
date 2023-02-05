@@ -117,6 +117,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | KillsByPlayer         |                             | Each player and their amount of kills.                                                  |
 | KillsByType           |                             | Each death type and the total amount of kills of that type.                             |
 | MedkitsConsumed       |                             | The total amount of medkits consumed.                                                   |
+| MostTalkativePlayer   |                             | The person who used voice chat the most. Overwatch players not included.                |
 | MTFKills              | Yes                         | The total amount of MTF kills in the round.                                             |
 | PainkillersConsumed   |                             | The total amount of painkillers consumed.                                               |
 | PlayerCount*          | Yes                         | The total amount of players currently connected to the server.                          |

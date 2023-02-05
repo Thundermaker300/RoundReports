@@ -644,7 +644,7 @@
         /// <param name="ev">Event arguments.</param>
         public void OnVoiceChatting(VoiceChattingEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player) || ev.Player.Role.Type is RoleTypeId.Overwatch) return;
 
             if (!Talkers.ContainsKey(ev.Player))
                 Talkers.Add(ev.Player, Time.deltaTime);
