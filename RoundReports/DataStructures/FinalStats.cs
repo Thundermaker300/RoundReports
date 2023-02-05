@@ -74,6 +74,10 @@
         [BindStat(StatType.SurvivingPlayers)]
         public List<string> SurvivingPlayers { get; set; }
 
+        [Translation(nameof(Translation.MostTalkativePlayer))]
+        [BindStat(StatType.MostTalkativePlayer)]
+        public string MostTalkativePlayer { get; set; }
+
         [Translation(nameof(Translation.TotalInteractions))]
         [BindStat(StatType.TotalInteractions)]
         public int TotalInteractions { get; set; }
@@ -152,6 +156,12 @@
 
             foreach (Player player in Player.Get(plr => plr.IsAlive && EventHandlers.ECheck(plr)))
                 SurvivingPlayers.Add($"{Reporter.GetDisplay(player, typeof(Player))} ({EventHandlers.GetRole(player)})");
+
+            KeyValuePair<Player, float>? talker = MainPlugin.Handlers.Talkers.OrderByDescending(r => r.Value).FirstOrDefault();
+            if (talker.HasValue)
+            {
+                MostTalkativePlayer = $"{talker.Value.Key.Nickname} ({Reporter.GetDisplay(TimeSpan.FromSeconds(talker.Value.Value))})";
+            }
         }
     }
 #pragma warning restore SA1600

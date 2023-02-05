@@ -28,6 +28,7 @@
     using PlayerRoles;
     using PlayerRoles.PlayableScps.Scp079.Cameras;
     using PlayerRoles.PlayableScps.Scp079.Rewards;
+    using PlayerRoles.Voice;
     using Scp914;
     using UnityEngine;
     using Camera = Exiled.API.Features.Camera;
@@ -79,9 +80,16 @@
         public Dictionary<Camera, int> UsedCameras { get; } = new();
 
         /// <summary>
+        /// Gets players that have talked.
+        /// </summary>
+        public Dictionary<Player, float> Talkers { get; } = new();
+
+        /// <summary>
         /// Gets or sets a value indicating whether or not final stats have been filled out.
         /// </summary>
         public bool FinalStatsFilledOut { get; set; } = false;
+
+        private List<Player> IsSpeakingLock { get; } = new();
 
         /// <summary>
         /// Returns <see cref="CustomRT"/> of role. Will return SerpentsHand or UIU for respective roles.
@@ -249,6 +257,8 @@
             FirstDoor = false;
             Interactions = 0;
             UsedCameras.Clear();
+            Talkers.Clear();
+            IsSpeakingLock.Clear();
             FinalStatsFilledOut = false;
             Points.Clear();
             Points[PointTeam.SCP] = new();
@@ -619,11 +629,36 @@
             Hold(stats);
         }
 
+        /*
+         * The following three methods are pure SHIT.
+         * This is the only way I can think of doing it. I am sorry for what you are about to read.
+         * If you have a better way to do this, please let me know :)
+         * VoiceChatting event: Called every frame a player is speaking.
+         * I could technically add to the Talkers dictionary every frame,
+         * although I'm not sure if that's the best option either.
+        */
+
+        /// <summary>
+        /// Called when a player talks.
+        /// </summary>
+        /// <param name="ev">Event arguments.</param>
+        public void OnVoiceChatting(VoiceChattingEventArgs ev)
+        {
+            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
+
+            if (!Talkers.ContainsKey(ev.Player))
+                Talkers.Add(ev.Player, Time.deltaTime);
+            else
+                Talkers[ev.Player] += Time.deltaTime;
+        }
+
         /// <summary>
         /// Called when a shot is fired.
         /// </summary>
         /// <param name="ev">Event arguments.</param>
+#pragma warning disable SA1202
         public void OnShooting(ShootingEventArgs ev)
+#pragma warning restore SA1202
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
 

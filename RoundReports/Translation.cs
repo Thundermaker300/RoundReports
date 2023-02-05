@@ -90,6 +90,8 @@
 
         public string SurvivingPlayers { get; set; } = "Surviving Players";
 
+        public string MostTalkativePlayer { get; set; } = "Most Talkative Player";
+
         public string TotalInteractions { get; set; } = "Total Interactions";
 
         // Item Stats
