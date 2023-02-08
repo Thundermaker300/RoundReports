@@ -656,9 +656,7 @@
         /// Called when a shot is fired.
         /// </summary>
         /// <param name="ev">Event arguments.</param>
-#pragma warning disable SA1202
         public void OnShooting(ShootingEventArgs ev)
-#pragma warning restore SA1202
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
 
