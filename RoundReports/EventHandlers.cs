@@ -1194,7 +1194,14 @@
             {
                 if (stat is null) continue;
 
-                stat.FillOutFinal();
+                try
+                {
+                    stat.FillOutFinal();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"Error when filling out {stat.Title} stats: {ex}");
+                }
             }
 
             var stats = GetStat<FinalStats>();
