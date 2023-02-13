@@ -70,7 +70,7 @@
         public override string Author => "Thunder";
 
         /// <inheritdoc/>
-        public override Version Version => new(0, 7, 0);
+        public override Version Version => new(1, 0, 0);
 
         /// <inheritdoc/>
         public override Version RequiredExiledVersion => new(6, 0, 0);
