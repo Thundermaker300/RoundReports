@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Reflection;
+    using System.Xml.Linq;
     using Exiled.API.Features;
     using Exiled.API.Interfaces;
     using Exiled.Loader;
@@ -59,6 +60,15 @@
 
             AddAction("RR_ADDREMARK", addRemarkAction);
             AddAction("RR_PAUSEREPORTER", pauseReporterAction);
+        }
+
+        public static void UnregisterCustomActions()
+        {
+            if (ApiHelper is not null)
+            {
+                ApiHelper.GetMethod("UnregisterCustomAction").Invoke(null, new object[] { "RR_ADDREMARK" });
+                ApiHelper.GetMethod("UnregisterCustomAction").Invoke(null, new object[] { "RR_PAUSEREPORT" });
+            }
         }
     }
 }

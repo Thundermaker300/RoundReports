@@ -254,6 +254,8 @@
 
             Singleton = null;
             Handlers = null;
+
+            ScriptedEventsIntegration.UnregisterCustomActions();
             base.OnDisabled();
         }
     }
