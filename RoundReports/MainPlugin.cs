@@ -184,6 +184,7 @@
                 }
             }
 
+            ScriptedEventsIntegration.AddCustomActions();
             base.OnEnabled();
         }
 
