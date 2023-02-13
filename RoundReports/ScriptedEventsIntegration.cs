@@ -40,10 +40,7 @@
         /// <param name="action">The action's function/return value.</param>
         public static void AddAction(string name, Func<string[], Tuple<bool, string>> action)
         {
-            if (ApiHelper is not null)
-            {
-                ApiHelper.GetMethod("RegisterCustomAction").Invoke(null, new object[] { name, action });
-            }
+            ApiHelper?.GetMethod("RegisterCustomAction").Invoke(null, new object[] { name, action });
         }
 
         /// <summary>
@@ -78,11 +75,7 @@
         /// </summary>
         public static void UnregisterCustomActions()
         {
-            if (ApiHelper is not null)
-            {
-                ApiHelper.GetMethod("UnregisterCustomAction").Invoke(null, new object[] { "RR_ADDREMARK" });
-                ApiHelper.GetMethod("UnregisterCustomAction").Invoke(null, new object[] { "RR_PAUSEREPORT" });
-            }
+            ApiHelper?.GetMethod("UnregisterCustomActions").Invoke(null, new object[] { new[] { "RR_ADDREMARK", "RR_PAUSEREPORT" } });
         }
     }
 }
