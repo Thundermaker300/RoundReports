@@ -40,6 +40,7 @@
         /// <param name="action">The action's function/return value.</param>
         public static void AddAction(string name, Func<string[], Tuple<bool, string>> action)
         {
+            return;
             ApiHelper?.GetMethod("RegisterCustomAction").Invoke(null, new object[] { name, action });
         }
 
@@ -75,6 +76,7 @@
         /// </summary>
         public static void UnregisterCustomActions()
         {
+            return;
             ApiHelper?.GetMethod("UnregisterCustomActions").Invoke(null, new object[] { new[] { "RR_ADDREMARK", "RR_PAUSEREPORT" } });
         }
     }
