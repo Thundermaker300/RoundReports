@@ -8,6 +8,9 @@
     using Exiled.API.Interfaces;
     using Exiled.Loader;
 
+    /// <summary>
+    /// Integration with the Scripted Events plugin.
+    /// </summary>
     public static class ScriptedEventsIntegration
     {
         /// <summary>
@@ -30,6 +33,11 @@
         /// </summary>
         public static Type ApiHelper => ScriptedAssembly?.GetType("ScriptedEvents.API.Helpers.ApiHelper");
 
+        /// <summary>
+        /// Wrapper method to add the action using reflection.
+        /// </summary>
+        /// <param name="name">The name of the action.</param>
+        /// <param name="action">The action's function/return value.</param>
         public static void AddAction(string name, Func<string[], Tuple<bool, string>> action)
         {
             if (ApiHelper is not null)
@@ -38,6 +46,9 @@
             }
         }
 
+        /// <summary>
+        /// This method is called in <see cref="MainPlugin.OnEnabled"/> to add the actions to Scripted Events.
+        /// </summary>
         public static void AddCustomActions()
         {
             if (!Enabled) return;
@@ -62,6 +73,9 @@
             AddAction("RR_PAUSEREPORTER", pauseReporterAction);
         }
 
+        /// <summary>
+        /// This method is called in <see cref="MainPlugin.OnDisabled"/> to remove the actions from Scripted Events.
+        /// </summary>
         public static void UnregisterCustomActions()
         {
             if (ApiHelper is not null)
