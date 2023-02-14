@@ -217,15 +217,21 @@
             PointTeam PT = teamOverride ?? (plr.IsScp ? PointTeam.SCP : PointTeam.Human);
 #pragma warning restore SA1312 // Variable names should begin with lower-case letter
 
+            if (!Points.ContainsKey(PT))
+                Points.Add(PT, new());
+
             if (Points[PT].ContainsKey(plr))
                 Points[PT][plr] += amount;
             else
-                Points[PT][plr] = amount;
+                Points[PT].Add(plr, amount);
 
-            if (Points[PT][plr] < MvpSettings.MinPoints)
-                Points[PT][plr] = MvpSettings.MinPoints;
-            else if (Points[PT][plr] > MvpSettings.MaxPoints)
-                Points[PT][plr] = MvpSettings.MaxPoints;
+            if (Points[PT].ContainsKey(plr))
+            {
+                if (Points[PT][plr] < MvpSettings.MinPoints)
+                    Points[PT][plr] = MvpSettings.MinPoints;
+                else if (Points[PT][plr] > MvpSettings.MaxPoints)
+                    Points[PT][plr] = MvpSettings.MaxPoints;
+            }
 
             MVPStats logs = GetStat<MVPStats>();
             string str = (amount > 0 ? MainPlugin.Translations.AddPointsLog : MainPlugin.Translations.RemovePointsLog)
@@ -1224,6 +1230,12 @@
             // Compile MVP info
             if (MvpSettings.MvpEnabled)
             {
+                if (!Points.ContainsKey(PointTeam.Human))
+                    Points.Add(PointTeam.Human, new());
+
+                if (!Points.ContainsKey(PointTeam.SCP))
+                    Points.Add(PointTeam.SCP, new());
+
                 var sortedHumanData = Points[PointTeam.Human].OrderByDescending(data => data.Value);
                 var sortedSCPData = Points[PointTeam.SCP].OrderByDescending(data => data.Value);
 #pragma warning disable SA1312 // Variable names should begin with lower-case letter
