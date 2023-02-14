@@ -158,7 +158,7 @@
                 SurvivingPlayers.Add($"{Reporter.GetDisplay(player, typeof(Player))} ({EventHandlers.GetRole(player)})");
 
             KeyValuePair<Player, float>? talker = MainPlugin.Handlers.Talkers.OrderByDescending(r => r.Value).FirstOrDefault();
-            if (talker.HasValue)
+            if (talker is not null && talker.HasValue)
             {
                 MostTalkativePlayer = $"{talker.Value.Key.Nickname} ({Reporter.GetDisplay(TimeSpan.FromSeconds(talker.Value.Value))})";
             }
