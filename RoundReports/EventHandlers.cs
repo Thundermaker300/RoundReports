@@ -467,7 +467,7 @@
             FinalStats stats = GetStat<FinalStats>();
             OrganizedKillsStats killStats = GetStat<OrganizedKillsStats>();
             stats.TotalDeaths++;
-            if (ev.Attacker is not null)
+            if (ev.Attacker is not null && ev.Player is not null)
             {
                 // Kill logs
                 string killerRole = GetRole(ev.Attacker).ToString();
@@ -555,15 +555,12 @@
             }
 
             // Edge case for SCP-049 kills
-            else
+            if (ev.DamageHandler.Type == DamageType.CardiacArrest)
             {
-                if (ev.DamageHandler.Type == DamageType.CardiacArrest)
+                IEnumerable<Player> doctors = Player.Get(ply => GetRole(ply) is CustomRT.Scp049).Where(bird => Vector3.Distance(bird.Position, ev.Player.Position) < 12);
+                foreach (Player birds in doctors)
                 {
-                    IEnumerable<Player> doctors = Player.Get(ply => GetRole(ply) is CustomRT.Scp049).Where(bird => Vector3.Distance(bird.Position, ev.Player.Position) < 12);
-                    foreach (Player birds in doctors)
-                    {
-                        IncrementPoints(birds, MvpSettings.Points.KillEnemy, MainPlugin.Translations.KilledEnemy);
-                    }
+                    IncrementPoints(birds, MvpSettings.Points.KillEnemy, MainPlugin.Translations.KilledEnemy);
                 }
             }
 
