@@ -24,6 +24,11 @@
         public int Scp049Revives { get; set; } = 0;
 
         [HideIfDefault]
+        [Translation(nameof(Translation.Scp079Tier))]
+        [BindStat(StatType.Scp079Tier)]
+        public int Scp079Tier { get; set; }
+
+        [HideIfDefault]
         [Translation(nameof(Translation.Scp079CamerasUsed))]
         [BindStat(StatType.Scp079CamerasUsed)]
         public PercentInt Scp079CamerasUsed { get; set; } // Created by script

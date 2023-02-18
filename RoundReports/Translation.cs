@@ -203,6 +203,8 @@
         [Description("The following SCP-related stats only show on the report if each is activated at least once.")]
         public string Scp049Revives { get; set; } = "SCP-049 Revives";
 
+        public string Scp079Tier { get; set; } = "SCP-079 Tier";
+
         public string Scp079CamerasUsed { get; set; } = "SCP-079 Cameras Used";
 
         public string Scp079MostUsedCamera { get; set; } = "SCP-079 Most Used Camera";

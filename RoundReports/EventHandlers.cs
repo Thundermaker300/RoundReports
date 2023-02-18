@@ -708,6 +708,10 @@
         {
             if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
             IncrementPoints(ev.Player, MvpSettings.Points.Scp079LeveledUp, MainPlugin.Translations.LeveledUp);
+
+            var stats = GetStat<SCPStats>();
+            stats.Scp079Tier = ev.NewLevel;
+            Hold(stats);
         }
 
         /// <summary>

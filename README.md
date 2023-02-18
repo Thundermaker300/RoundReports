@@ -137,6 +137,7 @@ MVP is calculated by granting players points for specific actions. These points 
 | Scp049Revives         |                             | The total amount of revivals by SCP-049.                                                |
 | Scp079CamerasUsed     |                             | The total amount of cameras SCP-079 has visited. Only shown if value is greater than 0. |
 | Scp079MostUsedCamera  |                             | The camera SCP-079 used the most. Will not be shown if not applicable (no SCP-079).     |
+| Scp079Tier            |                             | The highest tier that SCP-079 reached.                                                  |
 | Scp096Charges         |                             | The total amount of SCP-096 charges. Only shown if value is greater than 0.             |
 | Scp096Enrages         |                             | The total amount of SCP-096 enrages. Only shown if value is greater than 0.             |
 | Scp106Teleports       |                             | The total amount of SCP-106 teleports. Only shown if value is greater than 0.           |

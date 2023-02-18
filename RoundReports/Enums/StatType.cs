@@ -85,6 +85,7 @@
 
         // SCP Stats
         Scp049Revives,
+        Scp079Tier,
         Scp079CamerasUsed,
         Scp079MostUsedCamera,
         Scp096Charges,
