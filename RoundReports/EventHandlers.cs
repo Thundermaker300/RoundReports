@@ -614,10 +614,13 @@
             if (!Round.InProgress || !ev.IsAllowed || ev.Player is null || ev.Scp106 is null || !ECheck(ev.Scp106)) return;
             IncrementPoints(ev.Scp106, MvpSettings.Points.Scp106GrabPlayer, MainPlugin.Translations.GrabbedPlayer);
 
-            foreach (Player player in Player.Get(ECheck))
+            if (ev.Player.CurrentRoom is not null)
             {
-                if (player.Role is Scp079Role role && role.SubroutineModule.TryGetSubroutine(out Scp079RewardManager manager) && manager._markedRooms.ContainsKey(ev.Player.CurrentRoom.Identifier))
-                    IncrementPoints(player, MvpSettings.Points.Scp079AssistKill, MainPlugin.Translations.AssistKill);
+                foreach (Player player in Player.Get(ECheck))
+                {
+                    if (player.Role is Scp079Role role && role.SubroutineModule.TryGetSubroutine(out Scp079RewardManager manager) && manager._markedRooms.ContainsKey(ev.Player.CurrentRoom.Identifier))
+                        IncrementPoints(player, MvpSettings.Points.Scp079AssistKill, MainPlugin.Translations.AssistKill);
+                }
             }
         }
 
