@@ -12,10 +12,10 @@ Important Notes:
 * Statistics from users with Do Not Track (DNT) enabled are treated differently, please see "Note on DNT Players" section below.
 
 ## Supported Plugins
-* SCP-008-X
-* SCP-035
-* Serpent's Hand
-* UIU (Unusual Incidents Unit)
+* SCP-008-X (User must have "IsScp008" session variable)
+* SCP-035  (User must have "IsScp035" session variable)
+* Serpent's Hand  (User must have "IsSH" session variable)
+* UIU (Unusual Incidents Unit)  (User must have "IsUIU" session variable)
 
 ## Commands
 ### pausereport
