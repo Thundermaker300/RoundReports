@@ -104,11 +104,9 @@
                 return CustomRT.SerpentsHand;
             else if (player.SessionVariables.ContainsKey("IsUIU"))
                 return CustomRT.UIU;
-
-            ReadOnlyCollection<CustomRole> customRoles = player.GetCustomRoles();
-            if (customRoles.Any(r => r.Name == "SCP-008"))
+            else if (player.SessionVariables.ContainsKey("IsScp008"))
                 return CustomRT.Scp008;
-            else if (customRoles.Any(r => r.Name == "SCP-035"))
+            else if (player.SessionVariables.ContainsKey("IsScp035"))
                 return CustomRT.Scp035;
 
             return (CustomRT)Enum.Parse(typeof(CustomRT), player.Role.Type.ToString());
