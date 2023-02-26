@@ -47,7 +47,7 @@
         /// <summary>
         /// Gets or sets a <see cref="Dictionary{TKey, TValue}"/> of <see cref="PointTeam"/> and players' points in each.
         /// </summary>
-        public Dictionary<PointTeam, Dictionary<Player, int>> Points { get; set; } = new();
+        public Dictionary<PointTeam, Dictionary<Player, int>> Points { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not the first escape has occurred.
@@ -203,7 +203,7 @@
         /// <param name="overrideRoleChecks">Override dead/tutorial checks when adding points.</param>
         public void IncrementPoints(Player plr, int amount, string reason = "Unknown", PointTeam? teamOverride = null, bool overrideRoleChecks = false)
         {
-            if (!MvpSettings.MvpEnabled || plr is null || plr.DoNotTrack || (overrideRoleChecks == false && (MvpSettings.RoleBlacklist.Contains(GetRole(plr)) || plr.IsDead)) || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
+            if (MvpSettings is null || !MvpSettings.MvpEnabled || plr is null || plr.DoNotTrack || (overrideRoleChecks == false && (MvpSettings.RoleBlacklist.Contains(GetRole(plr)) || plr.IsDead)) || MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId))
                 return;
 
             if (amount == 0) return;
@@ -212,7 +212,7 @@
 
             // Sorry stylecop, you could not pay me $500 to name a variable "pT".
 #pragma warning disable SA1312 // Variable names should begin with lower-case letter
-            PointTeam PT = teamOverride ?? (plr.IsScp ? PointTeam.SCP : PointTeam.Human);
+            PointTeam PT = teamOverride.HasValue ? teamOverride.Value : (plr.IsScp ? PointTeam.SCP : PointTeam.Human);
 #pragma warning restore SA1312 // Variable names should begin with lower-case letter
 
             if (!Points.ContainsKey(PT))
@@ -255,6 +255,9 @@
         /// </summary>
         public void OnWaitingForPlayers()
         {
+            if (Points is null)
+                Points = new();
+
             FirstEscape = false;
             FirstUpgrade = false;
             FirstKill = false;
@@ -264,9 +267,11 @@
             Talkers.Clear();
             IsSpeakingLock.Clear();
             FinalStatsFilledOut = false;
+
             Points.Clear();
             Points[PointTeam.SCP] = new();
             Points[PointTeam.Human] = new();
+
             MainPlugin.Reporter = new Reporter();
             MainPlugin.IsRestarting = false;
 
