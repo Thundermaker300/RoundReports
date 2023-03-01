@@ -212,7 +212,7 @@
 
             // Sorry stylecop, you could not pay me $500 to name a variable "pT".
 #pragma warning disable SA1312 // Variable names should begin with lower-case letter
-            PointTeam PT = teamOverride.HasValue ? teamOverride.Value : (plr.IsScp ? PointTeam.SCP : PointTeam.Human);
+            PointTeam PT = (teamOverride is not null && teamOverride.HasValue) ? teamOverride.Value : (plr.IsScp ? PointTeam.SCP : PointTeam.Human);
 #pragma warning restore SA1312 // Variable names should begin with lower-case letter
 
             if (!Points.ContainsKey(PT))
