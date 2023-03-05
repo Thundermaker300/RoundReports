@@ -76,7 +76,10 @@
 
             if (player.DoNotTrack)
             {
-                response = "This player has do not track enabled; they cannot be MVPs.";
+                if (sender.CheckPermission(PlayerPermissions.PlayersManagement))
+                    response = "This player has Do Not Track (DNT) enabled; they cannot be MVPs.";
+                else
+                    response = "An unknown error has occurred when adding points to this player.";
                 return false;
             }
 
@@ -86,8 +89,16 @@
                 return false;
             }
 
-            string reason = string.Join(" ", arguments.Skip(3));
-            MainPlugin.Handlers.IncrementPoints(player, amount, reason, pt, true);
+            try
+            {
+                string reason = string.Join(" ", arguments.Skip(3));
+                MainPlugin.Handlers.IncrementPoints(player, amount, reason, pt, true);
+            }
+            catch (Exception ex)
+            {
+                response = $"An error occurred when adding points to this player. {ex}";
+                return false;
+            }
 
             response = $"Added {amount} MVP points to {player.Nickname}!";
             return true;
