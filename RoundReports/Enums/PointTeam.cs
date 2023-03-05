@@ -6,6 +6,11 @@
     public enum PointTeam
     {
         /// <summary>
+        /// N/A
+        /// </summary>
+        None,
+
+        /// <summary>
         /// The humans.
         /// </summary>
         Human,

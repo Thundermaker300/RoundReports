@@ -201,7 +201,7 @@
         /// <param name="reason">Reason for removing.</param>
         /// <param name="teamOverride">Override the <see cref="PointTeam"/> being used.</param>
         /// <param name="overrideRoleChecks">Override dead/tutorial checks when adding points.</param>
-        public void IncrementPoints(Player plr, int amount, string reason = "Unknown", PointTeam? teamOverride = null, bool overrideRoleChecks = false)
+        public void IncrementPoints(Player plr, int amount, string reason = "Unknown", PointTeam teamOverride = PointTeam.None, bool overrideRoleChecks = false)
         {
             if (MvpSettings is null || !MvpSettings.MvpEnabled || plr is null || plr.DoNotTrack || (overrideRoleChecks == false && ((MvpSettings.RoleBlacklist is not null && MvpSettings.RoleBlacklist.Any(role => role == GetRole(plr))) || plr.IsDead)) || (MainPlugin.Configs.IgnoredUsers is not null && MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId)))
                 return;
@@ -212,7 +212,7 @@
 
             // Sorry stylecop, you could not pay me $500 to name a variable "pT".
 #pragma warning disable SA1312 // Variable names should begin with lower-case letter
-            PointTeam PT = (teamOverride is not null && teamOverride.HasValue) ? teamOverride.Value : (plr.IsScp ? PointTeam.SCP : PointTeam.Human);
+            PointTeam PT = teamOverride is not PointTeam.None ? teamOverride : (plr.IsScp ? PointTeam.SCP : PointTeam.Human);
 #pragma warning restore SA1312 // Variable names should begin with lower-case letter
 
             if (!Points.ContainsKey(PT))
