@@ -557,7 +557,7 @@
                     if (MainPlugin.Singleton.Config.SendInConsole)
                         Log.Info($"Report uploaded successfully! Access it here: {response.Link}");
 
-                    if (!string.IsNullOrEmpty(MainPlugin.Singleton.Config.DiscordWebhook))
+                    if (!MainPlugin.Singleton.Config.DiscordWebhooks.IsEmpty())
                     {
                         Log.Debug("Sending report to Discord.");
                         Log.Debug("Building webhook information.");
@@ -611,19 +611,28 @@
                             },
                         };
 
-                        UnityWebRequest discordWWW = UnityWebRequest.Put(MainPlugin.Singleton.Config.DiscordWebhook, JsonConvert.SerializeObject(hookData));
-                        discordWWW.method = "POST";
-                        discordWWW.SetRequestHeader("Content-Type", "application/json");
-                        yield return Timing.WaitUntilDone(discordWWW.SendWebRequest());
+                        string hookDataString = JsonConvert.SerializeObject(hookData);
+                        int id = 0;
+                        foreach (string link in MainPlugin.Singleton.Config.DiscordWebhooks)
+                        {
+                            id++;
 
-                        if (discordWWW.isHttpError || discordWWW.isNetworkError)
-                        {
-                            Log.Warn($"Error when attempting to send report to discord log: {discordWWW.error}");
-                        }
-                        else
-                        {
-                            if (MainPlugin.Singleton.Config.SendInConsole)
-                                Log.Info("Report sent to Discord successfully.");
+                            UnityWebRequest discordWWW = UnityWebRequest.Put(link, hookDataString);
+                            discordWWW.method = "POST";
+                            discordWWW.SetRequestHeader("Content-Type", "application/json");
+                            yield return Timing.WaitUntilDone(discordWWW.SendWebRequest());
+
+                            if (discordWWW.isHttpError || discordWWW.isNetworkError)
+                            {
+                                Log.Warn($"Error when attempting to send report to discord hook #{id}: {discordWWW.error}");
+                            }
+                            else
+                            {
+                                if (MainPlugin.Singleton.Config.SendInConsole)
+                                    Log.Info($"Report sent to Discord (hook #{id}) successfully.");
+                            }
+
+                            discordWWW.Dispose();
                         }
 
                         ListPool<EmbedField>.Pool.Return(fields);

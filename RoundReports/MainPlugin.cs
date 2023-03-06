@@ -94,7 +94,7 @@
                 return;
             }
 
-            if (string.IsNullOrEmpty(Config.DiscordWebhook))
+            if (Config.DiscordWebhooks.IsEmpty())
             {
                 if (!Config.SendInConsole)
                 {

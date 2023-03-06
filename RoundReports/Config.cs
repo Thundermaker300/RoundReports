@@ -23,8 +23,8 @@
         [Description("Time until reports expire. Valid values: Never, 1H, 12H, 1D, 3D, 7D, 14D, 1M, 2M, 3M, 6M, 1Y, 2Y")]
         public string ExpiryTime { get; set; } = "1M";
 
-        [Description("Provide a Discord webhook to send reports to.")]
-        public string DiscordWebhook { get; set; } = string.Empty;
+        [Description("Provide one or more Discord webhooks to send reports to.")]
+        public List<string> DiscordWebhooks { get; set; } = new() { "SOME_WEBHOOK_LINK_HERE" };
 
         [Description("Send report links in server console when compiled?")]
         public bool SendInConsole { get; set; } = true;
