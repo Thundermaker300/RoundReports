@@ -7,7 +7,7 @@
     using Exiled.API.Features;
     using Exiled.API.Interfaces;
     using Exiled.Loader;
-
+    using HarmonyLib;
     using PlayerEvents = Exiled.Events.Handlers.Player;
     using Scp049Events = Exiled.Events.Handlers.Scp049;
     using Scp079Events = Exiled.Events.Handlers.Scp079;
@@ -47,6 +47,11 @@
         /// Gets the <see cref="EventHandlers"/> singleton.
         /// </summary>
         public static EventHandlers Handlers { get; private set; }
+
+        /// <summary>
+        /// Gets the <see cref="HarmonyLib.Harmony"/> singleton.
+        /// </summary>
+        public static Harmony Harmony { get; private set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not the round is currently restarting.
@@ -129,7 +134,6 @@
             PlayerEvents.Escaping += Handlers.OnEscaping;
             PlayerEvents.DroppingItem += Handlers.OnDroppingItem;
             PlayerEvents.EnteringPocketDimension += Handlers.OnEnteringPocketDimension;
-            PlayerEvents.TriggeringTesla += Handlers.OnTriggeringTesla;
             PlayerEvents.VoiceChatting += Handlers.OnVoiceChatting;
 
             PlayerEvents.Shooting += Handlers.OnShooting;
@@ -184,6 +188,18 @@
                 }
             }
 
+            // Harmony patching
+            try
+            {
+                Harmony = new Harmony($"thunder.roundreports.{DateTime.UtcNow.Ticks}");
+                Harmony.PatchAll();
+                Log.Info("Harmony patching success!");
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Harmony patching failed! {e}");
+            }
+
             ScriptedEventsIntegration.AddCustomActions();
             base.OnEnabled();
         }
@@ -212,7 +228,6 @@
             PlayerEvents.Escaping -= Handlers.OnEscaping;
             PlayerEvents.DroppingItem -= Handlers.OnDroppingItem;
             PlayerEvents.EnteringPocketDimension -= Handlers.OnEnteringPocketDimension;
-            PlayerEvents.TriggeringTesla -= Handlers.OnTriggeringTesla;
             PlayerEvents.VoiceChatting -= Handlers.OnVoiceChatting;
 
             PlayerEvents.Shooting -= Handlers.OnShooting;
@@ -251,9 +266,11 @@
             WarheadEvents.Detonated -= Handlers.OnWarheadDetonated;
 
             Reporter?.Kill();
+            Harmony.UnpatchAll();
 
             Singleton = null;
             Handlers = null;
+            Harmony = null;
 
             ScriptedEventsIntegration.UnregisterCustomActions();
             base.OnDisabled();

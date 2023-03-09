@@ -52,6 +52,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\..\scpslfiles\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
@@ -105,6 +108,7 @@
     <Compile Include="EventHandlers.cs" />
     <Compile Include="MainPlugin.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Patches\TeslaShocksPatch.cs" />
     <Compile Include="Pools\PercentIntPool.cs" />
     <Compile Include="ScriptedEventsIntegration.cs" />
     <Compile Include="Structures\DiscordConfig.cs" />

@@ -645,29 +645,6 @@
         }
 
         /// <summary>
-        /// Called when a tesla gate is triggered.
-        /// </summary>
-        /// <param name="ev">Event arguments.</param>
-        public void OnTriggeringTesla(TriggeringTeslaEventArgs ev)
-        {
-            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
-            var stats = GetStat<MiscStats>();
-
-            stats.TeslaShocks++;
-
-            Hold(stats);
-        }
-
-        /*
-         * The following three methods are pure SHIT.
-         * This is the only way I can think of doing it. I am sorry for what you are about to read.
-         * If you have a better way to do this, please let me know :)
-         * VoiceChatting event: Called every frame a player is speaking.
-         * I could technically add to the Talkers dictionary every frame,
-         * although I'm not sure if that's the best option either.
-        */
-
-        /// <summary>
         /// Called when a player talks.
         /// </summary>
         /// <param name="ev">Event arguments.</param>
