@@ -49,6 +49,8 @@
         /// </summary>
         public Dictionary<PointTeam, Dictionary<Player, int>> Points { get; set; }
 
+        public Dictionary<Player, float> DamageToScps { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether or not the first escape has occurred.
         /// </summary>
@@ -258,6 +260,11 @@
             if (Points is null)
                 Points = new();
 
+            if (DamageToScps is null)
+                DamageToScps = new();
+
+            DamageToScps.Clear();
+
             FirstEscape = false;
             FirstUpgrade = false;
             FirstKill = false;
@@ -455,6 +462,21 @@
                     stats.DamageByPlayer.Add(ev.Attacker, GetPI(amount, stats.TotalDamage, () => MainPlugin.Reporter.GetStat<OrganizedDamageStats>().TotalDamage));
                 else
                     stats.DamageByPlayer[ev.Attacker].IncrementValue(amount);
+
+                // Grant Points for SCP damage
+                if (GetTeam(ev.Player) is CustomTeam.SCPs && GetRole(ev.Player) is not CustomRT.Scp0492 && GetTeam(ev.Attacker) is not CustomTeam.SCPs)
+                {
+                    if (DamageToScps.ContainsKey(ev.Attacker))
+                        DamageToScps[ev.Attacker] += amount;
+                    else
+                        DamageToScps.Add(ev.Attacker, amount);
+
+                    if (DamageToScps[ev.Attacker] >= MvpSettings.Points.HurtScpRequired)
+                    {
+                        DamageToScps[ev.Attacker] = 0;
+                        IncrementPoints(ev.Attacker, MvpSettings.Points.HurtScp, MainPlugin.Translations.HurtSCP);
+                    }
+                }
             }
 
             Hold(stats);
@@ -539,8 +561,6 @@
                 // Killer points
                 if (ev.Player.Role.Side == ev.Attacker.Role.Side && ev.DamageHandler.Type != DamageType.Scp018)
                     IncrementPoints(ev.Attacker, MvpSettings.Points.KillTeammate, MainPlugin.Translations.KilledTeammate); // Kill teammate
-                else if (GetTeam(ev.Player) is CustomTeam.SCPs && GetRole(ev.Player) != CustomRT.Scp0492)
-                    IncrementPoints(ev.Attacker, MvpSettings.Points.KillScp, MainPlugin.Translations.KilledSCP); // Kill SCP
                 else if (GetTeam(ev.Player) is CustomTeam.Scientists)
                     IncrementPoints(ev.Attacker, MvpSettings.Points.KillScientist, MainPlugin.Translations.KilledScientist); // Kill scientist
                 else

@@ -312,7 +312,7 @@
         [Description("The following translations are for reasons regarding to add & removing MVP points.")]
 
         //-- Positive
-        public string KilledSCP { get; set; } = "Killed SCP";
+        public string HurtSCP { get; set; } = "Significantly Hurt SCP";
 
         public string KilledScientist { get; set; } = "Killed Scientist";
 

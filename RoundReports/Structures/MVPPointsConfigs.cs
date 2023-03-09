@@ -8,9 +8,12 @@
     /// </summary>
     public class MVPPointsConfigs
     {
+        [Description("The amount of damage required to be dealt to an SCP before the 'hurt_scp' points are added.")]
+        public int HurtScpRequired { get; set; } = 600;
+
         // Add points
         [Description("Stats to add points.")]
-        public int KillScp { get; set; } = 10;
+        public int HurtScp { get; set; } = 5;
 
         public int KillEnemy { get; set; } = 2;
 
