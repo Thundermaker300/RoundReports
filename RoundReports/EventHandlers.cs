@@ -136,11 +136,9 @@
                 return CustomTeam.SH;
             else if (player.SessionVariables.ContainsKey("IsUIU"))
                 return CustomTeam.UIU;
-
-            ReadOnlyCollection<CustomRole> customRoles = player.GetCustomRoles();
-            if (customRoles.Any(r => r.Name == "SCP-008"))
+            else if (player.SessionVariables.ContainsKey("IsScp008"))
                 return CustomTeam.SCPs;
-            else if (customRoles.Any(r => r.Name == "SCP-035"))
+            else if (player.SessionVariables.ContainsKey("IsScp035"))
                 return CustomTeam.SCPs;
 
             return (CustomTeam)Enum.Parse(typeof(CustomTeam), player.Role.Team.ToString());
