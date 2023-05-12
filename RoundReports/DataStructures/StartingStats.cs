@@ -40,10 +40,11 @@
 
         [Translation(nameof(Translation.Players))]
         [BindStat(StatType.StartPlayers)]
-        public List<string> Players { get; set; } // Created in code
+        public List<string> Players { get; set; }
 
         public void Setup()
         {
+            Players = ListPool<string>.Pool.Get();
         }
 
         public void Cleanup()

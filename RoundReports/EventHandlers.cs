@@ -332,7 +332,6 @@
                     Scientists = Player.Get(RoleTypeId.Scientist).Count(player => ECheck(player)),
                     StartTime = DateTime.Now,
                     PlayersAtStart = Player.List.Where(r => !r.IsDead).Count(player => ECheck(player)),
-                    Players = ListPool<string>.Pool.Get(),
                 };
                 foreach (Player player in Player.List.Where(player => ECheck(player) && !player.IsDead))
                     stats.Players.Add($"{Reporter.GetDisplay(player, typeof(Player))} [{GetRole(player)}]");
