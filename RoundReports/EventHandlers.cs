@@ -49,6 +49,9 @@
         /// </summary>
         public Dictionary<PointTeam, Dictionary<Player, int>> Points { get; set; }
 
+        /// <summary>
+        /// Gets or sets a <see cref="Dictionary{TKey, TValue}"/> of players and the amount of damage they've delt to SCPs.
+        /// </summary>
         public Dictionary<Player, float> DamageToScps { get; set; }
 
         /// <summary>
@@ -255,11 +258,8 @@
         /// </summary>
         public void OnWaitingForPlayers()
         {
-            if (Points is null)
-                Points = new();
-
-            if (DamageToScps is null)
-                DamageToScps = new();
+            Points ??= new();
+            DamageToScps ??= new();
 
             DamageToScps.Clear();
 

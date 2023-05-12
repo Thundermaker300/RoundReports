@@ -365,14 +365,18 @@
         public PasteEntry BuildReport()
         {
             Log.Debug("Building report...");
-            PasteEntry entry = new PasteEntry() { Description = $"{MainPlugin.Singleton.Config.ServerName} | {DateTime.Now.ToString("MMMM dd, yyyy hh:mm:ss tt")}", Sections = new(1) };
-            entry.Expiration = StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime);
+            PasteEntry entry = new()
+            {
+                Description = $"{MainPlugin.Singleton.Config.ServerName} | {DateTime.Now:MMMM dd, yyyy hh:mm:ss tt}",
+                Sections = new(1),
+                Expiration = StringLengthToLong(MainPlugin.Singleton.Config.ExpiryTime),
+            };
 
             // Remarks
             if (Remarks.Count > 0)
             {
                 Log.Debug($"{Remarks.Count} remarks saved.");
-                PasteSection section = new PasteSection()
+                PasteSection section = new()
                 {
                     Name = MainPlugin.Singleton.Translation.RoundRemarks,
                     Syntax = "text",
@@ -414,7 +418,7 @@
                     }
 
                     Log.Debug($"Adding new section: {sectionTitle}");
-                    PasteSection section = new PasteSection()
+                    PasteSection section = new()
                     {
                         Name = sectionTitle,
                         Syntax = "text",
@@ -527,7 +531,7 @@
             Log.Debug("Sending report to Pastee.");
             yield return Timing.WaitUntilDone(pasteWWW.SendWebRequest());
 
-            if (!pasteWWW.isHttpError && !pasteWWW.isNetworkError)
+            if (pasteWWW.result is UnityWebRequest.Result.Success)
             {
                 PasteResponse response;
                 try
@@ -622,7 +626,7 @@
                             discordWWW.SetRequestHeader("Content-Type", "application/json");
                             yield return Timing.WaitUntilDone(discordWWW.SendWebRequest());
 
-                            if (discordWWW.isHttpError || discordWWW.isNetworkError)
+                            if (discordWWW.result is not UnityWebRequest.Result.Success)
                             {
                                 Log.Warn($"Error when attempting to send report to discord hook #{id}: {discordWWW.error}");
                             }
