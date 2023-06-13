@@ -167,6 +167,9 @@
                     return false; // Exit func early (we don't want to show hidden message for tutorial exclusion)
             }
 
+            if (ply.Role?.Type is RoleTypeId.Filmmaker)
+                return false; // Ignore filmmaker entirely
+
             if (ply.DoNotTrack && MainPlugin.Configs.ExcludeDNTUsers)
                 flag = false;
 
@@ -197,7 +200,7 @@
             => MainPlugin.Reporter?.GetStat<T>() ?? null;
 
         /// <summary>
-        /// Increments MVP points. Ignored if user: Is null, Is DNT, Is role Tutorial, IsDead, or is an ignored user.
+        /// Increments MVP points. Ignored if user: Is null, Is DNT, Is role Tutorial, IsValidRole = false, or is an ignored user.
         /// </summary>
         /// <param name="plr">Player.</param>
         /// <param name="amount">Amount of points.</param>
@@ -206,7 +209,7 @@
         /// <param name="overrideRoleChecks">Override dead/tutorial checks when adding points.</param>
         public void IncrementPoints(Player plr, int amount, string reason = "Unknown", PointTeam teamOverride = PointTeam.None, bool overrideRoleChecks = false)
         {
-            if (MvpSettings is null || !MvpSettings.MvpEnabled || plr is null || plr.DoNotTrack || (overrideRoleChecks == false && ((MvpSettings.RoleBlacklist is not null && MvpSettings.RoleBlacklist.Any(role => role == GetRole(plr))) || plr.IsDead)) || (MainPlugin.Configs.IgnoredUsers is not null && MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId)))
+            if (MvpSettings is null || !MvpSettings.MvpEnabled || plr is null || plr.DoNotTrack || (overrideRoleChecks == false && ((MvpSettings.RoleBlacklist is not null && MvpSettings.RoleBlacklist.Any(role => role == GetRole(plr))) || !plr.IsValidRole())) || (MainPlugin.Configs.IgnoredUsers is not null && MainPlugin.Configs.IgnoredUsers.Contains(plr.UserId)))
                 return;
 
             if (amount == 0) return;
@@ -331,9 +334,9 @@
                     FacilityGuards = Player.Get(RoleTypeId.FacilityGuard).Count(player => ECheck(player)),
                     Scientists = Player.Get(RoleTypeId.Scientist).Count(player => ECheck(player)),
                     StartTime = DateTime.Now,
-                    PlayersAtStart = Player.List.Where(r => !r.IsDead).Count(player => ECheck(player)),
+                    PlayersAtStart = Player.List.Where(r => r.IsValidRole()).Count(player => ECheck(player)),
                 };
-                foreach (Player player in Player.List.Where(player => ECheck(player) && !player.IsDead))
+                foreach (Player player in Player.List.Where(player => ECheck(player) && player.IsValidRole()))
                     stats.Players.Add($"{Reporter.GetDisplay(player, typeof(Player))} [{GetRole(player)}]");
                 Hold(stats);
                 Timing.RunCoroutine(RecordSCPsStats().CancelWith(Server.Host.GameObject));
