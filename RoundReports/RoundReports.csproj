@@ -103,6 +103,7 @@
     <Compile Include="Enums\Rule.cs" />
     <Compile Include="Enums\StatType.cs" />
     <Compile Include="EventHandlers.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="MainPlugin.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Patches\TeslaShocksPatch.cs" />
