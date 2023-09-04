@@ -7,6 +7,7 @@
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.API.Features.Doors;
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Pools;
     using Exiled.API.Features.Roles;
@@ -867,7 +868,7 @@
         /// <param name="ev">Event arguments.</param>
         public void OnScp939Lunge(LungingEventArgs ev)
         {
-            if (!Round.InProgress || !ev.IsAllowed || !ECheck(ev.Player)) return;
+            if (!Round.InProgress || !ECheck(ev.Player)) return;
             SCPStats stats = GetStat<SCPStats>();
             stats.Scp939Lunges++;
             Hold(stats);

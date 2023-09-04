@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Exiled.API.Features;
+    using Exiled.API.Features.Doors;
     using Exiled.API.Features.Pools;
 
     public class FinalStats : IReportStat
@@ -149,7 +150,7 @@
 
         public void FillOutFinal()
         {
-            DoorsDestroyed = Door.List.Count(d => d.IsBroken);
+            DoorsDestroyed = Door.List.Count(d => d is BreakableDoor bd && bd.IsDestroyed);
             EndTime = DateTime.Now;
             RoundTime = Round.ElapsedTime;
             TotalInteractions = MainPlugin.Handlers.Interactions;
