@@ -31,7 +31,7 @@
         /// <summary>
         /// Gets the <see cref="Type"/> representing the "ApiHelper" class of Scripted Events.
         /// </summary>
-        public static Type ApiHelper => ScriptedAssembly?.GetType("ScriptedEvents.API.Helpers.ApiHelper");
+        public static Type ApiHelper => ScriptedAssembly?.GetType("ScriptedEvents.API.Features.ApiHelper");
 
         /// <summary>
         /// Wrapper method to add the action using reflection.
