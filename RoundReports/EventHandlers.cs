@@ -115,7 +115,10 @@
             else if (player.SessionVariables.ContainsKey("IsScp035"))
                 return CustomRT.Scp035;
 
-            return (CustomRT)Enum.Parse(typeof(CustomRT), player.Role.Type.ToString());
+            if (Enum.TryParse(player.Role.Type.ToString(), out CustomRT rt))
+                return rt;
+
+            return CustomRT.None;
         }
 
         /// <summary>
