@@ -322,9 +322,9 @@
 
         public string Escaped { get; set; } = "Escaped";
 
-        public string ClassDCuffedEscaped { get; set; } = "was cuffed as a Class-D and escaped.";
+        public string ClassDCuffedEscape { get; set; } = "Escaped as CUFFED Class-D";
 
-        public string CuffedEscaped { get; set; } = "was cuffed and escaped.";
+        public string CuffedEscape { get; set; } = "Escaped cuffed";
 
         public string OpenedWarheadPanel { get; set; } = "Opened Warhead Panel";
 
