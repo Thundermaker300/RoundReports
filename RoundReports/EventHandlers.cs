@@ -1063,12 +1063,12 @@
                 IncrementPoints(ev.Player, MvpSettings.Points.Escaped, MainPlugin.Translations.Escaped);
                 return;
             }
-            if (ev.escapeScenario == EscapeScenario.CuffedClassD)
+            if (ev.EscapeScenario == EscapeScenario.CuffedClassD)
             {
                 IncrementPoints(ev.Player, MvpSettings.Points.ClassDCuffedEscape, MainPlugin.Translations.Escaped);
                 return;
             }
-            if (ev.escapeScenario == EscapeScenario.CuffedScientist || ev.escapeScenario == EscapeScenario.CustomEscape)
+            if (ev.EscapeScenario == EscapeScenario.CuffedScientist || ev.EscapeScenario == EscapeScenario.CustomEscape)
             {
                 IncrementPoints(ev.Player, MvpSettings.Points.CuffedEscape, MainPlugin.Translations.Escaped);
                 return;
