@@ -1060,8 +1060,21 @@
                     .Replace("{MINUTE}", Round.ElapsedTime.Minutes.ToString())
                     .Replace("{SECOND}", Round.ElapsedTime.Seconds.ToString());
                 MainPlugin.Reporter.AddRemark(escapeText);
+                IncrementPoints(ev.Player, MvpSettings.Points.Escaped, MainPlugin.Translations.Escaped);
+                return;
             }
-
+            if (ev.escapeScenario == EscapeScenario.CuffedClassD)
+            {
+                IncrementPoints(ev.Player, MvpSettings.Points.ClassDCuffedEscape, MainPlugin.Translations.Escaped);
+                return;
+            }
+            if (ev.escapeScenario == EscapeScenario.CuffedScientist || ev.escapeScenario == EscapeScenario.CustomEscape)
+            {
+                IncrementPoints(ev.Player, MvpSettings.Points.CuffedEscape, MainPlugin.Translations.Escaped);
+                return;
+            }
+            
+            
             IncrementPoints(ev.Player, MvpSettings.Points.Escaped, MainPlugin.Translations.Escaped);
         }
 
