@@ -1051,7 +1051,18 @@
         public void OnEscaping(EscapingEventArgs ev)
         {
             if (!ev.IsAllowed || !Round.InProgress || !ECheck(ev.Player)) return;
-            if (!FirstEscape && MainPlugin.Reporter is not null)
+
+            if (ev.EscapeScenario == EscapeScenario.CuffedClassD) //cuffed class-d
+            {
+                IncrementPoints(ev.Player, MvpSettings.Points.ClassDCuffedEscape, MainPlugin.Translations.ClassDCuffedEscape);
+                return;
+            }
+            if (ev.EscapeScenario == EscapeScenario.CuffedScientist || ev.EscapeScenario == EscapeScenario.CustomEscape) //cuffed anything else (scientist, mtf, chaos,..)
+            {
+                IncrementPoints(ev.Player, MvpSettings.Points.CuffedEscape, MainPlugin.Translations.CuffedEscape);
+                return;
+            }
+            if (!FirstEscape && MainPlugin.Reporter is not null) //first real escape
             {
                 FirstEscape = true;
                 string escapeText = MainPlugin.Translations.EscapeRemark
@@ -1062,18 +1073,7 @@
                 MainPlugin.Reporter.AddRemark(escapeText);
                 IncrementPoints(ev.Player, MvpSettings.Points.Escaped, MainPlugin.Translations.Escaped);
                 return;
-            }
-            if (ev.EscapeScenario == EscapeScenario.CuffedClassD)
-            {
-                IncrementPoints(ev.Player, MvpSettings.Points.ClassDCuffedEscape, MainPlugin.Translations.Escaped);
-                return;
-            }
-            if (ev.EscapeScenario == EscapeScenario.CuffedScientist || ev.EscapeScenario == EscapeScenario.CustomEscape)
-            {
-                IncrementPoints(ev.Player, MvpSettings.Points.CuffedEscape, MainPlugin.Translations.Escaped);
-                return;
-            }
-            
+            }            
             
             IncrementPoints(ev.Player, MvpSettings.Points.Escaped, MainPlugin.Translations.Escaped);
         }
