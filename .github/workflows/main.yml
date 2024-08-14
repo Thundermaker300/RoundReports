@@ -33,7 +33,7 @@ jobs:
 
       - name: Build
         run: | 
-          msbuild RoundReports\RoundReports.csproj -t:rebuild -property:Configuration=Release -property:Platform=x64 -property:ReferencePath="${{ env.REFERENCES_PATH }}"
+          msbuild RoundReports\RoundReports.csproj -t:rebuild -property:Configuration=Release -property:ReferencePath="${{ env.REFERENCES_PATH }}"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
