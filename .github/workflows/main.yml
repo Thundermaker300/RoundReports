@@ -27,7 +27,7 @@ jobs:
           Expand-Archive -Path Dev.zip -DestinationPath ${{ env.REFERENCES_PATH }}
 
       - name: Setup MSBuild.exe
-        uses: microsoft/Setup-MSBuild@v1
+        uses: microsoft/Setup-MSBuild@v2
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
