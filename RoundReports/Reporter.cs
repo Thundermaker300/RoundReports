@@ -613,6 +613,7 @@
                                     },
                                 },
                             },
+                            Flags = [ 4096 ],
                         };
 
                         string hookDataString = JsonConvert.SerializeObject(hookData);
