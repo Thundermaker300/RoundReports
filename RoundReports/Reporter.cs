@@ -612,7 +612,7 @@
                                         Text = ProcessReportArgs(config.Embed.Footer),
                                     },
                                 },
-                            }
+                            },
                         };
 
                         string hookDataString = JsonConvert.SerializeObject(hookData);
