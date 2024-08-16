@@ -612,8 +612,7 @@
                                         Text = ProcessReportArgs(config.Embed.Footer),
                                     },
                                 },
-                            },
-                            Flags = 4096,
+                            }
                         };
 
                         string hookDataString = JsonConvert.SerializeObject(hookData);
