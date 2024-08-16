@@ -54,6 +54,8 @@ MVP is calculated by granting players points for specific actions. These points 
 | Kill Player (Not Scientist)           | +2               |
 | Open Warhead Panel (Surface)          | +2               |
 | Unlock Generator                      | +1               |
+| Escape (cuffed as Class-D)            | +0               |
+| Escape (cuffed)                       | -1               |
 | Die (Most Causes)                     | -1               |
 | Die (Warhead, Decontamination, Tesla) | -2               |
 | Take 3 Candies                        | -10              |
