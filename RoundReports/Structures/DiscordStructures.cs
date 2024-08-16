@@ -79,9 +79,6 @@
 
         [JsonProperty("embeds")]
         public List<Embed> Embeds { get; set; } = new List<Embed>();
-
-        [JsonProperty("flags")]
-        public int Flags { get; set; }
     }
 
     /// <summary>
