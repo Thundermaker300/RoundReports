@@ -59,6 +59,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\scpslfiles\SCPSL_Data\Managed\Mirror.dll</HintPath>
     </Reference>
+    <Reference Include="mscorlib">
+      <RequiredTargetFramework>4.8</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

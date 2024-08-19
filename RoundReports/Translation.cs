@@ -322,6 +322,10 @@
 
         public string Escaped { get; set; } = "Escaped";
 
+        public string ClassDCuffedEscape { get; set; } = "Escaped as CUFFED Class-D";
+
+        public string CuffedEscape { get; set; } = "Escaped cuffed";
+
         public string OpenedWarheadPanel { get; set; } = "Opened Warhead Panel";
 
         public string UnlockedGenerator { get; set; } = "Unlocked Generator";
